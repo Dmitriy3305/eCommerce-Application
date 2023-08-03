@@ -10,13 +10,7 @@ in your local folder
 ```npm install``` <br>
 in project root folder
 
-3. Install Husky running <br>
-```npm run prepare``` <br>
-in project root folder to run **Prettier** and **ESLint** on **Git commits** across all files in the project
-
 # Avaliable scripts
-- ## Install Husky
-  Use ```npm run prepare``` when getting started to initialize **Husky** and enable **Git** hooks
 - ## Dev server
   To run **Webpack**'s dev server use<br>
   ```npm run server```<br>
