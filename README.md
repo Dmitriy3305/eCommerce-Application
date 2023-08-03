@@ -6,9 +6,14 @@ final task JSCRackers
 ```git clone https://github.com/Dmitriy3305/eCommerce-Application.git``` <br>
 in your local folder
 
-2. Install all dependencies running <br>
+2. Switch your **Git** branch to ```develop``` running
+```git checkout develop```
+
+3. Install all dependencies running <br>
 ```npm install``` <br>
 in project root folder
+
+4. For each new feature create new branch from ```develop``` or your feature branch
 
 # Avaliable scripts
 - ## Dev server
@@ -26,10 +31,12 @@ in project root folder
   - To run **Prettier** use<br>
     ```npm run format```
   - To run **ESLint** with ```airbnb-typescript config```, find and fix linter errors use<br>
-    ```npm run lint```
+    ```npm run lint```<br>
   **Note**: These scripts run automatically with **Husky** before your commits
 - ## Testing
   To run tests avaliable in project with **Jest** use<br>
   ```npm run test```
+
+**Note:** all scripts should be run in project's **root** folder
 
 
