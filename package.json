@@ -7,7 +7,7 @@
     "server": "webpack serve",
     "build:prod": "set NODE_ENV=production&&webpack",
     "build:dev": "webpack",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --fix --ext .ts",
     "format": "prettier . --write",
     "test": "jest",
     "prepare": "husky install"
