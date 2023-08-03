@@ -1,0 +1,23 @@
+#Ignore artifacts
+dist
+coverage
+
+#Ignore all html files
+*.html
+
+#Ignore readme
+README.md
+
+#Ignore dependencies configs
+.browserslistrc
+.babelrc
+.eslintignore
+.eslintrc.json
+.gitignore
+.prettierrc
+jest.config.ts
+package.json
+package-lock.json
+webpack.config.js
+types.d.ts
+tsconfig.json

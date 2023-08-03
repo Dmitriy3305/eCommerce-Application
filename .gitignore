@@ -1,0 +1,8 @@
+#Dependencies
+node_modules/
+
+#Production build
+dist/
+
+#Jest output
+coverage/
