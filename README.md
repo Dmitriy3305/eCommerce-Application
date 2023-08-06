@@ -1,5 +1,5 @@
 # eCommerce-Application
-The final task the team "SCRackers" course JavaScript/Front-end 2023Q1 [RS School](https://app.rs.school/).
+The final task the team "JSCRackers" course JavaScript/Front-end 2023Q1 [RS School](https://app.rs.school/).
 
 # Description
 An eCommerce store web application  with utilizes the API client for CommerceTools.
@@ -22,35 +22,6 @@ This project is developed with the technology stack: TypeScript, Webpack, Sass, 
 **Travel** - shoes for outdoor activities.
 The color palette and size chart are also diverse, you can choose shoes of the right color and size by applying filtering for a faster search.
 Choose proven shoes - read reviews from real feedback  on our website, in the **Feedback** section.*
-
-# Project structure
-``` 
-/src 
-|-- /app
-    |-- /api
-    |-- /controller
-    |-- /model
-    |-- /view
-|-- /assets
-|-- /components
-|-- /main
-|-- /styles
-|-- /tests
-|-- /types
-|-- /utils 
-```
-- **/src:** contains the entire source code of the application, as well as styles, environment files;
-- **/api:** for client-server interaction
-- **/controller:** is a link that connects models, views, and other components into a production application;
-- **/model:** contains the business logic of the application; 
-- **/view:** used to specify the external display of data received from the controller and model;
-- **/assets:** Images, fonts and icons are stored in this folder;
-- **/components:** contains reusable components used throughout the whole application;
-- **/main:** contains the functional modules of the application;
-- **/styles:** global styles are stored in this folder;
-- **/tests:** contains tests;
-- **/types:** contains data types, interfaces
-- **/utils:** contains utility functions that will be used in various modules of the application.
 
 # Getting started
 1. Clone the repository running <br>
