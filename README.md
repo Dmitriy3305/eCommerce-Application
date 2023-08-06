@@ -35,9 +35,16 @@ in your local folder
 ```npm install``` <br>
 in project root folder
 
-4. For each new feature create new branch from ```develop``` or your feature branch
+4. Initialize Husky running <br>
+```npm run prepare``` <br>
+in project root folder
+
+5. For each new feature create new branch from ```develop``` or your feature branch
 
 # Avaliable scripts
+- ## Initializing 
+  To initialize **Husky** git hooks run <br>
+  ```npm run prepare```
 - ## Dev server
   To run **Webpack**'s dev server use<br>
   ```npm run server```<br>
