@@ -1,5 +1,27 @@
 # eCommerce-Application
-final task JSCRackers
+The final task the team "JSCRackers" course JavaScript/Front-end 2023Q1 [RS School](https://app.rs.school/).
+
+# Description
+An eCommerce store web application  with utilizes the API client for CommerceTools.
+This project is developed with the technology stack: TypeScript, Webpack, Sass, ESLint, Prettier, Husky, Jest and implements MVC pattern.
+
+# Functionalities
+- account login and registration  of users;
+- view and edit user profiles;
+- products categories;
+- search, sorting and filtering options for on attributes such as price range, brand, color, size, or other relevant characteristics;
+- detailed product description;
+- add items to the basket, displaying a list of items added to the basket, removing  items from the basket;
+- responsive application design.
+
+*In our store you will find а shoes in the following categories:
+**Summer** -  shoes for summer walks;
+**Rain** -  shoes for rainy weather;
+**Snow** - shoes for cold winters;
+**Office**  - shoes for official business meetings;
+**Travel** - shoes for outdoor activities.
+The color palette and size chart are also diverse, you can choose shoes of the right color and size by applying filtering for a faster search.
+Choose proven shoes - read reviews from real feedback  on our website, in the **Feedback** section.*
 
 # Getting started
 1. Clone the repository running <br>
