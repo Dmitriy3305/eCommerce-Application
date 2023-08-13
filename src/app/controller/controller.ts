@@ -1,4 +1,2 @@
 // Should be abstract
-export default class AppController {
-
-}
+export default class AppController {}
