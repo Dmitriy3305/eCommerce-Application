@@ -1,30 +1,19 @@
-import DOMComponent, { ElementParameters } from '../../components/base-component';
-import { Tags } from '../../types/dom-types/enums';
+import DOMComponent from '../../components/base-component';
+import Footer from './footer/footer';
+import Header from './header/header';
 
 enum ViewCssClasses {
-  Header = 'header',
   Main = 'main',
-  Footer = 'footer',
 }
 
 export default abstract class AppView {
-  private static HEADER_PARAMS: ElementParameters = {
-    tag: Tags.Header,
-    classList: [ViewCssClasses.Header],
-  };
-
-  private static FOOTER_PARAMS: ElementParameters = {
-    tag: Tags.Footer,
-    classList: [ViewCssClasses.Footer],
-  };
-
   protected body: DOMComponent<HTMLElement>;
 
-  protected header: DOMComponent<HTMLElement>;
+  protected header: Header;
 
   protected main: DOMComponent<HTMLElement>;
 
-  protected footer: DOMComponent<HTMLElement>;
+  protected footer: Footer;
 
   public abstract get pageName(): string;
 
@@ -32,13 +21,15 @@ export default abstract class AppView {
     this.body = DOMComponent.FromElement(document.body);
     this.setPageName(appName);
 
-    this.header = new DOMComponent<HTMLElement>({ ...AppView.HEADER_PARAMS, parent: this.body });
+    this.header = new Header(appName);
+    this.body.append(this.header);
 
     this.main = this.createMain();
     this.main.addClass(ViewCssClasses.Main);
     this.body.append(this.main);
 
-    this.footer = new DOMComponent<HTMLElement>({ ...AppView.FOOTER_PARAMS, parent: this.body });
+    this.footer = new Footer();
+    this.body.append(this.footer);
   }
 
   protected abstract createMain(): DOMComponent<HTMLElement>;

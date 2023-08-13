@@ -15,6 +15,7 @@ export enum Tags {
   Heading3 = 'h3',
   Label = 'label',
   Code = 'code',
+  Image = 'img',
 }
 
 export enum Events {
