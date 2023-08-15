@@ -13,10 +13,18 @@
   align-items: center;
 
   background-color: $primary-light;
+
+  @media (max-width: $desktop-width) {
+    font-size: 0.6rem;
+  }
+
+  @media (max-width: $mobile-width) {
+    justify-content: center;
+  }
 }
 
 .header__logo {
-  width: max(30%, 200px);
+  width: max(30%, 250px);
   height: 100%;
 
   display: flex;
@@ -26,6 +34,10 @@
 
   .logo__icon {
     max-height: 90%;
+
+    @media (max-width: $desktop-width) {
+      max-height: 75%;
+    }
   }
 
   .logo__name {
@@ -52,6 +64,10 @@
     color: $primary-dark;
     border-color: $primary-dark;
   }
+
+  @media (max-width: $mobile-width) {
+    display: none;
+  }
 }
 
 .header__user-nav {
@@ -70,5 +86,9 @@
     &:hover {
       color: $secondary-yellow;
     }
+  }
+
+  @media (max-width: $mobile-width) {
+    display: none;
   }
 }

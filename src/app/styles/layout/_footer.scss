@@ -32,10 +32,17 @@
 
   &__description {
     margin-top: 1em;
+    text-align: center;
+  }
+
+  @media (max-width: $tablet-width) {
+    font-size: 0.7em;
   }
 }
 
-.shop-info, .footer__course-link, .shop-links {
+.shop-info,
+.footer__course-link,
+.shop-links {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,7 +62,9 @@
   text-transform: capitalize;
   text-decoration: none;
 
-  transition: color $hover-transition, scale $active-transition;
+  transition:
+    color $hover-transition,
+    scale $active-transition;
 
   &:hover {
     color: $primary-light;
@@ -84,7 +93,7 @@
   }
 
   &:hover img {
-    filter: hue-rotate(39.88deg) saturate(189.47%) brightness(62.75%);;
+    filter: hue-rotate(39.88deg) saturate(189.47%) brightness(62.75%);
   }
 }
 
