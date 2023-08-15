@@ -6,6 +6,7 @@ enum FontAwesome {
   UserPlus = 'fa-user-plus',
   Cart = 'fa-shopping-cart',
   Key = 'fa-key',
+  Bars = 'fa-bars',
 }
 
 export default FontAwesome;

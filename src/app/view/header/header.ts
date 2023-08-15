@@ -1,6 +1,6 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import DropdownMenu from '../../../components/dropdown-menu/dropdown-menu';
-import { Events, Tags } from '../../../types/dom-types/enums';
+import { Tags } from '../../../types/dom-types/enums';
 import HeaderLogo from './header-logo';
 import UserNavigation from './user-navigation';
 
@@ -10,6 +10,7 @@ enum HeaderCssClasses {
   CategoriesButton = 'header__categories-show',
   CategoriesMenu = 'header__categories-nav',
   UserNav = 'header__user-nav',
+  BurgerMenuOpen = 'header__open-burger-menu',
 }
 
 export default class Header extends DOMComponent<HTMLElement> {
@@ -39,33 +40,16 @@ export default class Header extends DOMComponent<HTMLElement> {
     this.logo.addClass(HeaderCssClasses.Logo);
     this.append(this.logo);
 
-    this.categoriesButton = new DOMComponent<HTMLButtonElement>({
-      ...Header.CATEGORIES_BUTTON_PARAMS,
-      parent: this,
-    });
-
     this.categoriesNavigation = new DropdownMenu();
     this.categoriesNavigation.addClass(HeaderCssClasses.CategoriesMenu);
     this.append(this.categoriesNavigation);
 
-    this.categoriesButton.addEventListener(Events.MouseOver, (event) => {
-      const mouseEvent = event as MouseEvent;
-      this.categoriesNavigation.show({
-        x: mouseEvent.clientX - this.categoriesButton.width,
-        y: mouseEvent.clientY - this.categoriesButton.height,
-      });
-    });
-    this.categoriesButton.addEventListener(Events.MouseOut, (event) => {
-      const mouseEvent = event as MouseEvent;
-      if (
-        !DOMComponent.FromElement(mouseEvent.relatedTarget as HTMLElement).checkSelectorMatch(
-          `.${HeaderCssClasses.CategoriesMenu}`
-        )
-      )
-        this.categoriesNavigation.hide();
+    this.categoriesButton = this.categoriesNavigation.generateHoverButton({
+      ...Header.CATEGORIES_BUTTON_PARAMS,
+      parent: this,
     });
 
-    this.userNavigation = new UserNavigation(false);
+    this.userNavigation = new UserNavigation(false); // TODO: get if user is authorized from services
     this.userNavigation.addClass(HeaderCssClasses.UserNav);
     this.append(this.userNavigation);
   }

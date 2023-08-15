@@ -33,4 +33,26 @@ export default class DropdownMenu extends DOMComponent<HTMLDivElement> {
   public hide(): void {
     this.removeClass(DropdownMenuCssClasses.MenuShown);
   }
+
+  public generateHoverButton(buttonParams: ElementParameters): DOMComponent<HTMLButtonElement> {
+    const button = new DOMComponent<HTMLButtonElement>(buttonParams);
+
+    button.addEventListener(Events.MouseOver, (event) => {
+      const mouseEvent = event as MouseEvent;
+      this.show({
+        x: mouseEvent.clientX - button.width,
+        y: mouseEvent.clientY - button.height,
+      });
+    });
+    button.addEventListener(Events.MouseOut, (event) => {
+      const mouseEvent = event as MouseEvent;
+      if (
+        !DOMComponent.FromElement(mouseEvent.relatedTarget as HTMLElement).checkSelectorMatch(
+          `.${DropdownMenuCssClasses.Menu}`
+        )
+      )
+        this.hide();
+    });
+    return button;
+  }
 }
