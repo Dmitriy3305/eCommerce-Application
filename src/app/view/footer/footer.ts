@@ -43,6 +43,7 @@ export default class Footer extends DOMComponent<HTMLElement> {
     const shopSection = new DOMComponent<HTMLElement>(Footer.SHOP_SECTION_PARAMS);
     shopSection.append(this.createAppDescriptionRow(appName, appDescription));
 
+    // TODO: Refactor this when router is implemented
     shopSection.append(this.createLinksRow('Useful Links', ['/about-us', '/products']));
 
     return shopSection;

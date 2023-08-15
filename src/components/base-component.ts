@@ -60,6 +60,10 @@ export default class DOMComponent<T extends HTMLElement> {
     return this.element.offsetHeight;
   }
 
+  public get width(): number {
+    return this.element.offsetWidth;
+  }
+
   public get fullHeight(): number {
     const marginTop = parseFloat(this.getCSSProperty('margin-top'));
     const marginBottom = parseFloat(this.getCSSProperty('margin-bottom'));
