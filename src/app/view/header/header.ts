@@ -1,4 +1,5 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
+import BurgerMenu from '../../../components/burger-menu/burger-menu';
 import DropdownMenu from '../../../components/dropdown-menu/dropdown-menu';
 import { Tags } from '../../../types/dom-types/enums';
 import HeaderLogo from './header-logo';
@@ -52,5 +53,14 @@ export default class Header extends DOMComponent<HTMLElement> {
     this.userNavigation = new UserNavigation(false); // TODO: get if user is authorized from services
     this.userNavigation.addClass(HeaderCssClasses.UserNav);
     this.append(this.userNavigation);
+
+    const body = DOMComponent.FromElement(document.body);
+    const burgerMenu = new BurgerMenu(body);
+
+    body.append(
+      burgerMenu.generateOpenButton({
+        tag: Tags.Button,
+      })
+    );
   }
 }

@@ -30,6 +30,7 @@ export enum Events {
   KeyDown = 'keydown',
   MouseOver = 'mouseover',
   MouseOut = 'mouseout',
+  TransitionEnd = 'transitionend',
 }
 
 export enum InsertPositions {

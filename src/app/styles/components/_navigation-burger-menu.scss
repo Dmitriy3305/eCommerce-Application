@@ -1,0 +1,19 @@
+.burger-menu__open-button {
+  position: fixed;
+  top: 50px;
+  left: 10%;
+  z-index: $burger-menu-button-layer;
+
+  font-size: 2.5em;
+}
+
+.burger-menu__background,
+.burger-menu {
+  z-index: $menu-layer;
+}
+
+.burger-menu {
+  width: 320px;
+  background-color: $primary-light;
+  border-right: 4px solid $primary-dark;
+}
