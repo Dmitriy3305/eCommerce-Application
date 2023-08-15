@@ -27,7 +27,12 @@ export default class HeaderLogo extends DOMComponent<HTMLElement> {
   private icon: DOMComponent<HTMLImageElement>;
 
   public constructor(logoText: string) {
-    super({});
+    super({
+      tag: Tags.Anchor,
+      attributes: {
+        href: '', // TODO: Get router link here
+      },
+    });
     this.name = new DOMComponent<HTMLHeadingElement>({
       ...HeaderLogo.NAME_PARAMS,
       textContent: logoText.replace(' ', '\n'),

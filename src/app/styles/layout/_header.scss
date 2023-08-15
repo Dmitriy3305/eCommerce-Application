@@ -32,6 +32,9 @@
   align-items: center;
   gap: 20px;
 
+  text-decoration: none;
+  color: $primary-dark;
+
   .logo__icon {
     max-height: 90%;
 
@@ -81,10 +84,14 @@
   .navigation__link {
     font-size: 2em;
     color: $primary-dark;
-    transition: color $hover-transition;
+    transition: color $hover-transition, scale $active-transition;
 
     &:hover {
       color: $secondary-yellow;
+    }
+
+    &:active {
+      scale: 0.9;
     }
   }
 
