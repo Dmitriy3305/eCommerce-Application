@@ -43,6 +43,8 @@ export default class Footer extends DOMComponent<HTMLElement> {
     const shopSection = new DOMComponent<HTMLElement>(Footer.SHOP_SECTION_PARAMS);
     shopSection.append(this.createAppDescriptionRow(appName, appDescription));
 
+    shopSection.append(this.createLinksRow('Useful Links', ['/about-us', '/products']));
+
     return shopSection;
   }
 
@@ -80,7 +82,7 @@ export default class Footer extends DOMComponent<HTMLElement> {
         new DOMComponent<HTMLAnchorElement>({
           tag: Tags.Anchor,
           classList: [FooterCssClasses.Link],
-          textContent: url.substring(0),
+          textContent: url.substring(1).replace('-', ' '),
           attributes: {
             href: url,
           },
