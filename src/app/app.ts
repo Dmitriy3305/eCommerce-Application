@@ -1,6 +1,7 @@
 import AppController from './controller/controller';
 import MainView from './view/main-view';
 import AppView from './view/view';
+import './styles/main.scss';
 
 export type AppConfig = {
   appName: string;

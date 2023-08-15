@@ -15,7 +15,7 @@ export default class HeaderLogo extends DOMComponent<HTMLElement> {
 
   private static ICON_PARAMS: ElementParameters = {
     tag: Tags.Image,
-    classList: [LogoCssClasses.Name],
+    classList: [LogoCssClasses.Icon],
     attributes: {
       src: logo,
       alt: 'App logo',
@@ -30,7 +30,7 @@ export default class HeaderLogo extends DOMComponent<HTMLElement> {
     super({});
     this.name = new DOMComponent<HTMLHeadingElement>({
       ...HeaderLogo.NAME_PARAMS,
-      textContent: logoText,
+      textContent: logoText.replace(' ', '\n'),
       parent: this,
     });
     this.icon = new DOMComponent<HTMLImageElement>({ ...HeaderLogo.ICON_PARAMS, parent: this });
