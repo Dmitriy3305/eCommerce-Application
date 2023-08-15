@@ -18,6 +18,7 @@ export enum Tags {
   Image = 'img',
   Navigation = 'nav',
   Anchor = 'a',
+  Section = 'section',
 }
 
 export enum Events {

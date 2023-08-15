@@ -17,7 +17,7 @@ export default abstract class AppView {
 
   public abstract get pageName(): string;
 
-  public constructor(appName: string) {
+  public constructor(appName: string, appDescription: string) {
     this.body = DOMComponent.FromElement(document.body);
     this.setPageName(appName);
 
@@ -28,7 +28,7 @@ export default abstract class AppView {
     this.main.addClass(ViewCssClasses.Main);
     this.body.append(this.main);
 
-    this.footer = new Footer();
+    this.footer = new Footer(appName, appDescription);
     this.body.append(this.footer);
   }
 

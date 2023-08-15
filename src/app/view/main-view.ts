@@ -7,8 +7,8 @@ export default class MainView extends AppView {
     return 'Main';
   }
 
-  public constructor(appName: string) {
-    super(appName);
+  public constructor(appName: string, appDescription: string) {
+    super(appName, appDescription);
   }
 
   protected createMain(): DOMComponent<HTMLElement> {

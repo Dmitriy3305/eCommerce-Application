@@ -6,7 +6,7 @@
   @include shadow();
 
   width: 100%;
-  height: 150px;
+  height: $header-height;
 
   display: flex;
   justify-content: space-between;
@@ -44,7 +44,9 @@
   font-size: 1.5em;
 
   border-bottom: 2px solid transparent;
-  transition: color $hover-transition, border-color $hover-transition;
+  transition:
+    color $hover-transition,
+    border-color $hover-transition;
 
   &:hover {
     color: $primary-dark;
