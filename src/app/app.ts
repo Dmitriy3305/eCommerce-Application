@@ -1,7 +1,7 @@
 import AppController from './controller/controller';
-import MainView from './view/main-view';
 import AppView from './view/view';
 import './styles/main.scss';
+import AppRouter from './router';
 
 export type AppConfig = {
   appName: string;
@@ -13,8 +13,11 @@ export default class App {
 
   private controller: AppController;
 
+  private router: AppRouter;
+
   public constructor(config: AppConfig) {
-    this.view = new MainView(config.appName, config.description); // Routing should go here, main is start by default
+    this.router = new AppRouter(false);
+    this.view = this.router.getView(config.appName, config.description);
     this.controller = new AppController(); // Some implementation needed here
   }
 

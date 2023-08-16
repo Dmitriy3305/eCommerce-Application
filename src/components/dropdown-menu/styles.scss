@@ -1,13 +1,9 @@
-.dropdown-menu {
-  position: fixed;
+.dropdown-menu__content {
+  height: 0;
+  overflow: hidden;
+  transition: height var(--open-transition);
 
-  pointer-events: none;
-
-  opacity: 0;
-  transition: opacity var(--appear-time) ease-in-out;
-
-  &_shown {
-    pointer-events: all;
-    opacity: 1;
+  &_expanded {
+    height: var(--full-height);
   }
 }

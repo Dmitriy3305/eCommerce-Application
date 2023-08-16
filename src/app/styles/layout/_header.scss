@@ -27,24 +27,12 @@
   width: max(30%, 250px);
   height: 100%;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
+  @include app-logo();
 
-  text-decoration: none;
-  color: $primary-dark;
-
-  .logo__icon {
-    max-height: 90%;
-
-    @media (max-width: $desktop-width) {
+  @media (max-width: $desktop-width) {
+    .logo__icon {
       max-height: 75%;
     }
-  }
-
-  .logo__name {
-    text-transform: uppercase;
   }
 }
 
@@ -83,18 +71,6 @@
 
   .navigation__link {
     font-size: 2em;
-    color: $primary-dark;
-    transition:
-      color $hover-transition,
-      scale $active-transition;
-
-    &:hover {
-      color: $secondary-yellow;
-    }
-
-    &:active {
-      scale: 0.9;
-    }
   }
 
   @media (max-width: $mobile-width) {

@@ -60,19 +60,10 @@
 .shop-link {
   color: darken($secondary-light, 10);
   text-transform: capitalize;
-  text-decoration: none;
-
-  transition:
-    color $hover-transition,
-    scale $active-transition;
 
   &:hover {
     color: $primary-light;
     text-decoration: underline;
-  }
-
-  &:active {
-    scale: 0.9;
   }
 }
 

@@ -1,4 +1,5 @@
-.burger-menu, .burger-menu__background {
+.burger-menu,
+.burger-menu__background {
   position: fixed;
   top: 0;
   left: 0;
@@ -25,7 +26,7 @@
 
   &_shown {
     opacity: 1;
-  }  
+  }
 }
 
 .burger-menu__open-button {
@@ -34,7 +35,7 @@
   border: none;
   outline: none;
 
-  @media(max-width: 500px) {
+  @media (max-width: 500px) {
     display: inline-block;
     transform: none;
     transition: transform var(--open-transition);

@@ -1,7 +1,7 @@
 .burger-menu__open-button {
   position: fixed;
   top: 50px;
-  left: 10%;
+  left: 10px;
   z-index: $burger-menu-button-layer;
 
   font-size: 2.5em;
@@ -16,4 +16,82 @@
   width: 320px;
   background-color: $primary-light;
   border-right: 4px solid $primary-dark;
+}
+
+.mobile-navigation {
+  $height: 40%;
+  $width: 80%;
+
+  height: $height;
+  width: $width;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1em;
+
+  @include centered($width, $height);
+
+  font-size: 2em;
+
+  .navigation__link {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.25em;
+  }
+
+  .dropdown-menu__open {
+    border: none;
+    outline: none;
+    background: transparent;
+
+    color: $primary-dark;
+
+    i {
+      margin-left: 0.25em;
+      transition: transform $active-transition;
+    }
+  }
+
+  .dropdown-menu:has(.dropdown-menu__content_expanded) {
+    .dropdown-menu__open i {
+      transform: rotate(180deg);
+    }
+  }
+
+  .dropdown-menu__content {
+    margin-top: 0.25em;
+
+    display: flex;
+    flex-direction: column;
+    text-transform: capitalize;
+    gap: 0.25em;
+
+    font-size: 0.7em;
+    padding-left: 0.5em;
+
+    &_expanded {
+      overflow-y: auto;
+    }
+
+
+  }
+}
+
+.mobile-menu__logo {
+  position: absolute;
+  top: 7%;
+  right: 10%;
+
+  height: 50px;
+
+  padding: 0 0.5em;
+  border: 3px solid $primary-dark;
+  border-radius: 50px;
+
+  font-size: 0.75em;
+
+  @include app-logo();
+  gap: 0;
 }

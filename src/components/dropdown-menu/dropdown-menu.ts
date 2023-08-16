@@ -1,58 +1,59 @@
-import { Events } from '../../types/dom-types/enums';
+import { Events, Tags } from '../../types/dom-types/enums';
 import DOMComponent, { ElementParameters } from '../base-component';
 import './styles.scss';
 
 enum DropdownMenuCssClasses {
   Menu = 'dropdown-menu',
-  MenuShown = 'dropdown-menu_shown',
+  OpenButton = 'dropdown-menu__open',
+  ContentBody = 'dropdown-menu__content',
+  ContentBodyExpanded = 'dropdown-menu__content_expanded',
 }
 
 export default class DropdownMenu extends DOMComponent<HTMLDivElement> {
-  private static MENU_PARAMS: ElementParameters = {
-    classList: [DropdownMenuCssClasses.Menu],
+  private static OPEN_BUTTON_PARAMS: ElementParameters = {
+    tag: Tags.Button,
+    classList: [DropdownMenuCssClasses.OpenButton],
   };
 
-  private static OPACITY_TRANSITION_TIME = 500;
+  private static OPEN_TRANSITION_PARAMS = '500ms ease-in-out';
 
-  private static APPEAR_TIME_CSS_PROPERTY = '--appear-time';
+  private static OPEN_TRANSITION_CSS_PROPERTY = '--open-transition';
 
-  public constructor() {
-    super(DropdownMenu.MENU_PARAMS);
-    this.setCSSProperty(DropdownMenu.APPEAR_TIME_CSS_PROPERTY, `${DropdownMenu.OPACITY_TRANSITION_TIME}ms`);
+  private static FULL_HEIGHT_CSS_PROPERTY = '--full-height';
 
-    this.addEventListener(Events.MouseOut, () => this.hide());
-  }
+  protected openButton: DOMComponent<HTMLButtonElement>;
 
-  public show(coordinates: { x: number; y: number }): void {
-    this.setCSSProperty('left', `${coordinates.x}px`);
-    this.setCSSProperty('top', `${coordinates.y}px`);
+  protected contentBody: DOMComponent<HTMLElement>;
 
-    this.addClass(DropdownMenuCssClasses.MenuShown);
-  }
-
-  public hide(): void {
-    this.removeClass(DropdownMenuCssClasses.MenuShown);
-  }
-
-  public generateHoverButton(buttonParams: ElementParameters): DOMComponent<HTMLButtonElement> {
-    const button = new DOMComponent<HTMLButtonElement>(buttonParams);
-
-    button.addEventListener(Events.MouseOver, (event) => {
-      const mouseEvent = event as MouseEvent;
-      this.show({
-        x: mouseEvent.clientX - button.width,
-        y: mouseEvent.clientY - button.height,
-      });
+  public constructor(title: string, fullHeight: number, content: DOMComponent<HTMLElement>[]) {
+    super({
+      classList: [DropdownMenuCssClasses.Menu],
     });
-    button.addEventListener(Events.MouseOut, (event) => {
-      const mouseEvent = event as MouseEvent;
-      if (
-        !DOMComponent.FromElement(mouseEvent.relatedTarget as HTMLElement).checkSelectorMatch(
-          `.${DropdownMenuCssClasses.Menu}`
-        )
-      )
-        this.hide();
+
+    this.openButton = new DOMComponent<HTMLButtonElement>({
+      ...DropdownMenu.OPEN_BUTTON_PARAMS,
+      textContent: title,
+      parent: this,
     });
-    return button;
+    this.openButton.addEventListener(Events.Click, () => {
+      if (this.contentBody.checkSelectorMatch(`.${DropdownMenuCssClasses.ContentBodyExpanded}`)) this.close();
+      else this.open();
+    });
+
+    this.contentBody = new DOMComponent<HTMLElement>({
+      classList: [DropdownMenuCssClasses.ContentBody],
+      parent: this,
+    });
+    this.contentBody.setCSSProperty(DropdownMenu.OPEN_TRANSITION_CSS_PROPERTY, DropdownMenu.OPEN_TRANSITION_PARAMS);
+    this.contentBody.append(...content);
+    this.contentBody.setCSSProperty(DropdownMenu.FULL_HEIGHT_CSS_PROPERTY, `${fullHeight}px`);
+  }
+
+  public open(): void {
+    this.contentBody.addClass(DropdownMenuCssClasses.ContentBodyExpanded);
+  }
+
+  public close(): void {
+    this.contentBody.removeClass(DropdownMenuCssClasses.ContentBodyExpanded);
   }
 }

@@ -1,8 +1,8 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import BurgerMenu from '../../../components/burger-menu/burger-menu';
-import DropdownMenu from '../../../components/dropdown-menu/dropdown-menu';
+import HoverMenu from '../../../components/hover-menu/hover-menu';
 import { Tags } from '../../../types/dom-types/enums';
 import HeaderLogo from './header-logo';
+import MobileNavigation from './mobile-navigation';
 import UserNavigation from './user-navigation';
 
 enum HeaderCssClasses {
@@ -30,7 +30,7 @@ export default class Header extends DOMComponent<HTMLElement> {
 
   private categoriesButton: DOMComponent<HTMLButtonElement>;
 
-  private categoriesNavigation: DropdownMenu;
+  private categoriesNavigation: HoverMenu;
 
   private userNavigation: UserNavigation;
 
@@ -41,7 +41,7 @@ export default class Header extends DOMComponent<HTMLElement> {
     this.logo.addClass(HeaderCssClasses.Logo);
     this.append(this.logo);
 
-    this.categoriesNavigation = new DropdownMenu();
+    this.categoriesNavigation = new HoverMenu();
     this.categoriesNavigation.addClass(HeaderCssClasses.CategoriesMenu);
     this.append(this.categoriesNavigation);
 
@@ -50,12 +50,12 @@ export default class Header extends DOMComponent<HTMLElement> {
       parent: this,
     });
 
-    this.userNavigation = new UserNavigation(false); // TODO: get if user is authorized from services
+    this.userNavigation = new UserNavigation(); // TODO: get if user is authorized from services
     this.userNavigation.addClass(HeaderCssClasses.UserNav);
     this.append(this.userNavigation);
 
     const body = DOMComponent.FromElement(document.body);
-    const burgerMenu = new BurgerMenu(body);
+    const burgerMenu = new MobileNavigation(body);
 
     body.append(
       burgerMenu.generateOpenButton({
