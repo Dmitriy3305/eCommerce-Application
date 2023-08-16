@@ -3,8 +3,8 @@ a {
   color: $primary-dark;
 
   transition:
-  color $hover-transition,
-  scale $active-transition;
+    color $hover-transition,
+    scale $active-transition;
 
   &:hover {
     color: $secondary-yellow;
