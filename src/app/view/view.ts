@@ -1,5 +1,6 @@
 import DOMComponent, { ElementParameters } from '../../components/base-component';
-import { Tags } from '../../types/dom-types/enums';
+import { InsertPositions, Tags } from '../../types/dom-types/enums';
+import AppRouter from '../router/router';
 
 enum ViewCssClasses {
   Header = 'header',
@@ -18,25 +19,34 @@ export default abstract class AppView {
     classList: [ViewCssClasses.Footer],
   };
 
-  protected body: DOMComponent<HTMLElement>;
+  private static HEADER: DOMComponent<HTMLElement> | null;
 
-  protected header: DOMComponent<HTMLElement>;
+  private static FOOTER: DOMComponent<HTMLElement> | null;
+
+  protected body: DOMComponent<HTMLElement>;
 
   protected main: DOMComponent<HTMLElement>;
 
-  protected footer: DOMComponent<HTMLElement>;
+  protected router: AppRouter;
 
-  public constructor() {
+  public constructor(router: AppRouter) {
+    this.router = router;
+
     this.body = DOMComponent.FromElement(document.body);
 
-    this.header = new DOMComponent<HTMLElement>({ ...AppView.HEADER_PARAMS, parent: this.body });
+    if (!AppView.HEADER)
+      AppView.HEADER = new DOMComponent<HTMLElement>({ ...AppView.HEADER_PARAMS, parent: this.body });
+    if (!AppView.FOOTER)
+      AppView.FOOTER = new DOMComponent<HTMLElement>({ ...AppView.FOOTER_PARAMS, parent: this.body });
 
     this.main = this.createMain();
     this.main.addClass(ViewCssClasses.Main);
-    this.body.append(this.main);
-
-    this.footer = new DOMComponent<HTMLElement>({ ...AppView.FOOTER_PARAMS, parent: this.body });
+    AppView.FOOTER.insert(InsertPositions.Before, this.main);
   }
 
   protected abstract createMain(): DOMComponent<HTMLElement>;
+
+  public clear(): void {
+    this.main.remove();
+  }
 }

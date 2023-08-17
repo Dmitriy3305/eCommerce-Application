@@ -29,10 +29,12 @@ export default class App {
   private setupRouter(): AppRouter {
     const routes = new Map<AppLink, (resource?: string) => void>();
     routes.set(AppLink.Main, () => {
-      this.view = new MainView();
+      this.view?.clear();
+      this.view = new MainView(this.router);
     });
     routes.set(AppLink.Profile, () => {
-      this.view = new ProfileView();
+      this.view?.clear();
+      this.view = new ProfileView(this.router);
     });
 
     const router = new AppRouter(routes, this.controller.isAuthorized, this.config.appName);

@@ -1,9 +1,8 @@
-import { AppLink, RouterLink } from './router-types';
+import { Events } from '../../types/dom-types/enums';
+import { AppLink } from './router-types';
 
 export default class AppRouter {
   private routeCallbacks: Map<AppLink, (resource?: string) => void>;
-
-  private isAuthorized: boolean;
 
   private appName: string;
 
@@ -12,33 +11,17 @@ export default class AppRouter {
     isAuthorized: boolean,
     appName: string
   ) {
-    this.isAuthorized = isAuthorized;
     this.routeCallbacks = routeCallbacks;
     this.appName = appName;
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener(Events.ContentLoaded, () => {
       this.navigate('');
     });
 
-    window.addEventListener('popstate', (event) => {
+    window.addEventListener(Events.Popstate, (event) => {
       const params = (event as PopStateEvent).state;
       this.navigate(params);
     });
-  }
-
-  public set authorized(value: boolean) {
-    this.isAuthorized = value;
-  }
-
-  public get navigationLinks(): RouterLink[] {
-    const links: RouterLink[] = Object.entries(AppLink).map((pair) => {
-      return { description: pair[0], url: `/${pair[1]}` };
-    });
-    return this.isAuthorized
-      ? links.filter((link) => link.description === 'Profile' || link.description === 'Cart')
-      : links.filter(
-          (link) => link.description !== 'Profile' && link.description !== 'NotFound' && link.description !== 'Main'
-        );
   }
 
   public navigate(url: PopStateEvent | string): void {

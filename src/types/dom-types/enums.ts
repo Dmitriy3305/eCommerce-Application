@@ -15,6 +15,7 @@ export enum Tags {
   Heading3 = 'h3',
   Label = 'label',
   Code = 'code',
+  Anchor = 'a',
 }
 
 export enum Events {
@@ -26,6 +27,8 @@ export enum Events {
   KeyDown = 'keydown',
   MouseOver = 'mouseover',
   MouseOut = 'mouseout',
+  ContentLoaded = 'DOMContentLoaded',
+  Popstate = 'popstate',
 }
 
 export enum InsertPositions {
