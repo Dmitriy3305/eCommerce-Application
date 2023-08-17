@@ -31,6 +31,8 @@ export enum Events {
   MouseOver = 'mouseover',
   MouseOut = 'mouseout',
   TransitionEnd = 'transitionend',
+  ContentLoaded = 'DOMContentLoaded',
+  Popstate = 'popstate',
 }
 
 export enum InsertPositions {

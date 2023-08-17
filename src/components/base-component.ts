@@ -78,6 +78,10 @@ export default class DOMComponent<T extends HTMLElement> {
     node.parentNode?.insertBefore(this.element, node);
   }
 
+  public insert(position: InsertPositions, element: DOMComponent<HTMLElement>): void {
+    this.element.insertAdjacentElement(position, element.element);
+  }
+
   public prepend(...elements: (HTMLElement | DOMComponent<HTMLElement>)[]): void {
     elements.forEach((element) => {
       if (element instanceof DOMComponent) this.element.prepend(element.element);

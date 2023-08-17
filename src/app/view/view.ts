@@ -1,41 +1,40 @@
 import DOMComponent from '../../components/base-component';
 import Footer from './footer/footer';
 import Header from './header/header';
+import { InsertPositions } from '../../types/dom-types/enums';
+import AppRouter from '../router/router';
 
 enum ViewCssClasses {
   Main = 'main',
 }
 
 export default abstract class AppView {
-  protected body: DOMComponent<HTMLElement>;
+  private static HEADER: Header | null;
 
-  protected header: Header;
+  private static FOOTER: Footer | null;
+
+  protected body: DOMComponent<HTMLElement>;
 
   protected main: DOMComponent<HTMLElement>;
 
-  protected footer: Footer;
+  protected router: AppRouter;
 
-  public abstract get pageName(): string;
-
-  public constructor(appName: string, appDescription: string) {
+  public constructor(router: AppRouter, appName: string) {
     this.body = DOMComponent.FromElement(document.body);
-    this.setPageName(appName);
 
-    this.header = new Header(appName);
-    this.body.append(this.header);
+    if (!AppView.HEADER)
+      AppView.HEADER = new Header();
+    if (!AppView.FOOTER)
+      AppView.FOOTER = new Footer();
 
     this.main = this.createMain();
     this.main.addClass(ViewCssClasses.Main);
-    this.body.append(this.main);
-
-    this.footer = new Footer(appName, appDescription);
-    this.body.append(this.footer);
+    AppView.FOOTER.insert(InsertPositions.Before, this.main);
   }
 
   protected abstract createMain(): DOMComponent<HTMLElement>;
 
-  // Should go to router?
-  private setPageName(appName: string): void {
-    document.title = `${appName} | ${this.pageName}`;
+  public clear(): void {
+    this.main.remove();
   }
 }

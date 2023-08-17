@@ -3,12 +3,12 @@ import { Tags } from '../../types/dom-types/enums';
 import AppRouter from '../router/router';
 import AppView from './view';
 
-export default class MainView extends AppView {
+export default class ProfileView extends AppView {
   public constructor(router: AppRouter) {
     super(router);
   }
 
-  protected createMain(): DOMComponent<HTMLElement> {
+  protected override createMain(): DOMComponent<HTMLElement> {
     const main = new DOMComponent<HTMLElement>({
       tag: Tags.Main,
     });
