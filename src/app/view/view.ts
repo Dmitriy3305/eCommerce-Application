@@ -26,11 +26,8 @@ export default abstract class AppView {
 
   protected footer: DOMComponent<HTMLElement>;
 
-  public abstract get pageName(): string;
-
-  public constructor(appName: string) {
+  public constructor() {
     this.body = DOMComponent.FromElement(document.body);
-    this.setPageName(appName);
 
     this.header = new DOMComponent<HTMLElement>({ ...AppView.HEADER_PARAMS, parent: this.body });
 
@@ -42,9 +39,4 @@ export default abstract class AppView {
   }
 
   protected abstract createMain(): DOMComponent<HTMLElement>;
-
-  // Should go to router?
-  private setPageName(appName: string): void {
-    document.title = `${appName} | ${this.pageName}`;
-  }
 }

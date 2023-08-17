@@ -1,5 +1,8 @@
 import AppController from './controller/controller';
+import AppRouter from './router/router';
+import { AppLink } from './router/router-types';
 import MainView from './view/main-view';
+import ProfileView from './view/profile-view';
 import AppView from './view/view';
 
 export type AppConfig = {
@@ -7,14 +10,32 @@ export type AppConfig = {
 };
 
 export default class App {
-  private view: AppView;
+  private config: AppConfig;
+
+  private view?: AppView;
 
   private controller: AppController;
 
+  private router: AppRouter;
+
   public constructor(config: AppConfig) {
-    this.view = new MainView(config.appName); // Routing should go here, main is start by default
+    this.config = config;
     this.controller = new AppController(); // Some implementation needed here
+    this.router = this.setupRouter();
   }
 
   public start(): void {}
+
+  private setupRouter(): AppRouter {
+    const routes = new Map<AppLink, (resource?: string) => void>();
+    routes.set(AppLink.Main, () => {
+      this.view = new MainView();
+    });
+    routes.set(AppLink.Profile, () => {
+      this.view = new ProfileView();
+    });
+
+    const router = new AppRouter(routes, this.controller.isAuthorized, this.config.appName);
+    return router;
+  }
 }
