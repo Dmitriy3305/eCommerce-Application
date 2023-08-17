@@ -1,8 +1,17 @@
 import DOMComponent from './base-component';
 import { Tags } from '../types/dom-types/enums';
 import AppView from '../app/view/view';
+import InputDomComponents from './input-components';
 
 export default class LoginMainView extends AppView {
+  public inputEmail!: InputDomComponents;
+
+  public inputPassword!: InputDomComponents;
+
+  public messageField!: DOMComponent<HTMLSpanElement>;
+
+  public btnShowPassword!: DOMComponent<HTMLButtonElement>;
+
   public get pageName(): string {
     return 'main-login';
   }
@@ -32,10 +41,20 @@ export default class LoginMainView extends AppView {
       parent: loginForm,
     });
 
-    const inputEmail = new DOMComponent<HTMLInputElement>({
-      tag: Tags.Input,
-      attributes: { id: 'input-email', type: 'text', placeholder: 'Email' },
+    this.inputEmail = new InputDomComponents({
+      attributes: {
+        id: 'input-email',
+        type: 'email',
+        placeholder: 'Email',
+      },
       parent: loginForm,
+    });
+
+    this.messageField = new DOMComponent<HTMLSpanElement>({
+      tag: Tags.Span,
+      classList: ['message-field'],
+      parent: loginForm,
+      textContent: ' ',
     });
 
     const labelPassword = new DOMComponent<HTMLLabelElement>({
@@ -45,11 +64,22 @@ export default class LoginMainView extends AppView {
       parent: loginForm,
     });
 
-    const inputPassword = new DOMComponent<HTMLInputElement>({
-      tag: Tags.Input,
+    const inputPasswordContainer = new DOMComponent<HTMLDivElement>({
+      tag: Tags.Div,
+      classList: ['input-password-container'],
+      parent: loginForm
+    })
+
+    this.inputPassword = new InputDomComponents({
       attributes: { id: 'input-password', type: 'password', placeholder: 'Password' },
-      parent: loginForm,
+      parent: inputPasswordContainer,
     });
+
+    this.btnShowPassword = new DOMComponent<HTMLButtonElement>({
+      tag: Tags.Button,
+      classList: ['btn-show-password'],
+      parent: inputPasswordContainer,
+    })
 
     const loginButton = new DOMComponent<HTMLButtonElement>({
       tag: Tags.Button,
@@ -57,8 +87,6 @@ export default class LoginMainView extends AppView {
       textContent: 'Sign in',
       parent: loginForm,
     });
-    loginForm.append(labelEmail, inputEmail, labelPassword, inputPassword, loginButton);
-    main.append(title, loginForm);
 
     return main;
   }

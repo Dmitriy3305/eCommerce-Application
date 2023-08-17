@@ -3,6 +3,8 @@ import AppController from './controller/controller';
 import AppView from './view/view';
 import LoginMainView from '../components/login-main-view';
 import './styles/main.scss';
+import './api/products';
+import './controller/validationForms';
 
 export type AppConfig = {
   appName: string;
