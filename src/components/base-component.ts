@@ -1,4 +1,4 @@
-import { Tags, Events, InsertPositions } from '../types/dom-types/enums';
+import { Tags, Events, InsertPositions, NodeTypes } from '../types/dom-types/enums';
 import { AnimationParams } from '../types/dom-types/types';
 
 export type ElementParameters = Partial<{
@@ -134,6 +134,11 @@ export default class DOMComponent<T extends HTMLElement> {
 
   public addText(text: string) {
     this.element.append(document.createTextNode(text));
+  }
+
+  public removeText() {
+    const nodes = Array.from(this.element.childNodes).filter((node) => node.nodeType === NodeTypes.TextNode);
+    nodes.forEach((textNode) => textNode.remove());
   }
 
   public remove(): void {

@@ -44,14 +44,19 @@ export default class Header extends RoutedComponent {
 
   private userNavigation: UserNavigation;
 
+  private burgerMenu: MobileNavigation;
+
+  private router: AppRouter;
+
   public constructor(router: AppRouter, appName: string) {
     super(Header.HEADER_PARAMS);
+    this.router = router;
     this.links = new Map();
 
     this.logo = new HeaderLogo(router, appName);
     this.logo.addClass(HeaderCssClasses.Logo);
     this.append(this.logo);
-    this.links.set(AppLink.Main, [this.logo]);
+    this.links.set(AppLink.Main, this.logo);
 
     this.categoriesNavigation = new HoverMenu();
     this.categoriesNavigation.addClass(HeaderCssClasses.CategoriesMenu);
@@ -63,21 +68,38 @@ export default class Header extends RoutedComponent {
     });
 
     const linkCallback: LinkCreateCallback = (url: AppLink, link: DOMComponent<HTMLElement>) => {
-      const links = this.links.get(url);
       this.links.set(url, link);
-    }
-      
-    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS, linkCallback); // TODO: get if user is authorized from services
-    this.userNavigation.addClass(HeaderCssClasses.UserNav);
-    this.append(this.userNavigation);
+    };
+    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS.slice(1), linkCallback); // TODO: get if user is authorized from services
+    this.burgerMenu = this.createBurgerMenu();
+  }
 
+  public override switchActiveLink(url: AppLink): void {
+    super.switchActiveLink(url);
+
+    if (this.burgerMenu.isShown) this.burgerMenu.hide();
+  }
+
+  private createBurgerMenu(): MobileNavigation {
+    const mobileMediaQuery = matchMedia('(max-width: 500px)');
     const body = DOMComponent.FromElement(document.body);
-    const burgerMenu = new MobileNavigation(router, Header.NOT_AUTH_LINKS, linkCallback, body);
+    const burgerMenu = new MobileNavigation(this.router, body);
+    const openButton = burgerMenu.generateOpenButton({ tag: Tags.Button });
 
-    body.append(
-      burgerMenu.generateOpenButton({
-        tag: Tags.Button,
-      })
-    );
+    const mediaQueryChangeHandler = () => {
+      if (mobileMediaQuery.matches) {
+        body.append(openButton);
+        this.userNavigation.removeClass(HeaderCssClasses.UserNav);
+        burgerMenu.userNavigation = this.userNavigation;
+      } else {
+        openButton.remove();
+        burgerMenu.removeNavigation();
+        this.userNavigation.addClass(HeaderCssClasses.UserNav);
+        this.append(this.userNavigation);
+      }
+    };
+    mobileMediaQuery.addEventListener('change', mediaQueryChangeHandler);
+    mediaQueryChangeHandler();
+    return burgerMenu;
   }
 }

@@ -61,7 +61,8 @@
   color: darken($secondary-light, 10);
   text-transform: capitalize;
 
-  &:hover, &[disabled] {
+  &:hover,
+  &[disabled] {
     color: $primary-light;
     text-decoration: underline;
   }

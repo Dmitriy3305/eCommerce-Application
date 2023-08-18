@@ -52,11 +52,15 @@ export default class BurgerMenu extends DOMComponent<HTMLElement> {
     this.removeClass(BurgerMenuCssClasses.BurgerMenuShown);
     this.background.removeClass(BurgerMenuCssClasses.BurgerMenuBackgroundShown);
 
-    const removeHandler = () => {
-      this.remove();
-      this.background.remove();
-      this.parent.removeCSSProperty('overflow');
-      this.removeEventListener(Events.TransitionEnd, removeHandler);
+    const removeHandler = (event: Event) => {
+      if (
+        DOMComponent.FromElement(event.target as HTMLElement).checkSelectorMatch(`.${BurgerMenuCssClasses.BurgerMenu}`)
+      ) {
+        this.remove();
+        this.background.remove();
+        this.parent.removeCSSProperty('overflow');
+        this.removeEventListener(Events.TransitionEnd, removeHandler);
+      }
     };
     this.addEventListener(Events.TransitionEnd, removeHandler);
   }
@@ -74,16 +78,22 @@ export default class BurgerMenu extends DOMComponent<HTMLElement> {
 
     button.addEventListener(Events.Click, () => {
       if (this.isShown) {
-        button.removeClass(BurgerMenuCssClasses.BurgerMenuButtonClicked);
         this.hide();
       } else {
-        button.addClass(BurgerMenuCssClasses.BurgerMenuButtonClicked);
         this.show();
       }
     });
 
-    this.background.addEventListener(Events.Click, () => {
-      button.removeClass(BurgerMenuCssClasses.BurgerMenuButtonClicked);
+    this.addEventListener(Events.TransitionStart, (event: Event) => {
+      if (
+        DOMComponent.FromElement(event.target as HTMLElement).checkSelectorMatch(`.${BurgerMenuCssClasses.BurgerMenu}`)
+      ) {
+        if (this.isShown) {
+          button.addClass(BurgerMenuCssClasses.BurgerMenuButtonClicked);
+        } else {
+          button.removeClass(BurgerMenuCssClasses.BurgerMenuButtonClicked);
+        }
+      }
     });
 
     button.setCSSProperty(BurgerMenu.OPEN_TRANSITION_CSS_PROPERTY, BurgerMenu.OPEN_TRANSITION_PARAMS);

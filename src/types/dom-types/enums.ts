@@ -30,6 +30,7 @@ export enum Events {
   KeyDown = 'keydown',
   MouseOver = 'mouseover',
   MouseOut = 'mouseout',
+  TransitionStart = 'transitionstart',
   TransitionEnd = 'transitionend',
   ContentLoaded = 'DOMContentLoaded',
   Popstate = 'popstate',

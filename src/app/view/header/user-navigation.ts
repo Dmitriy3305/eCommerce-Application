@@ -1,6 +1,7 @@
 import Navigation from '../../../components/navigation';
 import { LinkCreateCallback } from '../../../types/header-types';
 import capitalizeString from '../../../utils/capitalize-string';
+import { getEnumKey } from '../../../utils/enum-utils';
 import getLinkIcon from '../../../utils/get-link-icon';
 import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
@@ -24,7 +25,14 @@ export default class UserNavigation extends Navigation {
     });
   }
 
-  public addLinkTexts(texts: string[]): void {
-    this.links.forEach((link, index) => link.addText(texts[index]));
+  public addLinkTexts(): void {
+    const descriptions = this.linkDescriptions.map((link) => getEnumKey(AppLink, link) || '???');
+    this.links.forEach((link, index) => link.addText(descriptions[index]));
+  }
+
+  public removeLinkTexts(): void {
+    this.links.forEach((link) => {
+      link.removeText();
+    });
   }
 }
