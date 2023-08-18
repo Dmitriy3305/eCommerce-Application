@@ -1,0 +1,130 @@
+.section__slider {
+  position: relative;
+  background-color: #ffffff;
+  padding-top: 2rem;
+  .title__slider {
+    font-family: $BOLD-FONT, sans-serif;
+    color: $primary-color;
+    font-size: 2.5rem;
+    line-height: 3rem;
+    letter-spacing: 0.06em;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .slider__container {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 53px;
+    justify-content: center;
+    margin-top: 2rem;
+    .btn__arrow {
+      position: absolute;
+      background-color: inherit;
+      width: 40px;
+      height: 40px;
+      border-top: 7px solid $primary-color;
+      border-right: 7px solid $primary-color;
+      border-left: none;
+      border-bottom: none;
+      top: 40%;
+      transition: transform 0.2s;
+    }
+  }
+  .btn__arrow:hover {
+    cursor: pointer;
+  }
+  .card__product {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 3rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    justify-content: center;
+  }
+}
+#left {
+  left: -3rem;
+}
+
+#right {
+  right: -3rem;
+}
+
+.slider__container > .btn__arrow:first-child {
+  transform: rotate(-135deg);
+}
+.slider__container > .btn__arrow:last-child {
+  transform: rotate(45deg);
+}
+
+.card__product:hover {
+  cursor: pointer;
+}
+
+.slider__container {
+  max-width: 70vw;
+  position: relative;
+  padding: 0 1rem;
+}
+.wrapper__photo {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.slider__photo {
+  scroll-behavior: smooth;
+  overflow: hidden;
+  display: flex;
+  gap: 30px;
+}
+.slider__product {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.card__product {
+  min-width: 17rem;
+  min-height: 25rem;
+}
+
+.name__product {
+  font-family: $MAIN-FONT;
+  font-size: 1.5rem;
+  white-space: normal;
+  text-align: center;
+  color: $primary-color;
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .slider__container {
+    max-width: 64vw;
+  }
+  .title__slider {
+    font-size: 1.8rem;
+  }
+  .name__product {
+    font-size: 1.1rem;
+  }
+  .btn__arrow {
+    width: 35px;
+    height: 35px;
+  }
+}
+@media (max-width: 767px) {
+  .slider__container {
+    max-width: 43vw;
+  }
+  .title__slider {
+    font-size: 0.5rem;
+  }
+  .name__product {
+    font-size: 0.9rem;
+  }
+  .btn__arrow {
+    width: 20px;
+    height: 20px;
+  }
+}

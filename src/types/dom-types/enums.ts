@@ -15,6 +15,9 @@ export enum Tags {
   Heading3 = 'h3',
   Label = 'label',
   Code = 'code',
+  Section = 'section',
+  Container = 'container',
+  Image = 'img',
 }
 
 export enum Events {
@@ -26,6 +29,7 @@ export enum Events {
   KeyDown = 'keydown',
   MouseOver = 'mouseover',
   MouseOut = 'mouseout',
+  Animationend = 'animationend',
 }
 
 export enum InsertPositions {
