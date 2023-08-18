@@ -1,6 +1,8 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import { Tags } from '../../../types/dom-types/enums';
+import { Events, Tags } from '../../../types/dom-types/enums';
 import logo from '../../../assets/images/logo-color.svg';
+import { AppLink } from '../../router/router-types';
+import AppRouter from '../../router/router';
 
 enum LogoCssClasses {
   Name = 'logo__name',
@@ -26,13 +28,14 @@ export default class HeaderLogo extends DOMComponent<HTMLElement> {
 
   private icon: DOMComponent<HTMLImageElement>;
 
-  public constructor(logoText: string) {
+  public constructor(router: AppRouter, logoText: string) {
     super({
       tag: Tags.Anchor,
-      attributes: {
-        href: '', // TODO: Get router link here
-      },
     });
+    this.addEventListener(Events.Click, () => {
+      router.navigate(AppLink.Main);
+    });
+
     this.name = new DOMComponent<HTMLHeadingElement>({
       ...HeaderLogo.NAME_PARAMS,
       textContent: logoText.replace(' ', '\n'),

@@ -1,9 +1,13 @@
-import { Tags } from '../types/dom-types/enums';
+import { Events, Tags } from '../types/dom-types/enums';
 import DOMComponent, { ElementParameters } from './base-component';
 
 enum NavigationCssClasses {
   Container = 'navigation',
   Link = 'navigation__link',
+}
+
+interface Router {
+  navigate: (url: string) => void;
 }
 
 export default class Navigation extends DOMComponent<HTMLElement> {
@@ -18,17 +22,20 @@ export default class Navigation extends DOMComponent<HTMLElement> {
 
   protected links: DOMComponent<HTMLAnchorElement>[];
 
-  public constructor(links: string[]) {
+  public constructor(links: string[], router?: Router) {
     super(Navigation.ELEMENT_PARAMS);
-    this.links = links.map(
-      (linkURL) =>
-        new DOMComponent<HTMLAnchorElement>({
-          ...Navigation.LINK_PARAMS,
-          attributes: {
-            href: linkURL,
-          },
-          parent: this,
-        })
-    );
+    this.links = links.map((linkURL) => {
+      const attributes = router ? undefined : { href: linkURL };
+      const link = new DOMComponent<HTMLAnchorElement>({
+        ...Navigation.LINK_PARAMS,
+        attributes,
+        parent: this,
+      });
+      if (router)
+        link.addEventListener(Events.Click, () => {
+          router.navigate(linkURL);
+        });
+      return link;
+    });
   }
 }

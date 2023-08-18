@@ -4,8 +4,8 @@ import AppRouter from '../router/router';
 import AppView from './view';
 
 export default class MainView extends AppView {
-  public constructor(router: AppRouter) {
-    super(router);
+  public constructor(router: AppRouter, appName: string, appDescription: string) {
+    super(router, appName, appDescription);
   }
 
   protected createMain(): DOMComponent<HTMLElement> {

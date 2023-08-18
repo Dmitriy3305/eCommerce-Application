@@ -1,5 +1,9 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
+import createLink from '../../../utils/create-link';
+import AppRouter from '../../router/router';
+import { AppLink } from '../../router/router-types';
+import RoutedComponent from '../routed-component';
 import courseLinkHtml from './course-link.html';
 
 enum FooterCssClasses {
@@ -14,7 +18,7 @@ enum FooterCssClasses {
   Link = 'shop-link',
 }
 
-export default class Footer extends DOMComponent<HTMLElement> {
+export default class Footer extends RoutedComponent {
   private static FOOTER_PARAMS: ElementParameters = {
     tag: Tags.Footer,
     classList: [FooterCssClasses.Footer],
@@ -25,12 +29,18 @@ export default class Footer extends DOMComponent<HTMLElement> {
     classList: [FooterCssClasses.ShopSection],
   };
 
+  public static NAVIGATION_LINKS = [AppLink.AboutUs, AppLink.Catalog];
+
   private shopSection: DOMComponent<HTMLElement>;
 
   private courseLinkSection: DOMComponent<HTMLElement>;
 
-  public constructor(appName: string, appDescription: string) {
+  private router: AppRouter;
+
+  public constructor(router: AppRouter, appName: string, appDescription: string) {
     super(Footer.FOOTER_PARAMS);
+
+    this.router = router;
 
     this.shopSection = this.createShopSection(appName, appDescription);
     this.append(this.shopSection);
@@ -43,8 +53,7 @@ export default class Footer extends DOMComponent<HTMLElement> {
     const shopSection = new DOMComponent<HTMLElement>(Footer.SHOP_SECTION_PARAMS);
     shopSection.append(this.createAppDescriptionRow(appName, appDescription));
 
-    // TODO: Refactor this when router is implemented
-    shopSection.append(this.createLinksRow('Useful Links', ['/about-us', '/products']));
+    shopSection.append(this.createLinksRow('Useful Links', Footer.NAVIGATION_LINKS));
 
     return shopSection;
   }
@@ -78,17 +87,18 @@ export default class Footer extends DOMComponent<HTMLElement> {
       textContent: title,
     });
 
-    const linkElements = links.map(
-      (url) =>
-        new DOMComponent<HTMLAnchorElement>({
-          tag: Tags.Anchor,
+    const linkElements = links.map((url) => {
+      const link = createLink(
+        {
           classList: [FooterCssClasses.Link],
-          textContent: url.substring(1).replace('-', ' '),
-          attributes: {
-            href: url,
-          },
-        })
-    );
+          textContent: url.replace('-', ' '),
+        },
+        this.router,
+        url
+      );
+      this.links.set(url as AppLink, link);
+      return link;
+    });
 
     linksRow.append(linksTitle, ...linkElements);
     return linksRow;

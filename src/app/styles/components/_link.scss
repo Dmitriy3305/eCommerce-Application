@@ -1,16 +1,21 @@
 a {
   text-decoration: none;
   color: $primary-dark;
+  cursor: pointer;
 
   transition:
     color $hover-transition,
     scale $active-transition;
 
-  &:hover {
+  &:hover, &[disabled] {
     color: $secondary-yellow;
   }
 
   &:active {
     scale: 0.9;
+  }
+
+  &[disabled] {
+    pointer-events: none;
   }
 }

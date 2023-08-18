@@ -1,6 +1,10 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import HoverMenu from '../../../components/hover-menu/hover-menu';
 import { Tags } from '../../../types/dom-types/enums';
+import { LinkCreateCallback } from '../../../types/header-types';
+import AppRouter from '../../router/router';
+import { AppLink } from '../../router/router-types';
+import RoutedComponent from '../routed-component';
 import HeaderLogo from './header-logo';
 import MobileNavigation from './mobile-navigation';
 import UserNavigation from './user-navigation';
@@ -14,7 +18,7 @@ enum HeaderCssClasses {
   BurgerMenuOpen = 'header__open-burger-menu',
 }
 
-export default class Header extends DOMComponent<HTMLElement> {
+export default class Header extends RoutedComponent {
   private static HEADER_PARAMS: ElementParameters = {
     tag: Tags.Header,
     classList: [HeaderCssClasses.Header],
@@ -26,6 +30,12 @@ export default class Header extends DOMComponent<HTMLElement> {
     textContent: 'Catalog',
   };
 
+  private static NOT_AUTH_LINKS = [AppLink.Main, AppLink.Register, AppLink.Login, AppLink.Cart];
+
+  private static AUTH_LINKS = [AppLink.Main, AppLink.Profile, AppLink.Cart];
+
+  public static NAVIGATION_LINKS = Header.NOT_AUTH_LINKS.concat(Header.AUTH_LINKS);
+
   private logo: HeaderLogo;
 
   private categoriesButton: DOMComponent<HTMLButtonElement>;
@@ -34,12 +44,14 @@ export default class Header extends DOMComponent<HTMLElement> {
 
   private userNavigation: UserNavigation;
 
-  public constructor(appName: string) {
+  public constructor(router: AppRouter, appName: string) {
     super(Header.HEADER_PARAMS);
+    this.links = new Map();
 
-    this.logo = new HeaderLogo(appName);
+    this.logo = new HeaderLogo(router, appName);
     this.logo.addClass(HeaderCssClasses.Logo);
     this.append(this.logo);
+    this.links.set(AppLink.Main, [this.logo]);
 
     this.categoriesNavigation = new HoverMenu();
     this.categoriesNavigation.addClass(HeaderCssClasses.CategoriesMenu);
@@ -50,12 +62,17 @@ export default class Header extends DOMComponent<HTMLElement> {
       parent: this,
     });
 
-    this.userNavigation = new UserNavigation(); // TODO: get if user is authorized from services
+    const linkCallback: LinkCreateCallback = (url: AppLink, link: DOMComponent<HTMLElement>) => {
+      const links = this.links.get(url);
+      this.links.set(url, link);
+    }
+      
+    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS, linkCallback); // TODO: get if user is authorized from services
     this.userNavigation.addClass(HeaderCssClasses.UserNav);
     this.append(this.userNavigation);
 
     const body = DOMComponent.FromElement(document.body);
-    const burgerMenu = new MobileNavigation(body);
+    const burgerMenu = new MobileNavigation(router, Header.NOT_AUTH_LINKS, linkCallback, body);
 
     body.append(
       burgerMenu.generateOpenButton({

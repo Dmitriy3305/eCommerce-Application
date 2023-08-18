@@ -1,10 +1,10 @@
 import AppController from './controller/controller';
 import AppRouter from './router/router';
-import { AppLink } from './router/router-types';
+import { AppLink, RouteHandler } from './router/router-types';
 import MainView from './view/main-view';
-import ProfileView from './view/profile-view';
 import AppView from './view/view';
 import './styles/main.scss';
+import { Events } from '../types/dom-types/enums';
 
 export type AppConfig = {
   appName: string;
@@ -26,20 +26,35 @@ export default class App {
     this.router = this.setupRouter();
   }
 
-  public start(): void {}
+  public start(): void {
+    document.addEventListener(Events.ContentLoaded, () => {
+      this.router.navigate('');
+    });
+  }
 
   private setupRouter(): AppRouter {
     const routes = new Map<AppLink, (resource?: string) => void>();
-    routes.set(AppLink.Main, () => {
-      this.view?.clear();
-      this.view = new MainView(this.router, this.config.appName, this.config.description);
-    });
-    routes.set(AppLink.Profile, () => {
-      this.view?.clear();
-      this.view = new ProfileView(this.router, this.config.appName, this.config.description);
-    });
-
+    Object.values(AppLink).forEach((link) => routes.set(link, this.getDefaultRouteHandler(link)));
     const router = new AppRouter(routes, this.controller.isAuthorized, this.config.appName);
     return router;
+  }
+
+  private getDefaultRouteHandler(link: AppLink): RouteHandler {
+    return () => {
+      this.view?.clear();
+      switch (link) {
+        case AppLink.Main:
+        case AppLink.AboutUs:
+        case AppLink.Catalog:
+        case AppLink.Login:
+        case AppLink.Register:
+        case AppLink.Cart:
+          this.view = new MainView(this.router, this.config.appName, this.config.description);
+          break;
+        default:
+          break;
+      }
+      this.view?.switchActiveLink(link);
+    };
   }
 }
