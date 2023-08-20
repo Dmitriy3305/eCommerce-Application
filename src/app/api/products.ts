@@ -1,12 +1,25 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { Product, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import ctpClient from './buildClient';
 
-const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey: 'ecommerce-application2023q1' });
-const getProducts = async () => {
-  return apiRoot.products().get().execute();
-};
-getProducts()
-  .then((response) => {
-    return response;
-  })
-  .catch(console.error);
+export default class ProductsRepository {
+  private static PROJECT_KEY = 'ecommerce-application2023q1';
+
+  private apiRoot: ByProjectKeyRequestBuilder;
+
+  public constructor() {
+    this.apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+      projectKey: ProductsRepository.PROJECT_KEY,
+    });
+  }
+
+  public async getCategoriesNames(): Promise<string[]> {
+    const response = await this.apiRoot.categories().get().execute();
+    return response.body.results.map((category) => category.key || '');
+  }
+
+  public async getProducts(): Promise<Product[]> {
+    const response = await this.apiRoot.products().get().execute();
+    return response.body.results;
+  }
+}
