@@ -1,41 +1,29 @@
 import DOMComponent from '../../components/base-component';
-import { Events, Tags } from '../../types/dom-types/enums';
+import { Events } from '../../types/dom-types/enums';
 import InputDomComponents from '../../components/input-components';
 
+const enum Messages {
+  NotValidEmail = 'Please enter a valid email',
+  ValidEmail = 'Your email is valid',
+  ValidPassword = 'Your password is valid',
+}
+
 export default class ValidationInput {
-  public inputEmail: InputDomComponents;
+  constructor(
+    public inputEmail: InputDomComponents,
+    public inputPassword: InputDomComponents,
+    public messageForEmail: DOMComponent<HTMLSpanElement>,
+    public messageForPassword: DOMComponent<HTMLSpanElement>
+  ) {}
 
-  public messageField: DOMComponent<HTMLElement>;
-
-  public inputPassword: InputDomComponents;
-
-  constructor() {
-    this.inputEmail = new InputDomComponents({
-      attributes: {
-        id: 'input-email',
-        type: 'email',
-        placeholder: 'Email',
-      },
-    });
-    this.messageField = new DOMComponent<HTMLElement>({
-      classList: ['message-field'],
-      textContent: ' ',
-    });
-    
-    this.inputPassword = new InputDomComponents({ classList: ['input-password'] });
-  }
-  
   public validationEmail() {
-    console.log(this.inputEmail, this.messageField, this.inputPassword)
     this.inputEmail?.setEventHandler(Events.Input, (value: string) => {
-      console.log('Event.Input:', Events.Input);
       const isValid = this.inputEmail?.validateEmail(value);
-      console.log(isValid);
-      if (isValid && this.messageField) {
-        console.log('valid');
-        this.messageField.addText('valid');
-      } else if (this.messageField) {
-        this.messageField.addText('valid');
+      if (isValid && this.messageForEmail) {
+        this.messageForEmail.textContent = Messages.ValidEmail;
+        this.inputEmail?.removeAttribute('invalid');
+      } else if (this.messageForEmail) {
+        this.messageForEmail.textContent = Messages.NotValidEmail;
         this.inputEmail?.setAttribute('invalid', '');
       }
     });
@@ -44,27 +32,16 @@ export default class ValidationInput {
   public validationPassword() {
     this.inputPassword?.setEventHandler(Events.Input, (value: string) => {
       const validationResult = this.inputPassword?.validatePassword(value);
-      if (validationResult?.length === 0) {
-        console.log('valid');
-        if (this.messageField) {
-          this.messageField.textContent = 'valid';
-          this.inputPassword?.removeAttribute('invalid');
-        }
-      } else if (this.messageField) {
-        console.log('not valid');
-
-        this.messageField.textContent = 'not-valid';
+      if (validationResult?.length === 0 && this.messageForPassword) {
+        this.messageForPassword.textContent = Messages.ValidPassword;
+        this.inputPassword?.removeAttribute('invalid');
+      } else if (this.messageForPassword) {
         this.inputPassword?.setAttribute('invalid', '');
-
         const errorMessage = validationResult?.join('');
-        if (this.messageField && errorMessage) {
-          this.messageField.textContent = errorMessage;
+        if (this.messageForPassword && errorMessage) {
+          this.messageForPassword.textContent = errorMessage;
         }
       }
     });
   }
 }
-
-const validationForm = new ValidationInput();
-validationForm.validationEmail();
-validationForm.validationPassword();

@@ -7,7 +7,7 @@ const getCategories = async () => {
 };
 getCategories()
   .then((response) => {
-    console.log(response)
+    console.log(response);
     return response;
   })
   .catch(console.error);

@@ -18,43 +18,34 @@ export default class InputDomComponents extends DOMComponent<HTMLInputElement> {
     return emailRegex.test(email);
   }
 
-  public get validityMessage(): string {
-    return String(this.element.validationMessage);
-  }
-
   public validatePassword(password: string): string[] {
     const errors: string[] = [];
-    // Password should be at least 8 characters
+
     if (password.length < 8) {
       errors.length = 0;
       errors.push('Password should be at least 8 characters');
     }
 
-    // Password should contain at least one uppercase letter
     if (!/[A-Z]/.test(password)) {
       errors.length = 0;
       errors.push('Password should contain at least one uppercase letter');
     }
 
-    // Password should contain at least one lowercase letter
     if (!/[a-z]/.test(password)) {
       errors.length = 0;
       errors.push('Password should contain at least one lowercase letter');
     }
 
-    // Password should contain at least one digit
     if (!/\d/.test(password)) {
       errors.length = 0;
       errors.push('Password should contain at least one digit');
     }
 
-    // Password can contain a special character (optional)
     if (!/[!@#$%^&*]/.test(password)) {
       errors.length = 0;
-      errors.push('Password can contain a special character');
+      errors.push('The password must contain a special character');
     }
 
-    // Password should not have leading or trailing spaces
     if (password.trim() !== password) {
       errors.length = 0;
       errors.push('Password must not contain leading or trailing whitespace');
@@ -66,5 +57,9 @@ export default class InputDomComponents extends DOMComponent<HTMLInputElement> {
     this.element.addEventListener(event, () => {
       callback(this.element.value);
     });
+  }
+
+  public getAttribute(attributeName: string) {
+    return this.element.getAttribute(attributeName);
   }
 }

@@ -10,10 +10,6 @@ export type ElementParameters = Partial<{
 }>;
 
 export default class DOMComponent<T extends HTMLElement> {
-  getElement() {
-    throw new Error('Method not implemented.');
-  }
-
   protected element: T;
 
   public static FromHTML<T extends HTMLElement>(html: string): DOMComponent<T> {

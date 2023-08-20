@@ -1,0 +1,20 @@
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+@mixin input-style {
+  padding: 1rem;
+  width: 75vw;
+  max-width: 400px;
+  outline: none;
+}
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}

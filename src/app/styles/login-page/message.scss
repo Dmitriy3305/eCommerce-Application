@@ -1,0 +1,9 @@
+@import 'variables';
+
+.message-for-email,
+.message-for-password {
+  padding-top: 10px;
+  height: 60px;
+  font-family: $font-family;
+  color: $primary-color;
+}

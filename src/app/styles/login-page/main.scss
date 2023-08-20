@@ -1,70 +1,18 @@
-$primary-color: #123026;
-$font-family: 'Atak', sans-serif;
+@import 'variables';
+@import 'mixin';
+@import 'form';
+@import 'message';
+@import 'btn';
 
 .main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 90vh;
+  @include flex-center;
+  height: 100%;
+  color: $primary-color;
 
   .title {
     color: $primary-color;
-    font-size: 42.5px;
+    font-size: 40px;
     font-family: $font-family;
     margin: 0;
   }
-
-  .form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-
-    #input-email,
-    #input-password {
-      padding: 1rem;
-      width: 25vw;
-    }
-
-    .input-password-container {
-      position: relative;
-    }
-
-    .btn-show-password {
-      position: absolute;
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 10px;
-      background-color: transparent;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      background: url(/src/assets/icon_showPassword.svg);
-    }
-  }
-}
-
-.sign-in {
-  width: 100px;
-  height: 50px;
-  background-color: $primary-color;
-  color: white;
-}
-
-#input-email:invalid {
-  color: red;
-}
-
-#input-email:valid {
-  color: black;
-}
-
-.message-field {
-  height: 61.39px;
 }
