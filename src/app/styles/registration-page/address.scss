@@ -1,0 +1,15 @@
+@import 'variables';
+@import 'mixin';
+
+.info-of-address, .shipping-address, .billing-address{
+    @include flex-center;
+    color: $primary-color;
+  
+    .title {
+      color: $primary-color;
+      font-size: 40px;
+      font-family: $font-family;
+      margin: 0;
+    
+    }
+  }

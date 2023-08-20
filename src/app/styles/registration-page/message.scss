@@ -1,0 +1,8 @@
+@import 'variables';
+
+input ~ span {
+  padding-top: 10px;
+  height: 60px;
+  font-family: $font-family;
+  color: $primary-color;
+}

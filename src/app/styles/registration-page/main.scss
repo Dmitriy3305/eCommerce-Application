@@ -1,0 +1,19 @@
+@import 'variables';
+@import 'mixin';
+@import 'form';
+@import 'message';
+@import 'btn';
+@import 'address';
+
+.main {
+  @include flex-center;
+  height: 100%;
+  color: $primary-color;
+
+  .title {
+    color: $primary-color;
+    font-size: 40px;
+    font-family: $font-family;
+    margin: 0;
+  }
+}

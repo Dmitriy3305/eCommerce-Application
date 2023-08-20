@@ -53,6 +53,11 @@ export default class InputDomComponents extends DOMComponent<HTMLInputElement> {
     return errors;
   }
 
+  public containsSpecialCharactersOrDigits(value: string) {
+    const regex = /[!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?0-9]/;
+    return regex.test(value);
+  }
+
   public setEventHandler(event: string, callback: (value: string) => void) {
     this.element.addEventListener(event, () => {
       callback(this.element.value);
