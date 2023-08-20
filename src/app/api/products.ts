@@ -3,7 +3,7 @@ import ctpClient from './buildClient';
 
 const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey: 'ecommerce-application2023q1' });
 
-export const getProducts = async () => {
+const getProducts = async () => {
   return apiRoot.products().get().execute();
 };
 getProducts()

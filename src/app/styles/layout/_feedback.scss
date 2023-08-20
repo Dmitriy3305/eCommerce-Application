@@ -19,7 +19,7 @@
   }
 }
 .feedback {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: $font-feedback;
   font-size: 1.8rem;
   text-align: center;
   letter-spacing: 0.06rem;
@@ -28,13 +28,14 @@
   padding-bottom: 2.1rem;
 }
 .author {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: $font-feedback;
   font-size: 1.5rem;
   text-align: center;
   color: $primary-color;
   font-style: italic;
 }
-@media (min-width: 768px) and (max-width: 1279px) {
+
+@media (min-width: $tablet-width) and (max-width: $desktop-width) {
   .section__feedback {
     flex-direction: column;
   }
@@ -51,7 +52,7 @@
     font-size: 1.2rem;
   }
 }
-@media (max-width: 767px) {
+@media (max-width: $tablet-width) {
   .section__feedback {
     flex-direction: column;
   }
