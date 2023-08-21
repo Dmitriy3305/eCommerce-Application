@@ -16,6 +16,10 @@ export enum Tags {
   Label = 'label',
   Code = 'code',
   Form = 'form',
+  Image = 'img',
+  Navigation = 'nav',
+  Anchor = 'a',
+  Section = 'section',
 }
 
 export enum Events {
@@ -27,6 +31,10 @@ export enum Events {
   KeyDown = 'keydown',
   MouseOver = 'mouseover',
   MouseOut = 'mouseout',
+  TransitionStart = 'transitionstart',
+  TransitionEnd = 'transitionend',
+  ContentLoaded = 'DOMContentLoaded',
+  Popstate = 'popstate',
 }
 
 export enum InsertPositions {

@@ -1,0 +1,32 @@
+@mixin shadow() {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+@mixin centered($width, $height) {
+  position: absolute;
+  top: calc(50% - $height / 2);
+  left: calc(50% - $width / 2);
+}
+
+@mixin app-logo() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  .logo__icon {
+    max-height: 90%;
+  }
+
+  .logo__name {
+    text-transform: uppercase;
+  }
+
+  &:hover {
+    color: inherit;
+  }
+
+  &:active {
+    scale: 1;
+  }
+}

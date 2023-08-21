@@ -20,6 +20,7 @@ module.exports = {
     port: 8000,
     open: true,
     hot: true,
+    historyApiFallback: true,
   },
   output: {
     filename: 'main.js',

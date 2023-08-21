@@ -1,0 +1,9 @@
+.dropdown-menu__content {
+  height: 0;
+  overflow: hidden;
+  transition: height var(--open-transition);
+
+  &_expanded {
+    height: var(--full-height);
+  }
+}

@@ -1,0 +1,13 @@
+.hover-menu {
+  position: fixed;
+
+  pointer-events: none;
+
+  opacity: 0;
+  transition: opacity var(--appear-time) ease-in-out;
+
+  &_shown {
+    pointer-events: all;
+    opacity: 1;
+  }
+}

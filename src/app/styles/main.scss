@@ -1,2 +1,22 @@
+@import 'abstracts/colors';
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+@import 'base/reset';
+@import 'base/typography';
+
+@import 'components/link';
+@import 'components/categories-hover';
+@import 'components/navigation-burger-menu';
+@import 'components/slider-section';
+
+@import 'layout/header';
+@import 'layout/main';
+@import 'layout/footer';
+
+@import 'pages/home';
+@import 'pages/not-found';
 @import './login-page/main.scss';
 @import './registration-page/main.scss';
+
+@import 'vendors/normalize.css';

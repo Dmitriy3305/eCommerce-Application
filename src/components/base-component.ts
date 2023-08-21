@@ -1,4 +1,4 @@
-import { Tags, Events, InsertPositions } from '../types/dom-types/enums';
+import { Tags, Events, InsertPositions, NodeTypes } from '../types/dom-types/enums';
 import { AnimationParams } from '../types/dom-types/types';
 
 export type ElementParameters = Partial<{
@@ -60,6 +60,10 @@ export default class DOMComponent<T extends HTMLElement> {
     return this.element.offsetHeight;
   }
 
+  public get width(): number {
+    return this.element.offsetWidth;
+  }
+
   public get fullHeight(): number {
     const marginTop = parseFloat(this.getCSSProperty('margin-top'));
     const marginBottom = parseFloat(this.getCSSProperty('margin-bottom'));
@@ -72,6 +76,17 @@ export default class DOMComponent<T extends HTMLElement> {
 
   public insertBeforeNode(node: Node) {
     node.parentNode?.insertBefore(this.element, node);
+  }
+
+  public insert(position: InsertPositions, element: DOMComponent<HTMLElement>): void {
+    this.element.insertAdjacentElement(position, element.element);
+  }
+
+  public prepend(...elements: (HTMLElement | DOMComponent<HTMLElement>)[]): void {
+    elements.forEach((element) => {
+      if (element instanceof DOMComponent) this.element.prepend(element.element);
+      else this.element.prepend(element);
+    });
   }
 
   public append(...elements: (HTMLElement | DOMComponent<HTMLElement>)[]): void {
@@ -119,6 +134,11 @@ export default class DOMComponent<T extends HTMLElement> {
 
   public addText(text: string) {
     this.element.append(document.createTextNode(text));
+  }
+
+  public removeText() {
+    const nodes = Array.from(this.element.childNodes).filter((node) => node.nodeType === NodeTypes.TextNode);
+    nodes.forEach((textNode) => textNode.remove());
   }
 
   public remove(): void {
