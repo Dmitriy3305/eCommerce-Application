@@ -16,6 +16,8 @@ export enum Tags {
   Label = 'label',
   Code = 'code',
   Anchor = 'a',
+  Section = 'section',
+  Image = 'img',
 }
 
 export enum Events {

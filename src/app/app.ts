@@ -4,6 +4,7 @@ import { AppLink } from './router/router-types';
 import MainView from './view/main-view';
 import ProfileView from './view/profile-view';
 import AppView from './view/view';
+import './styles/main.scss';
 
 export type AppConfig = {
   appName: string;
