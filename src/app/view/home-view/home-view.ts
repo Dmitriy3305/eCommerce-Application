@@ -1,11 +1,11 @@
-import DOMComponent from '../../components/base-component';
-import { Tags } from '../../types/dom-types/enums';
-import Feedback from './home-page/feedback';
-import HomeSeasonSection from './home-page/home-season';
-import Slider from './home-page/slider';
-import AppView from './view';
+import DOMComponent from '../../../components/base-component';
+import { Tags } from '../../../types/dom-types/enums';
+import Feedback from './feedback';
+import HomeSeasonSection from './home-season';
+import Slider from './slider';
+import AppView from '../view';
 
-export default class MainView extends AppView {
+export default class HomeView extends AppView {
   protected createMain(): DOMComponent<HTMLElement> {
     const main = new DOMComponent<HTMLElement>({
       tag: Tags.Main,

@@ -1,4 +1,12 @@
 body:has(.not-found) {
+  .header {
+    display: none;
+  }
+
+  .footer {
+    display: none;
+  }
+
   overflow: hidden;
 }
 
@@ -8,15 +16,15 @@ body:has(.not-found) {
   align-items: center;
 
   height: 100vh;
-  font-family: Atak, sans-serif;
+  padding-top: 0;
 }
 
 .not-found__content-wrapper {
   width: max(60vw, 300px);
   height: 50vh;
-  background-color: rgb(248, 242, 178);
+  background-color: $secondary-brown;
   border-radius: 50px;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  @include shadow();
 
   position: relative;
   display: grid;
@@ -29,7 +37,7 @@ body:has(.not-found) {
 
   font-size: 1rem;
 
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     font-size: 0.7rem;
     height: 40vh;
   }
@@ -47,7 +55,7 @@ body:has(.not-found) {
 .not-found__photo {
   width: 100%;
   grid-row: span 3;
-  
+
   align-self: center;
 }
 
@@ -76,13 +84,13 @@ body:has(.not-found) {
 
 @keyframes text-glow {
   0% {
-    color: rgb(0, 0, 0);
-  } 
+    color: $secondary-yellow;
+  }
   50% {
-    color: green;
+    color: $primary-dark;
   }
   100% {
-    color: rgb(0, 0, 0);
+    color: $secondary-yellow;
   }
 }
 
@@ -93,14 +101,14 @@ body:has(.not-found) {
   aspect-ratio: 5 / 1;
   border-radius: 25px;
 
-  background-color: #ffffff;
-  color: green;
-  border-color: green;
+  background-color: $primary-light;
+  color: $primary-dark;
+  border-color: $primary-dark;
 
   transition: background-color ease-in-out 500ms;
 
   &:hover {
-    background-color: darken(#ffffff, 5);
+    background-color: $secondary-light;
     animation: button-hover ease-in-out 1000ms infinite;
   }
 }
@@ -116,4 +124,3 @@ body:has(.not-found) {
     translate: none;
   }
 }
-

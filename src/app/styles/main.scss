@@ -4,18 +4,17 @@
 
 @import 'base/reset';
 @import 'base/typography';
-@import './base/pages/home-page';
-@import './base/main';
 
 @import 'components/link';
 @import 'components/categories-hover';
 @import 'components/navigation-burger-menu';
+@import 'components/slider-section';
 
 @import 'layout/header';
 @import 'layout/main';
 @import 'layout/footer';
-@import 'layout/feedback';
-@import 'layout/section-season';
-@import 'layout/slider-section';
+
+@import 'pages/home';
+@import 'pages/not-found';
 
 @import 'vendors/normalize.css';
