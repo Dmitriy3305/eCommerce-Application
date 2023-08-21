@@ -2,7 +2,7 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { Tags } from '../../../types/dom-types/enums';
 import CardSlider from './cardSlider';
 import AppRouter from '../../router/router';
-import getProducts from '../../api/products';
+import ProductsRepository from '../../api/products';
 
 enum SliderCssClasses {
   NameSection = 'section__slider',
@@ -83,11 +83,12 @@ export default class Slider extends DOMComponent<HTMLElement> {
     const cards: string[] = [];
     const names: string[] = [];
     const cardsProduct = [];
-    getProducts().then((response) => {
-      const data = response.body.results;
-      for (let i = 0; i < data.length; i += 1) {
-        const { images } = data[i].masterData.current.masterVariant;
-        const { name } = data[i].masterData.current;
+    const productsRepository = new ProductsRepository();
+    productsRepository.getProducts().then((response) => {
+      console.log(response);
+      for (let i = 0; i < response.length; i += 1) {
+        const { images } = response[i].masterData.current.masterVariant;
+        const { name } = response[i].masterData.current;
         const urlImg = images ? images[0].url : '';
         const nameProduct = Object.values(name);
         cards.push(urlImg);
