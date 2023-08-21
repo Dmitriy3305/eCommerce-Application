@@ -1,6 +1,5 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
-import AppRouter from '../../router/router';
 
 enum SectionSeasonCssClasses {
   SectionSeason = 'section__season',
@@ -8,17 +7,14 @@ enum SectionSeasonCssClasses {
   BtnSeason = 'btn__season',
 }
 
-export default class Season extends DOMComponent<HTMLElement> {
+export default class HomeSeasonSection extends DOMComponent<HTMLElement> {
   private static SEASON_SECTION_PARAMS: ElementParameters = {
     tag: Tags.Section,
     classList: [SectionSeasonCssClasses.SectionSeason],
   };
 
-  private router: AppRouter;
-
-  public constructor(router: AppRouter) {
-    super(Season.SEASON_SECTION_PARAMS);
-    this.router = router;
+  public constructor() {
+    super(HomeSeasonSection.SEASON_SECTION_PARAMS);
     const titleSectionSeason = new DOMComponent<HTMLParagraphElement>({
       tag: Tags.Paragraph,
       classList: [SectionSeasonCssClasses.TitleSeason],

@@ -29,6 +29,5 @@ export default class CardSlider extends DOMComponent<HTMLElement> {
       textContent: name,
     });
     this.append(imgProduct, nameProduct);
-    return this;
   }
 }

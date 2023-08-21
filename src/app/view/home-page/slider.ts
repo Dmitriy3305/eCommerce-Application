@@ -1,9 +1,8 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import { Events, Tags } from '../../../types/dom-types/enums';
+import { Tags } from '../../../types/dom-types/enums';
 import CardSlider from './cardSlider';
 import AppRouter from '../../router/router';
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import ctpClient from '../../api/buildClient';
+import getProducts from '../../api/products';
 
 enum SliderCssClasses {
   NameSection = 'section__slider',
@@ -23,9 +22,13 @@ export default class Slider extends DOMComponent<HTMLElement> {
     tag: Tags.Section,
     classList: [SliderCssClasses.NameSection],
   };
+
   private sliderPhoto: DOMComponent<HTMLDivElement>;
+
   private leftBtn: DOMComponent<HTMLButtonElement>;
+
   private rightBtn: DOMComponent<HTMLButtonElement>;
+
   private router: AppRouter;
 
   public constructor(router: AppRouter) {
@@ -58,7 +61,7 @@ export default class Slider extends DOMComponent<HTMLElement> {
       classList: [SliderCssClasses.WrapperPhoto],
     });
     this.sliderPhoto = new DOMComponent<HTMLDivElement>({
-     tag: Tags.Div,
+      tag: Tags.Div,
       classList: [SliderCssClasses.NamePhotoContent],
     });
     this.rightBtn = new DOMComponent<HTMLButtonElement>({
@@ -73,25 +76,18 @@ export default class Slider extends DOMComponent<HTMLElement> {
     wrapperSlider.append(titleSlider, container);
     container.append(this.leftBtn, wrapperPhoto, this.rightBtn);
     wrapperPhoto.append(this.sliderPhoto);
-    this.drowSlider();
+    this.drawSlider();
   }
 
-  public drowSlider(): void {
-    let cards: string[] = [];
-    let names: string[] = [];
-    let cardsProduct = [];
-
-    const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-      projectKey: 'ecommerce-application2023q1',
-    });
-    const getProducts = async () => {
-      return apiRoot.products().get().execute();
-    };
+  public drawSlider(): void {
+    const cards: string[] = [];
+    const names: string[] = [];
+    const cardsProduct = [];
     getProducts().then((response) => {
       const data = response.body.results;
       for (let i = 0; i < data.length; i += 1) {
-        const images = data[i].masterData.current.masterVariant.images;
-        const name = data[i].masterData.current.name;
+        const { images } = data[i].masterData.current.masterVariant;
+        const { name } = data[i].masterData.current;
         const urlImg = images ? images[0].url : '';
         const nameProduct = Object.values(name);
         cards.push(urlImg);

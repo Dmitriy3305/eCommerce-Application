@@ -1,7 +1,6 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
 import imgFeedback from '../../../assets/feedback3.jpg';
-import AppRouter from '../../router/router';
 
 enum FeedbackCssClasses {
   SectionFeedback = 'section__feedback',
@@ -19,11 +18,8 @@ export default class Feedback extends DOMComponent<HTMLElement> {
     classList: [FeedbackCssClasses.SectionFeedback],
   };
 
-  private router: AppRouter;
-
-  public constructor(router: AppRouter) {
+  public constructor() {
     super(Feedback.SECTION_FEEDBACK_PARAMS);
-    this.router = router;
     const contentFeedback = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [FeedbackCssClasses.TextFeedback],

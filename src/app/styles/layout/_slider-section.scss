@@ -44,7 +44,7 @@
   }
 }
 .card__product > img {
-width: 100%;
+  width: 100%;
 }
 #left {
   left: -3rem;
@@ -87,19 +87,22 @@ width: 100%;
   width: 100%;
 }
 .card__product {
-  min-width: 17rem;
-  min-height: 25rem;
+  min-width: 8rem;
+  min-height: 13rem;
 }
 
 .name__product {
   font-family: $MAIN-FONT;
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   white-space: normal;
   text-align: center;
   color: $primary-color;
 }
 
-@media (min-width: $tablet-width) and (max-width: $desktop-width) {
+.slider__photo > .card__product:nth-child(n + 4):nth-child(-n + 20) {
+  display: none;
+}
+@media (min-width: $mobile-width) and (max-width: $tablet-width) {
   .slider__container {
     width: 60vw;
   }
@@ -114,14 +117,16 @@ width: 100%;
     height: 35px;
   }
   .card__product {
-    min-width: 13rem;
-    min-height: 18rem;
+    min-width: 8rem;
+    min-height: 13rem;
+  }
+  .slider__photo > .card__product:nth-child(n + 3):nth-child(-n + 20) {
+    display: none;
+  }
 }
-
-}
-@media (max-width: $tablet-width) {
+@media (max-width: $mobile-width) {
   .slider__container {
-   width: 50vw;
+    width: 50vw;
   }
   .title__slider {
     font-size: 0.2rem;
@@ -136,5 +141,8 @@ width: 100%;
   .card__product {
     min-width: 10rem;
     min-height: 15rem;
-}
+  }
+  .slider__photo > .card__product:not(:first-child) {
+    display: none;
+  }
 }

@@ -10,3 +10,5 @@ getProducts()
     return response;
   })
   .catch(console.error);
+
+export default getProducts;
