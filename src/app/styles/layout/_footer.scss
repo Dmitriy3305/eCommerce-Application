@@ -1,0 +1,101 @@
+.footer {
+  width: 100%;
+
+  padding: 30px 0;
+
+  color: $primary-light;
+  background-color: $primary-dark;
+}
+
+.footer__shop-info-links {
+  width: 100%;
+
+  margin: 0 auto;
+  padding-bottom: 12px;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  border-bottom: 3px solid rgba(lighten($primary-dark, 15), 0.8);
+}
+
+.shop-info {
+  width: 30%;
+
+  &__name {
+    font-size: 2em;
+    font-weight: bold;
+    border-bottom: 2px solid;
+    text-transform: uppercase;
+  }
+
+  &__description {
+    margin-top: 1em;
+    text-align: center;
+  }
+
+  @media (max-width: $tablet-width) {
+    font-size: 0.7em;
+  }
+}
+
+.shop-info,
+.footer__course-link,
+.shop-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shop-links {
+  gap: 0.5em;
+}
+
+.shop-links__title {
+  font-weight: bold;
+  font-size: 1.25em;
+}
+
+.shop-link {
+  color: darken($secondary-light, 10);
+  text-transform: capitalize;
+
+  &:hover,
+  &[disabled] {
+    color: $primary-light;
+    text-decoration: underline;
+  }
+}
+
+.footer__course-link {
+  margin-top: 20px;
+  gap: 1em;
+
+  font-size: 0.75em;
+}
+
+.course-link {
+  position: relative;
+  top: 3px;
+
+  img {
+    transition: filter $hover-transition;
+    max-height: 1.5em;
+  }
+
+  &:hover img {
+    filter: hue-rotate(39.88deg) saturate(189.47%) brightness(62.75%);
+  }
+}
+
+.course-link__author {
+  font-weight: bold;
+
+  padding-bottom: 0.2em;
+  border-bottom: 2px solid;
+}
+
+.course-link__date {
+  font-weight: bold;
+}

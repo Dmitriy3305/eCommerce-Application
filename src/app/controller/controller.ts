@@ -1,5 +1,5 @@
 import { Customer, CustomerDraft } from '@commercetools/platform-sdk';
-import ProductsRepository from '../api/products';
+import ProductsRepository, { GrouppedCategories } from '../api/products';
 import AuthorizationManager from '../api/user';
 
 export default class AppController {
@@ -29,5 +29,10 @@ export default class AppController {
 
   public async register(credentials: CustomerDraft) {
     this.currentCustomer = await this.authManager.register(credentials);
+  }
+
+  public async loadCategories(callback: (categories: GrouppedCategories) => void): Promise<void> {
+    const categories = await this.products.getCategoriesGroups();
+    callback(categories);
   }
 }

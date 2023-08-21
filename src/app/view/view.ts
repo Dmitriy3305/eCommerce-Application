@@ -1,27 +1,19 @@
-import DOMComponent, { ElementParameters } from '../../components/base-component';
-import { InsertPositions, Tags } from '../../types/dom-types/enums';
+import DOMComponent from '../../components/base-component';
+import Footer from './footer/footer';
+import Header from './header/header';
+import { InsertPositions } from '../../types/dom-types/enums';
 import AppRouter from '../router/router';
+import { AppLink } from '../router/router-types';
+import { GrouppedCategories } from '../api/products';
 
 enum ViewCssClasses {
-  Header = 'header',
   Main = 'main',
-  Footer = 'footer',
 }
 
 export default abstract class AppView {
-  private static HEADER_PARAMS: ElementParameters = {
-    tag: Tags.Header,
-    classList: [ViewCssClasses.Header],
-  };
+  private static HEADER: Header | null = null;
 
-  private static FOOTER_PARAMS: ElementParameters = {
-    tag: Tags.Footer,
-    classList: [ViewCssClasses.Footer],
-  };
-
-  private static HEADER: DOMComponent<HTMLElement> | null;
-
-  private static FOOTER: DOMComponent<HTMLElement> | null;
+  private static FOOTER: Footer | null = null;
 
   protected body: DOMComponent<HTMLElement>;
 
@@ -29,15 +21,19 @@ export default abstract class AppView {
 
   protected router: AppRouter;
 
-  public constructor(router: AppRouter) {
+  public constructor(router: AppRouter, appName: string, appDescription: string, categories: GrouppedCategories) {
     this.router = router;
 
     this.body = DOMComponent.FromElement(document.body);
 
-    if (!AppView.HEADER)
-      AppView.HEADER = new DOMComponent<HTMLElement>({ ...AppView.HEADER_PARAMS, parent: this.body });
-    if (!AppView.FOOTER)
-      AppView.FOOTER = new DOMComponent<HTMLElement>({ ...AppView.FOOTER_PARAMS, parent: this.body });
+    if (!AppView.HEADER) {
+      AppView.HEADER = new Header(router, appName, categories);
+      this.body.append(AppView.HEADER);
+    }
+    if (!AppView.FOOTER) {
+      AppView.FOOTER = new Footer(router, appName, appDescription);
+      this.body.append(AppView.FOOTER);
+    }
 
     this.main = this.createMain();
     this.main.addClass(ViewCssClasses.Main);
@@ -48,5 +44,14 @@ export default abstract class AppView {
 
   public clear(): void {
     this.main.remove();
+  }
+
+  public switchActiveLink(link: AppLink, queries?: URLSearchParams): void {
+    const url = queries?.size ? `${link}?${queries}` : link;
+    if (Header.NAVIGATION_LINKS.includes(link)) AppView.HEADER?.switchActiveLink(url);
+    else AppView.HEADER?.disableActiveLinks();
+
+    if (Footer.NAVIGATION_LINKS.includes(link)) AppView.FOOTER?.switchActiveLink(url);
+    else AppView.FOOTER?.disableActiveLinks();
   }
 }

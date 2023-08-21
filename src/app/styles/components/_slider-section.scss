@@ -1,10 +1,9 @@
 .section__slider {
   position: relative;
-  background-color: #ffffff;
+  background-color: $primary-light;
   padding-top: 2rem;
   .title__slider {
-    font-family: $BOLD-FONT, sans-serif;
-    color: $primary-color;
+    color: $primary-dark;
     font-size: 2.5rem;
     line-height: 3rem;
     letter-spacing: 0.06em;
@@ -23,8 +22,8 @@
       background-color: inherit;
       width: 40px;
       height: 40px;
-      border-top: 7px solid #666666;
-      border-right: 7px solid #666666;
+      border-top: 7px solid $secondary-grey;
+      border-right: 7px solid $secondary-grey;
       border-left: none;
       border-bottom: none;
       top: 30%;
@@ -32,7 +31,7 @@
     }
   }
   .card__product {
-    background-color: #fff;
+    background-color: $primary-light;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,10 +40,19 @@
     transition: background-color 0.3s;
     border-radius: 5px;
     justify-content: center;
+
+    &:hover {
+      overflow: hidden;
+      img {
+        scale: 1.05;
+      }
+    }
   }
 }
 .card__product > img {
-  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  transition: scale $hover-transition;
 }
 #left {
   left: -3rem;
@@ -92,11 +100,10 @@
 }
 
 .name__product {
-  font-family: $MAIN-FONT;
   font-size: 1.3rem;
   white-space: normal;
   text-align: center;
-  color: $primary-color;
+  color: $primary-dark;
 }
 
 .slider__photo > .card__product:nth-child(n + 4):nth-child(-n + 20) {

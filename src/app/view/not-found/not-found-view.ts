@@ -1,6 +1,7 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
 import createLink from '../../../utils/create-link';
+import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
 import AppView from '../view';
@@ -17,8 +18,8 @@ export default class NotFoundView extends AppView {
     classList: [NotFoundCssClasses.Main],
   };
 
-  public constructor(router: AppRouter) {
-    super(router);
+  public constructor(router: AppRouter, appName: string, appDescription: string, categories: GrouppedCategories) {
+    super(router, appName, appDescription, categories);
   }
 
   protected override createMain(): DOMComponent<HTMLElement> {

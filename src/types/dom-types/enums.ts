@@ -15,9 +15,10 @@ export enum Tags {
   Heading3 = 'h3',
   Label = 'label',
   Code = 'code',
+  Image = 'img',
+  Navigation = 'nav',
   Anchor = 'a',
   Section = 'section',
-  Image = 'img',
 }
 
 export enum Events {
@@ -29,6 +30,8 @@ export enum Events {
   KeyDown = 'keydown',
   MouseOver = 'mouseover',
   MouseOut = 'mouseout',
+  TransitionStart = 'transitionstart',
+  TransitionEnd = 'transitionend',
   ContentLoaded = 'DOMContentLoaded',
   Popstate = 'popstate',
 }

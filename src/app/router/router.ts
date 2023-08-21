@@ -1,8 +1,9 @@
 import { Events } from '../../types/dom-types/enums';
-import { AppLink } from './router-types';
+import { getEnumKey, isEnumValue } from '../../utils/enum-utils';
+import { AppLink, LinkQueries, RouteHandler } from './router-types';
 
 export default class AppRouter {
-  private routeCallbacks: Map<AppLink, (resource?: string) => void>;
+  private routeCallbacks: Map<AppLink, RouteHandler>;
 
   private appName: string;
 
@@ -14,10 +15,6 @@ export default class AppRouter {
     this.routeCallbacks = routeCallbacks;
     this.appName = appName;
 
-    document.addEventListener(Events.ContentLoaded, () => {
-      this.navigate('');
-    });
-
     window.addEventListener(Events.Popstate, (event) => {
       const params = (event as PopStateEvent).state;
       this.navigate(params);
@@ -27,17 +24,23 @@ export default class AppRouter {
   public navigate(url: PopStateEvent | string): void {
     if (typeof url === 'string') window.history.pushState(null, '', url);
     const urlParams = window.location.pathname.split('/').slice(1);
+    const queries = new URL(window.location.href).searchParams;
 
     const path = urlParams[0] ? (urlParams[0] as AppLink) : AppLink.Main;
-    if (Object.values(AppLink).includes(path)) {
+    if (isEnumValue(AppLink, path)) {
       const resource = urlParams[1];
-      this.routeCallbacks.get(path)?.(resource);
+      this.routeCallbacks.get(path)?.(resource, queries);
 
-      const pageEntry = Object.entries(AppLink).find((entry) => entry[1] === path) || [''];
-      document.title = `${this.appName} | ${pageEntry[0]}`;
+      let pageName = getEnumKey(AppLink, path);
+      pageName = pageName === 'AboutUs' ? 'About Us' : pageName;
+      document.title = `${this.appName} | ${pageName}`;
     } else {
       this.routeCallbacks.get(AppLink.NotFound)?.();
       document.title = `${this.appName} | Not Found`;
     }
+  }
+
+  public buildCategoryUrl(category: string): string {
+    return `${AppLink.Catalog}?${LinkQueries.CategoryFilter}=${category.toLowerCase()}`;
   }
 }
