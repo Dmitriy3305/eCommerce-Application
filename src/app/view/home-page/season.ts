@@ -14,8 +14,11 @@ export default class Season extends DOMComponent<HTMLElement> {
     classList: [SectionSeasonCssClasses.SectionSeason],
   };
 
+  private router: AppRouter;
+
   public constructor(router: AppRouter) {
     super(Season.SEASON_SECTION_PARAMS);
+    this.router = router;
     const titleSectionSeason = new DOMComponent<HTMLParagraphElement>({
       tag: Tags.Paragraph,
       classList: [SectionSeasonCssClasses.TitleSeason],

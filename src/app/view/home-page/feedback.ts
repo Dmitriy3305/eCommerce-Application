@@ -18,6 +18,7 @@ export default class Feedback extends DOMComponent<HTMLElement> {
     tag: Tags.Section,
     classList: [FeedbackCssClasses.SectionFeedback],
   };
+
   private router: AppRouter;
 
   public constructor(router: AppRouter) {
