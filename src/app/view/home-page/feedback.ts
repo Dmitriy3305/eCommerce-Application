@@ -18,10 +18,11 @@ export default class Feedback extends DOMComponent<HTMLElement> {
     tag: Tags.Section,
     classList: [FeedbackCssClasses.SectionFeedback],
   };
+  private router: AppRouter;
 
   public constructor(router: AppRouter) {
     super(Feedback.SECTION_FEEDBACK_PARAMS);
-
+    this.router = router;
     const contentFeedback = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [FeedbackCssClasses.TextFeedback],
