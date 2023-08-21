@@ -1,0 +1,54 @@
+.section__season {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem;
+  padding-top: 7rem;
+  padding-bottom: 5rem;
+  max-width: 100%;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url(main-photo.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  min-height: 65%;
+}
+.title__season {
+  display: inline-block;
+  display: flex;
+  text-align: center;
+  font-family: $BOLD-FONT, sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  color: #ffffff;
+  text-shadow:
+    1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+}
+.btn__season {
+  font-family: $MAIN-FONT, sans-serif;
+  color: $primary-color;
+  font-size: 1rem;
+  padding: 0.8rem 1.6rem;
+  margin-top: 2rem;
+  border-radius: 5px;
+  border: #fff;
+}
+.btn__season:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+@media (min-width: $tablet-width) and (max-width: $desktop-width) {
+  .title__season {
+    font-size: 3rem;
+  }
+}
+@media (max-width: $tablet-width) {
+  .title__season {
+    font-size: 2rem;
+  }
+}
