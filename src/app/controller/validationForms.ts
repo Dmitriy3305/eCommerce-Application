@@ -10,14 +10,14 @@ const enum Messages {
 
 export default class ValidationInput {
   constructor(
+    public messageForFirstName?: DOMComponent<HTMLSpanElement>,
     public inputEmail?: InputDomComponents,
     public inputPassword?: InputDomComponents,
     public messageForEmail?: DOMComponent<HTMLSpanElement>,
     public messageForPassword?: DOMComponent<HTMLSpanElement>,
     public inputDateOfBirth?: InputDomComponents,
     public messageForDateOfBirth?: DOMComponent<HTMLSpanElement>,
-    public inputFirstName?: InputDomComponents,
-    public messageForFirstName?: DOMComponent<HTMLSpanElement>,
+    public inputFirstName?: DOMComponent<HTMLSpanElement>,
     public inputLastName?: InputDomComponents,
     public messageForLastName?: DOMComponent<HTMLSpanElement>,
     public inputShippingAddressCounty?: string

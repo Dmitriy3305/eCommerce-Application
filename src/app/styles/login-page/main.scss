@@ -4,7 +4,7 @@
 @import 'message';
 @import 'btn';
 
-.main {
+.main, .personal {
   @include flex-center;
   height: 100%;
   color: $primary-color;
