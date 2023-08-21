@@ -4,7 +4,7 @@ import { Tags } from '../../../types/dom-types/enums';
 import { LinkCreateCallback } from '../../../types/header-types';
 import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
-import RoutedComponent from '../routed-component';
+import RoutedComponent from '../../../components/routed-component';
 import HeaderLogo from './header-logo';
 import MobileNavigation from './mobile-navigation';
 import UserNavigation from './user-navigation';
@@ -48,6 +48,8 @@ export default class Header extends RoutedComponent {
 
   private router: AppRouter;
 
+  private linkCallback: LinkCreateCallback;
+
   public constructor(router: AppRouter, appName: string, categories: string[]) {
     super(Header.HEADER_PARAMS);
     this.router = router;
@@ -67,14 +69,14 @@ export default class Header extends RoutedComponent {
       parent: this,
     });
 
-    const linkCallback: LinkCreateCallback = (url: AppLink, link: DOMComponent<HTMLElement>) => {
+    this.linkCallback = (url: string, link: DOMComponent<HTMLElement>) => {
       this.links.set(url, link);
     };
-    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS.slice(2), linkCallback); // TODO: get if user is authorized from services
+    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS.slice(2), this.linkCallback); // TODO: get if user is authorized from services
     this.burgerMenu = this.createBurgerMenu(categories);
   }
 
-  public override switchActiveLink(url: AppLink): void {
+  public override switchActiveLink(url: string): void {
     super.switchActiveLink(url);
 
     if (this.burgerMenu.isShown) this.burgerMenu.hide();
@@ -83,7 +85,7 @@ export default class Header extends RoutedComponent {
   private createBurgerMenu(categories: string[]): MobileNavigation {
     const mobileMediaQuery = matchMedia('(max-width: 500px)');
     const body = DOMComponent.FromElement(document.body);
-    const burgerMenu = new MobileNavigation(this.router, body, categories);
+    const burgerMenu = new MobileNavigation(this.router, body, categories, this.linkCallback);
     const openButton = burgerMenu.generateOpenButton({ tag: Tags.Button });
 
     const mediaQueryChangeHandler = () => {

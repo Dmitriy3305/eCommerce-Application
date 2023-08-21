@@ -40,7 +40,7 @@ export default class App {
   }
 
   private getDefaultRouteHandler(link: AppLink): RouteHandler {
-    return async () => {
+    return async (resource?: string, queries?: URLSearchParams) => {
       this.controller.loadCategories((categories) => {
         this.view?.clear();
         switch (link) {
@@ -55,7 +55,7 @@ export default class App {
           default:
             break;
         }
-        this.view?.switchActiveLink(link);
+        this.view?.switchActiveLink(link, queries);
       });
     };
   }

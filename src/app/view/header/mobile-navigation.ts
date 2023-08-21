@@ -1,5 +1,6 @@
 import DOMComponent from '../../../components/base-component';
 import BurgerMenu from '../../../components/burger-menu/burger-menu';
+import { LinkCreateCallback } from '../../../types/header-types';
 import AppRouter from '../../router/router';
 import CategoriesDropdown from './categories-dropdown';
 import HeaderLogo from './header-logo';
@@ -15,14 +16,19 @@ export default class MobileNavigation extends BurgerMenu {
 
   private navigation: UserNavigation | null = null;
 
-  public constructor(router: AppRouter, parent: DOMComponent<HTMLElement>, categories: string[]) {
+  public constructor(
+    router: AppRouter,
+    parent: DOMComponent<HTMLElement>,
+    categories: string[],
+    callback: LinkCreateCallback
+  ) {
     super(parent);
 
     const logo = new HeaderLogo(router, '');
     logo.addClass(MobileNavigationCssClasses.Logo);
     this.append(logo);
 
-    this.categories = new CategoriesDropdown(router, categories);
+    this.categories = new CategoriesDropdown(router, categories, callback);
   }
 
   public set userNavigation(value: UserNavigation) {

@@ -45,11 +45,12 @@ export default abstract class AppView {
     this.main.remove();
   }
 
-  public switchActiveLink(link: AppLink): void {
-    if (Header.NAVIGATION_LINKS.includes(link)) AppView.HEADER?.switchActiveLink(link);
+  public switchActiveLink(link: AppLink, queries?: URLSearchParams): void {
+    const url = queries?.size ? `${link}?${queries}` : link;
+    if (Header.NAVIGATION_LINKS.includes(link)) AppView.HEADER?.switchActiveLink(url);
     else AppView.HEADER?.disableActiveLinks();
 
-    if (Footer.NAVIGATION_LINKS.includes(link)) AppView.FOOTER?.switchActiveLink(link);
+    if (Footer.NAVIGATION_LINKS.includes(link)) AppView.FOOTER?.switchActiveLink(url);
     else AppView.FOOTER?.disableActiveLinks();
   }
 }

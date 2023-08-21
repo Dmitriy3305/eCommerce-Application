@@ -3,7 +3,7 @@ import { Tags } from '../../../types/dom-types/enums';
 import createLink from '../../../utils/create-link';
 import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
-import RoutedComponent from '../routed-component';
+import RoutedComponent from '../../../components/routed-component';
 import courseLinkHtml from './course-link.html';
 
 enum FooterCssClasses {
