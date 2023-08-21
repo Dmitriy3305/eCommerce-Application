@@ -85,7 +85,6 @@ export default class Slider extends DOMComponent<HTMLElement> {
     const cardsProduct = [];
     const productsRepository = new ProductsRepository();
     productsRepository.getProducts().then((response) => {
-      console.log(response);
       for (let i = 0; i < response.length; i += 1) {
         const { images } = response[i].masterData.current.masterVariant;
         const { name } = response[i].masterData.current;
