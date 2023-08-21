@@ -2,6 +2,7 @@ import AppController from './controller/controller';
 import AppRouter from './router/router';
 import { AppLink, RouteHandler } from './router/router-types';
 import MainView from './view/main-view';
+import NotFoundView from './view/not-found/not-found-view';
 import AppView from './view/view';
 import './styles/main.scss';
 import { Events } from '../types/dom-types/enums';
@@ -45,12 +46,14 @@ export default class App {
         this.view?.clear();
         switch (link) {
           case AppLink.Main:
+            this.view = new MainView(this.router, this.config.appName, this.config.description, categories);
+            break;
           case AppLink.AboutUs:
           case AppLink.Catalog:
           case AppLink.Login:
           case AppLink.Register:
           case AppLink.Cart:
-            this.view = new MainView(this.router, this.config.appName, this.config.description, categories);
+            this.view = new NotFoundView(this.router);
             break;
           default:
             break;
