@@ -115,8 +115,8 @@ export default class LoginView extends AppView {
     main.append(title, loginForm);
     const validationInput = new ValidationInput(
       this.inputEmail,
-      this.inputPassword,
       this.messageForEmail,
+      this.inputPassword,
       this.messageForPassword
     );
     validationInput.validationEmail();

@@ -13,6 +13,20 @@ export default class InputDomComponents extends DOMComponent<HTMLInputElement> {
     return this.element.value;
   }
 
+  public validateName(firstName: string): string[] {
+    const errors: string[] = [];
+    const nameRegex = /^[a-zA-Zа-яА-Я]+$/;
+    if (firstName.length === 0) {
+      errors.length = 0;
+      errors.push('The name should not be empty');
+    }
+    if (!nameRegex.test(firstName)) {
+      errors.length = 0;
+      errors.push('The name should consist only of letters');
+    }
+    return errors;
+  }
+
   public validateEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/;
     return emailRegex.test(email);
@@ -66,5 +80,33 @@ export default class InputDomComponents extends DOMComponent<HTMLInputElement> {
 
   public getAttribute(attributeName: string) {
     return this.element.getAttribute(attributeName);
+  }
+
+  public validateDateOfBirth(inputValue: string): string[] {
+    const errors: string[] = [];
+    const minimumAge = 13;
+    const currentDate = new Date();
+    const selectedDate = new Date(inputValue);
+    const minimumDate = new Date();
+    minimumDate.setFullYear(currentDate.getFullYear() - minimumAge);
+
+    if (selectedDate > currentDate) {
+      errors.length = 0;
+      errors.push('A future date has been selected');
+    } else if (selectedDate > minimumDate) {
+      errors.length = 0;
+      errors.push(`You must be over ${minimumAge} years old`);
+    }
+
+    return errors;
+  }
+
+  public validateStreet(inputValue: string): string[] {
+    const errors: string[] = [];
+    if (inputValue.length === 0) {
+      errors.length = 0;
+      errors.push('The street name must contain at least 1 character');
+    }
+    return errors;
   }
 }

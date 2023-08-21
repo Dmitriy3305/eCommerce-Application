@@ -1,7 +1,7 @@
 import DOMComponent from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
 import AppView from '../view';
-// import ValidationInput from '../../controller/validationForms';
+import ValidationInput from '../../controller/validationForms';
 import ShippingAddressView from './shipping-address-view';
 import BillingAddressView from './billingAddress';
 import PersonalView from './personal-view';
@@ -52,7 +52,6 @@ export default class RegistrationView extends AppView {
 
     registrationForm.append(title, titlePersonal, personalView, infoOfAddress, RegistrationButton);
 
-    /* Personal
     const { inputFirstName } = personal;
     const { messageForFirstName } = personal;
     const { inputLastName } = personal;
@@ -64,7 +63,7 @@ export default class RegistrationView extends AppView {
     const { inputDateOfBirth } = personal;
     const { messageForDateOfBirth } = personal;
     const { btnShowPassword } = personal;
-    // ShippingAddress
+
     const { inputShippingAddressCounty } = shippingAddress;
     const { messageForShippingAddressCounty } = shippingAddress;
     const { inputShippingAddressCity } = shippingAddress;
@@ -77,7 +76,7 @@ export default class RegistrationView extends AppView {
     const { messageForShippingAddressPostalCode } = shippingAddress;
     const { inputShippingAddressApartment } = shippingAddress;
     const { messageForShippingAddressApartment } = shippingAddress;
-    // BillingAddress
+
     const { inputBillingAddressCounty } = billingAddress;
     const { messageForBillingAddressCounty } = billingAddress;
     const { inputBillingAddressCity } = billingAddress;
@@ -92,15 +91,48 @@ export default class RegistrationView extends AppView {
     const { messageForBillingAddressApartment } = billingAddress;
 
     const validationInput = new ValidationInput(
+      inputEmail,
+      messageForEmail,
+      inputPassword,
+      messageForPassword,
       inputFirstName,
       messageForFirstName,
       inputLastName,
       messageForLastName,
-
-      inputShippingAddressCounty
+      inputDateOfBirth,
+      messageForDateOfBirth,
+      btnShowPassword,
+      inputShippingAddressCounty,
+      messageForShippingAddressCounty,
+      inputShippingAddressCity,
+      messageForShippingAddressCity,
+      inputShippingAddressStreet,
+      messageForShippingAddressStreet,
+      inputShippingAddressNumberStreet,
+      messageForShippingAddressNumberStreet,
+      inputShippingAddressPostalCode,
+      messageForShippingAddressPostalCode,
+      inputShippingAddressApartment,
+      messageForShippingAddressApartment,
+      inputBillingAddressCounty,
+      messageForBillingAddressCounty,
+      inputBillingAddressCity,
+      messageForBillingAddressCity,
+      inputBillingAddressStreet,
+      messageForBillingAddressStreet,
+      inputBillingAddressNumberStreet,
+      messageForBillingAddressNumberStreet,
+      inputBillingAddressPostalCode,
+      messageForBillingAddressPostalCode,
+      inputBillingAddressApartment,
+      messageForBillingAddressApartment
     );
+    validationInput.validationFirstName();
+    validationInput.validationLastName();
     validationInput.validationEmail();
-*/
+    validationInput.validationPassword();
+    validationInput.validationDateOfBirth();
+    validationInput.validationShippingStreet();
     return main;
   }
 }

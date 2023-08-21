@@ -59,7 +59,6 @@ export default class PersonalView {
         id: 'input-first-name',
         type: 'text',
         placeholder: 'First name',
-        addEventListener: Events.Input,
         required: '',
       },
     });
@@ -101,7 +100,8 @@ export default class PersonalView {
     this.inputDateOfBirth = new InputDomComponents({
       attributes: {
         id: 'input-date-of-birth',
-        type: 'text',
+        type: 'date',
+        max: '2023',
         placeholder: 'Date of birth',
         addEventListener: Events.Input,
         required: '',
