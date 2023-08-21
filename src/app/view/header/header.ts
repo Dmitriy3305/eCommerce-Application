@@ -103,7 +103,8 @@ export default class Header extends RoutedComponent {
       } else {
         openButton.remove();
         burgerMenu.removeNavigation();
-        burgerMenu.hide();
+        if (burgerMenu.isShown) burgerMenu.hide();
+
         this.userNavigation.addClass(HeaderCssClasses.UserNav);
         this.append(this.userNavigation);
 

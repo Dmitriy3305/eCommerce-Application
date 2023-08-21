@@ -42,7 +42,6 @@ export default class App {
   private getDefaultRouteHandler(link: AppLink): RouteHandler {
     return async (resource?: string, queries?: URLSearchParams) => {
       this.controller.loadCategories((categories) => {
-        console.log(categories);
         this.view?.clear();
         switch (link) {
           case AppLink.Main:

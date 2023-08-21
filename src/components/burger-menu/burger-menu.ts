@@ -53,9 +53,7 @@ export default class BurgerMenu extends DOMComponent<HTMLElement> {
     this.background.removeClass(BurgerMenuCssClasses.BurgerMenuBackgroundShown);
 
     const removeHandler = (event: Event) => {
-      if (
-        DOMComponent.FromElement(event.target as HTMLElement).checkSelectorMatch(`.${BurgerMenuCssClasses.BurgerMenu}`)
-      ) {
+      if (event.target === this.element) {
         this.remove();
         this.background.remove();
         this.parent.removeCSSProperty('overflow');
