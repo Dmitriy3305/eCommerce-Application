@@ -15,7 +15,7 @@ export default class ProductsRepository {
 
   public async getCategoriesNames(): Promise<string[]> {
     const response = await this.apiRoot.categories().get().execute();
-    return response.body.results.map((category) => category.key || '');
+    return response.body.results.map((category) => category.key || '').filter((name) => !name.endsWith('spec'));
   }
 
   public async getProducts(): Promise<Product[]> {

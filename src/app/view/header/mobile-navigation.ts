@@ -15,14 +15,14 @@ export default class MobileNavigation extends BurgerMenu {
 
   private navigation: UserNavigation | null = null;
 
-  public constructor(router: AppRouter, parent: DOMComponent<HTMLElement>) {
+  public constructor(router: AppRouter, parent: DOMComponent<HTMLElement>, categories: string[]) {
     super(parent);
 
     const logo = new HeaderLogo(router, '');
     logo.addClass(MobileNavigationCssClasses.Logo);
     this.append(logo);
 
-    this.categories = new CategoriesDropdown();
+    this.categories = new CategoriesDropdown(router, categories);
   }
 
   public set userNavigation(value: UserNavigation) {

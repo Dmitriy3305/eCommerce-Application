@@ -20,13 +20,13 @@ export default abstract class AppView {
 
   protected router: AppRouter;
 
-  public constructor(router: AppRouter, appName: string, appDescription: string) {
+  public constructor(router: AppRouter, appName: string, appDescription: string, categories: string[]) {
     this.router = router;
 
     this.body = DOMComponent.FromElement(document.body);
 
     if (!AppView.HEADER) {
-      AppView.HEADER = new Header(router, appName);
+      AppView.HEADER = new Header(router, appName, categories);
       this.body.append(AppView.HEADER);
     }
     if (!AppView.FOOTER) {

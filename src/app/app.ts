@@ -33,28 +33,30 @@ export default class App {
   }
 
   private setupRouter(): AppRouter {
-    const routes = new Map<AppLink, (resource?: string) => void>();
+    const routes = new Map<AppLink, RouteHandler>();
     Object.values(AppLink).forEach((link) => routes.set(link, this.getDefaultRouteHandler(link)));
     const router = new AppRouter(routes, this.controller.isAuthorized, this.config.appName);
     return router;
   }
 
   private getDefaultRouteHandler(link: AppLink): RouteHandler {
-    return () => {
-      this.view?.clear();
-      switch (link) {
-        case AppLink.Main:
-        case AppLink.AboutUs:
-        case AppLink.Catalog:
-        case AppLink.Login:
-        case AppLink.Register:
-        case AppLink.Cart:
-          this.view = new MainView(this.router, this.config.appName, this.config.description);
-          break;
-        default:
-          break;
-      }
-      this.view?.switchActiveLink(link);
+    return async () => {
+      this.controller.loadCategories((categories) => {
+        this.view?.clear();
+        switch (link) {
+          case AppLink.Main:
+          case AppLink.AboutUs:
+          case AppLink.Catalog:
+          case AppLink.Login:
+          case AppLink.Register:
+          case AppLink.Cart:
+            this.view = new MainView(this.router, this.config.appName, this.config.description, categories);
+            break;
+          default:
+            break;
+        }
+        this.view?.switchActiveLink(link);
+      });
     };
   }
 }

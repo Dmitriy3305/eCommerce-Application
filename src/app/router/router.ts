@@ -1,6 +1,6 @@
 import { Events } from '../../types/dom-types/enums';
 import { getEnumKey, isEnumValue } from '../../utils/enum-utils';
-import { AppLink, RouteHandler } from './router-types';
+import { AppLink, LinkQueries, RouteHandler } from './router-types';
 
 export default class AppRouter {
   private routeCallbacks: Map<AppLink, RouteHandler>;
@@ -24,11 +24,12 @@ export default class AppRouter {
   public navigate(url: PopStateEvent | string): void {
     if (typeof url === 'string') window.history.pushState(null, '', url);
     const urlParams = window.location.pathname.split('/').slice(1);
+    const queries = new URL(window.location.href).searchParams;
 
     const path = urlParams[0] ? (urlParams[0] as AppLink) : AppLink.Main;
     if (isEnumValue(AppLink, path)) {
       const resource = urlParams[1];
-      this.routeCallbacks.get(path)?.(resource);
+      this.routeCallbacks.get(path)?.(resource, queries);
 
       let pageName = getEnumKey(AppLink, path);
       pageName = pageName === 'AboutUs' ? 'About Us' : pageName;
@@ -37,5 +38,9 @@ export default class AppRouter {
       this.routeCallbacks.get(AppLink.NotFound)?.();
       document.title = `${this.appName} | Not Found`;
     }
+  }
+
+  public buildCategoryUrl(category: string): string {
+    return `${AppLink.Catalog}?${LinkQueries.CategoryFilter}=${category.toLowerCase()}`;
   }
 }

@@ -30,9 +30,9 @@ export default class Header extends RoutedComponent {
     textContent: 'Catalog',
   };
 
-  private static NOT_AUTH_LINKS = [AppLink.Main, AppLink.Register, AppLink.Login, AppLink.Cart];
+  private static NOT_AUTH_LINKS = [AppLink.Main, AppLink.Catalog, AppLink.Register, AppLink.Login, AppLink.Cart];
 
-  private static AUTH_LINKS = [AppLink.Main, AppLink.Profile, AppLink.Cart];
+  private static AUTH_LINKS = [AppLink.Main, AppLink.Catalog, AppLink.Profile, AppLink.Cart];
 
   public static NAVIGATION_LINKS = Header.NOT_AUTH_LINKS.concat(Header.AUTH_LINKS);
 
@@ -48,7 +48,7 @@ export default class Header extends RoutedComponent {
 
   private router: AppRouter;
 
-  public constructor(router: AppRouter, appName: string) {
+  public constructor(router: AppRouter, appName: string, categories: string[]) {
     super(Header.HEADER_PARAMS);
     this.router = router;
     this.links = new Map();
@@ -70,8 +70,8 @@ export default class Header extends RoutedComponent {
     const linkCallback: LinkCreateCallback = (url: AppLink, link: DOMComponent<HTMLElement>) => {
       this.links.set(url, link);
     };
-    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS.slice(1), linkCallback); // TODO: get if user is authorized from services
-    this.burgerMenu = this.createBurgerMenu();
+    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS.slice(2), linkCallback); // TODO: get if user is authorized from services
+    this.burgerMenu = this.createBurgerMenu(categories);
   }
 
   public override switchActiveLink(url: AppLink): void {
@@ -80,10 +80,10 @@ export default class Header extends RoutedComponent {
     if (this.burgerMenu.isShown) this.burgerMenu.hide();
   }
 
-  private createBurgerMenu(): MobileNavigation {
+  private createBurgerMenu(categories: string[]): MobileNavigation {
     const mobileMediaQuery = matchMedia('(max-width: 500px)');
     const body = DOMComponent.FromElement(document.body);
-    const burgerMenu = new MobileNavigation(this.router, body);
+    const burgerMenu = new MobileNavigation(this.router, body, categories);
     const openButton = burgerMenu.generateOpenButton({ tag: Tags.Button });
 
     const mediaQueryChangeHandler = () => {
@@ -94,6 +94,7 @@ export default class Header extends RoutedComponent {
       } else {
         openButton.remove();
         burgerMenu.removeNavigation();
+        burgerMenu.hide();
         this.userNavigation.addClass(HeaderCssClasses.UserNav);
         this.append(this.userNavigation);
       }
