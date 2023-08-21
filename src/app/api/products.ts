@@ -2,6 +2,8 @@ import { Product, createApiBuilderFromCtpClient } from '@commercetools/platform-
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import ctpClient from './buildClient';
 
+export type GrouppedCategories = { [group: string]: string[] };
+
 export default class ProductsRepository {
   private static PROJECT_KEY = 'ecommerce-application2023q1';
 
@@ -13,9 +15,19 @@ export default class ProductsRepository {
     });
   }
 
-  public async getCategoriesNames(): Promise<string[]> {
+  public async getCategoriesGroups(): Promise<GrouppedCategories> {
     const response = await this.apiRoot.categories().get().execute();
-    return response.body.results.map((category) => category.key || '').filter((name) => !name.endsWith('spec'));
+    const categories = response.body.results;
+    const result: GrouppedCategories = {};
+
+    categories.forEach((category) => {
+      if (category.parent) {
+        const key = category.parent.id;
+        if (!result[key]) result[key] = [];
+        result[key].push(category.key || '');
+      }
+    });
+    return result;
   }
 
   public async getProducts(): Promise<Product[]> {

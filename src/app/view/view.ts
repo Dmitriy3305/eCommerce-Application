@@ -4,6 +4,7 @@ import Header from './header/header';
 import { InsertPositions } from '../../types/dom-types/enums';
 import AppRouter from '../router/router';
 import { AppLink } from '../router/router-types';
+import { GrouppedCategories } from '../api/products';
 
 enum ViewCssClasses {
   Main = 'main',
@@ -20,7 +21,7 @@ export default abstract class AppView {
 
   protected router: AppRouter;
 
-  public constructor(router: AppRouter, appName: string, appDescription: string, categories: string[]) {
+  public constructor(router: AppRouter, appName: string, appDescription: string, categories: GrouppedCategories) {
     this.router = router;
 
     this.body = DOMComponent.FromElement(document.body);

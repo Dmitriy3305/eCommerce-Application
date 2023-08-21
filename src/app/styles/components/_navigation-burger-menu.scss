@@ -41,39 +41,10 @@
     gap: 0.25em;
   }
 
-  .dropdown-menu__open {
-    border: none;
-    outline: none;
-    background: transparent;
-
-    color: $primary-dark;
-
-    i {
-      margin-left: 0.25em;
-      transition: transform $active-transition;
-    }
-  }
-
-  .dropdown-menu:has(.dropdown-menu__content_expanded) {
-    .dropdown-menu__open i {
-      transform: rotate(180deg);
-    }
-  }
-
-  .dropdown-menu__content {
-    margin-top: 0.25em;
-
-    display: flex;
-    flex-direction: column;
-    text-transform: capitalize;
-    gap: 0.25em;
-
-    font-size: 0.7em;
-    padding-left: 0.5em;
-
-    &_expanded {
-      overflow-y: auto;
-    }
+  .categories-group {
+    width: 50%;
+    padding-bottom: 0.5em;
+    border-bottom: 2px solid $primary-dark;
   }
 }
 

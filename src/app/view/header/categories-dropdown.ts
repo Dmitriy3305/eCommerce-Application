@@ -5,23 +5,35 @@ import FontAwesome from '../../../types/font-awesome';
 import { LinkCreateCallback } from '../../../types/header-types';
 import createLink from '../../../utils/create-link';
 import getLinkIcon from '../../../utils/get-link-icon';
+import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
+
+enum CategoriesDropdownCssClasses {
+  GroupWrapper = 'categories-group',
+}
 
 export default class CategoriesDropdown extends DropdownMenu {
   private static TITLE = 'Catalog';
 
   private static CONTENT_HEIGHT = 150;
 
-  public constructor(router: AppRouter, categories: string[], callback: LinkCreateCallback) {
+  public constructor(router: AppRouter, categoryGroups: GrouppedCategories, callback: LinkCreateCallback) {
     super(
       CategoriesDropdown.TITLE,
       CategoriesDropdown.CONTENT_HEIGHT,
-      categories.map((category) => {
-        const url = router.buildCategoryUrl(category);
-        const link = createLink({ textContent: category }, router, url);
-        callback(url, link);
-        link.append(getLinkIcon(category));
-        return link;
+      Object.keys(categoryGroups).map((group) => {
+        const groupWrapper = new DOMComponent<HTMLElement>({
+          tag: Tags.Div,
+          classList: [CategoriesDropdownCssClasses.GroupWrapper],
+        });
+        categoryGroups[group].forEach((category) => {
+          const url = router.buildCategoryUrl(category);
+          const link = createLink({ textContent: category }, router, url);
+          link.append(getLinkIcon(category));
+          callback(url, link);
+          groupWrapper.append(link);
+        });
+        return groupWrapper;
       })
     );
 
@@ -31,5 +43,15 @@ export default class CategoriesDropdown extends DropdownMenu {
         classList: [FontAwesome.Regular, FontAwesome.ChevronDown],
       })
     );
+  }
+
+  public disable(): void {
+    this.openButton.setAttribute('disabled', '');
+    this.open();
+  }
+
+  public enable(): void {
+    this.openButton.removeAttribute('disabled');
+    this.close();
   }
 }

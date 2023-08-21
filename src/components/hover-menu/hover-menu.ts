@@ -20,7 +20,9 @@ export default class HoverMenu extends DOMComponent<HTMLDivElement> {
     super(HoverMenu.MENU_PARAMS);
     this.setCSSProperty(HoverMenu.APPEAR_TIME_CSS_PROPERTY, `${HoverMenu.OPACITY_TRANSITION_TIME}ms`);
 
-    this.addEventListener(Events.MouseOut, () => this.hide());
+    this.addEventListener(Events.MouseOut, (event: Event) => {
+      if (!this.element.contains((event as MouseEvent).relatedTarget as Node)) this.hide();
+    });
   }
 
   public show(coordinates: { x: number; y: number }): void {
@@ -46,11 +48,7 @@ export default class HoverMenu extends DOMComponent<HTMLDivElement> {
     });
     button.addEventListener(Events.MouseOut, (event) => {
       const mouseEvent = event as MouseEvent;
-      if (
-        !DOMComponent.FromElement(mouseEvent.relatedTarget as HTMLElement).checkSelectorMatch(
-          `.${HoverMenuCssClasses.Menu}`
-        )
-      )
+      if (this.element !== mouseEvent.relatedTarget && !this.element.contains(mouseEvent.relatedTarget as Node))
         this.hide();
     });
     return button;

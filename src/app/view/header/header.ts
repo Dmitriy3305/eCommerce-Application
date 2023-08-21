@@ -1,5 +1,4 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import HoverMenu from '../../../components/hover-menu/hover-menu';
 import { Tags } from '../../../types/dom-types/enums';
 import { LinkCreateCallback } from '../../../types/header-types';
 import AppRouter from '../../router/router';
@@ -8,6 +7,9 @@ import RoutedComponent from '../../../components/routed-component';
 import HeaderLogo from './header-logo';
 import MobileNavigation from './mobile-navigation';
 import UserNavigation from './user-navigation';
+import CategoriesDropdown from './categories-dropdown';
+import HoverMenu from '../../../components/hover-menu/hover-menu';
+import { GrouppedCategories } from '../../api/products';
 
 enum HeaderCssClasses {
   Header = 'header',
@@ -40,17 +42,19 @@ export default class Header extends RoutedComponent {
 
   private categoriesButton: DOMComponent<HTMLButtonElement>;
 
-  private categoriesNavigation: HoverMenu;
+  private hoverMenu: HoverMenu;
 
   private userNavigation: UserNavigation;
 
   private burgerMenu: MobileNavigation;
 
+  private categoriesDropdown: CategoriesDropdown;
+
   private router: AppRouter;
 
   private linkCallback: LinkCreateCallback;
 
-  public constructor(router: AppRouter, appName: string, categories: string[]) {
+  public constructor(router: AppRouter, appName: string, categories: GrouppedCategories) {
     super(Header.HEADER_PARAMS);
     this.router = router;
     this.links = new Map();
@@ -60,11 +64,11 @@ export default class Header extends RoutedComponent {
     this.append(this.logo);
     this.links.set(AppLink.Main, this.logo);
 
-    this.categoriesNavigation = new HoverMenu();
-    this.categoriesNavigation.addClass(HeaderCssClasses.CategoriesMenu);
-    this.append(this.categoriesNavigation);
+    this.hoverMenu = new HoverMenu();
+    this.hoverMenu.addClass(HeaderCssClasses.CategoriesMenu);
+    this.append(this.hoverMenu);
 
-    this.categoriesButton = this.categoriesNavigation.generateHoverButton({
+    this.categoriesButton = this.hoverMenu.generateHoverButton({
       ...Header.CATEGORIES_BUTTON_PARAMS,
       parent: this,
     });
@@ -72,8 +76,9 @@ export default class Header extends RoutedComponent {
     this.linkCallback = (url: string, link: DOMComponent<HTMLElement>) => {
       this.links.set(url, link);
     };
+    this.categoriesDropdown = new CategoriesDropdown(router, categories, this.linkCallback);
     this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS.slice(2), this.linkCallback); // TODO: get if user is authorized from services
-    this.burgerMenu = this.createBurgerMenu(categories);
+    this.burgerMenu = this.createBurgerMenu();
   }
 
   public override switchActiveLink(url: string): void {
@@ -82,10 +87,10 @@ export default class Header extends RoutedComponent {
     if (this.burgerMenu.isShown) this.burgerMenu.hide();
   }
 
-  private createBurgerMenu(categories: string[]): MobileNavigation {
+  private createBurgerMenu(): MobileNavigation {
     const mobileMediaQuery = matchMedia('(max-width: 500px)');
     const body = DOMComponent.FromElement(document.body);
-    const burgerMenu = new MobileNavigation(this.router, body, categories, this.linkCallback);
+    const burgerMenu = new MobileNavigation(this.router, body);
     const openButton = burgerMenu.generateOpenButton({ tag: Tags.Button });
 
     const mediaQueryChangeHandler = () => {
@@ -93,12 +98,17 @@ export default class Header extends RoutedComponent {
         body.append(openButton);
         this.userNavigation.removeClass(HeaderCssClasses.UserNav);
         burgerMenu.userNavigation = this.userNavigation;
+
+        burgerMenu.categoriesNavigation = this.categoriesDropdown;
       } else {
         openButton.remove();
         burgerMenu.removeNavigation();
         burgerMenu.hide();
         this.userNavigation.addClass(HeaderCssClasses.UserNav);
         this.append(this.userNavigation);
+
+        this.hoverMenu.append(this.categoriesDropdown);
+        this.categoriesDropdown.disable();
       }
     };
     mobileMediaQuery.addEventListener('change', mediaQueryChangeHandler);
