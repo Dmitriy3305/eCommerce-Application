@@ -9,6 +9,7 @@
 @import 'components/categories-hover';
 @import 'components/navigation-burger-menu';
 @import 'components/slider-section';
+@import 'components/form';
 
 @import 'layout/header';
 @import 'layout/main';
@@ -16,7 +17,6 @@
 
 @import 'pages/home';
 @import 'pages/not-found';
-@import './login-page/main.scss';
-@import './registration-page/main.scss';
+@import 'pages/login-registration';
 
 @import 'vendors/normalize.css';

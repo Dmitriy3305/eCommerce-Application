@@ -1,7 +1,7 @@
 import DOMComponent, { ElementParameters } from './base-component';
 import { Tags } from '../types/dom-types/enums';
 
-export default class InputDomComponents extends DOMComponent<HTMLInputElement> {
+export default class InputDomComponent extends DOMComponent<HTMLInputElement> {
   public constructor(params: Omit<ElementParameters, 'tag'>) {
     super({
       tag: Tags.Input,
@@ -11,6 +11,18 @@ export default class InputDomComponents extends DOMComponent<HTMLInputElement> {
 
   public get value(): string {
     return this.element.value;
+  }
+
+  public set value(text: string) {
+    this.element.value = text;
+  }
+
+  public get required(): boolean {
+    return this.element.required;
+  }
+
+  public set required(value: boolean) {
+    this.element.required = value;
   }
 
   public validateName(firstName: string): string[] {
@@ -76,10 +88,6 @@ export default class InputDomComponents extends DOMComponent<HTMLInputElement> {
     this.element.addEventListener(event, () => {
       callback(this.element.value);
     });
-  }
-
-  public getAttribute(attributeName: string) {
-    return this.element.getAttribute(attributeName);
   }
 
   public validateDateOfBirth(inputValue: string): string[] {

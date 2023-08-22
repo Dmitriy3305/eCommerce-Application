@@ -1,6 +1,6 @@
 import DOMComponent from '../../components/base-component';
 import { Events } from '../../types/dom-types/enums';
-import InputDomComponents from '../../components/input-components';
+import InputDomComponents from '../../components/input-component';
 
 export default class PasswordShow {
   private inputPassword: InputDomComponents;

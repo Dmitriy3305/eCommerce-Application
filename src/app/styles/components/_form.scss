@@ -1,0 +1,74 @@
+
+.form__title {
+    font-size: 2.5rem;
+    margin: 0;
+  }
+
+.form {
+  @include flex($direction: column, $gap: 1em);
+  padding-top: 30px;
+//   .input-password-container {
+//     position: relative;
+//   }
+
+//   .btn-show-password-visible,
+//   .btn-show-password-hide {
+//     @include absolute-center;
+//     @include flex();
+//     margin: 0 10px;
+//     border: none;
+//     outline: none;
+//     cursor: pointer;
+//     width: 30px;
+//     height: 30px;
+//     background-repeat: no-repeat;
+//   }
+
+//   .btn-show-password-visible {
+//     background: url('../../assets/images/icon_showPassword.svg');
+//   }
+
+//   .btn-show-password-hide {
+//     background-image: url('../../assets/images/icon_hidePassword.svg');
+//   }
+}
+
+.form__fieldset {
+  @include flex($direction: column, $gap: 1rem);
+  width: max(60vw, 300px);
+}
+
+.fieldset__title {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.form__input-wrapper {
+  height: 100px;
+  @include flex($direction: column);
+}
+
+.form__label {
+  @include flex($direction: column, $align-items: flex-start, $gap: 5px);
+}
+
+.form__input {
+  @include input-style;
+}
+
+.form__validation-message {
+    padding-top: 10px;
+    height: 60px;
+    font-family: $font-family;
+    color: $primary-dark;
+}
+
+.form__submit {
+  width: max(20vw, 100px);
+  height: 40px;
+
+  background-color: $primary-dark;
+  color: $primary-light;
+
+  cursor: pointer;
+}

@@ -16,10 +16,12 @@ export enum Tags {
   Label = 'label',
   Code = 'code',
   Form = 'form',
+  FieldSet = 'fieldset',
   Image = 'img',
   Navigation = 'nav',
   Anchor = 'a',
   Section = 'section',
+  Legend = 'legend',
 }
 
 export enum Events {
@@ -35,6 +37,7 @@ export enum Events {
   TransitionEnd = 'transitionend',
   ContentLoaded = 'DOMContentLoaded',
   Popstate = 'popstate',
+  Submit = 'submit',
 }
 
 export enum InsertPositions {
@@ -47,6 +50,7 @@ export enum InsertPositions {
 export enum InputTypes {
   Text = 'text',
   Checkbox = 'checkbox',
+  Submit = 'submit',
 }
 
 export enum NodeTypes {

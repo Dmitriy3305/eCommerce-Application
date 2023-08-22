@@ -1,9 +1,11 @@
 import AppController from './controller/controller';
 import AppRouter from './router/router';
 import { AppLink, RouteHandler } from './router/router-types';
+import AppView from './view/view';
 import HomeView from './view/home-view/home-view';
 import NotFoundView from './view/not-found/not-found-view';
-import AppView from './view/view';
+import LoginView from './view/login/login-view';
+import RegistrationView from './view/registration/registration-view';
 import { Events } from '../types/dom-types/enums';
 import './styles/main.scss';
 
@@ -23,7 +25,7 @@ export default class App {
 
   public constructor(config: AppConfig) {
     this.config = config;
-    this.controller = new AppController(); // Some implementation needed here
+    this.controller = new AppController();
     this.router = this.setupRouter();
   }
 
@@ -48,14 +50,17 @@ export default class App {
           case AppLink.Main:
             this.view = new HomeView(this.router, this.config.appName, this.config.description, categories);
             break;
+          case AppLink.Login:
+            this.view = new LoginView(this.router, this.config.appName, this.config.description, categories);
+            break;
+          case AppLink.Register:
+            this.view = new RegistrationView(this.router, this.config.appName, this.config.description, categories);
+            break;
+          case AppLink.Cart:
           case AppLink.AboutUs:
           case AppLink.Catalog:
-          case AppLink.Login:
-          case AppLink.Register:
-          case AppLink.Cart:
-            this.view = new NotFoundView(this.router, this.config.appName, this.config.description, categories);
-            break;
           default:
+            this.view = new NotFoundView(this.router, this.config.appName, this.config.description, categories);
             break;
         }
         this.view?.switchActiveLink(link, queries);

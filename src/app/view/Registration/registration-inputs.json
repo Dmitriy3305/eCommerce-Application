@@ -1,0 +1,48 @@
+[
+  {
+    "title": "Personal Info",
+    "inputs": [
+      {
+        "label": "First Name",
+        "type": "text"
+      },
+      {
+        "label": "Last Name",
+        "type": "text"
+      },
+      {
+        "label": "Email",
+        "type": "email"
+      },
+      {
+        "label": "Password",
+        "type": "password"
+      }
+    ]
+  },
+  {
+    "title": "Shipping Address",
+    "inputs": [
+      {
+        "label": "Country",
+        "type": "select"
+      },
+      {
+        "label": "City",
+        "type": "text"
+      },
+      {
+        "label": "Street",
+        "type": "text"
+      },
+      {
+        "label": "Bulding / Appartment",
+        "type": "text"
+      },
+      {
+        "label": "Postal Code",
+        "type": "text"
+      }
+    ]
+  }
+]

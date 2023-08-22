@@ -120,6 +120,10 @@ export default class DOMComponent<T extends HTMLElement> {
     this.element.setAttribute(attributeName, attributeValue);
   }
 
+  public getAttribute(attributeName: string): string | null {
+    return this.element.getAttribute(attributeName);
+  }
+
   public removeAttribute(attributeName: string): void {
     this.element.removeAttribute(attributeName);
   }
