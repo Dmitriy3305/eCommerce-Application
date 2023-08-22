@@ -1,5 +1,7 @@
 import { Tags, InputTypes, Events } from '../../types/dom-types/enums';
-import { FormFieldsetData, InputData } from '../../types/dom-types/types';
+import { FormFieldsetData } from '../../types/dom-types/types';
+import { InputData, InputDataType } from '../../types/input-datas';
+import ValidationCallback from '../../types/validation-callback';
 import DOMComponent, { ElementParameters } from '../base-component';
 import InputDomComponent from '../input-component';
 import Fieldset from './fieldset-component';
@@ -20,6 +22,7 @@ export type FieldsetSubmitData = {
 type FormParams = {
   inputs: (InputData | FormFieldsetData)[];
   onSubmit: (formData: (InputSubmitData | FieldsetSubmitData)[]) => void;
+  validationCallbacks?: Map<InputDataType, ValidationCallback>;
   title?: string;
 };
 
@@ -45,7 +48,7 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
 
   private inputs: (Fieldset | FormInput)[];
 
-  public constructor({ inputs, onSubmit, title }: FormParams) {
+  public constructor({ inputs, onSubmit, validationCallbacks, title }: FormParams) {
     super(FormComponent.FORM_PARAMS);
 
     if (title) this.append(new DOMComponent<HTMLHeadingElement>({ ...FormComponent.TITLE_PARAMS, textContent: title }));
@@ -64,6 +67,8 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
       event.preventDefault();
       onSubmit(this.data);
     });
+
+    if (validationCallbacks) this.addValidation(validationCallbacks);
   }
 
   public get data(): (InputSubmitData | FieldsetSubmitData)[] {
@@ -74,6 +79,16 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
             inputs: group.data,
           }
         : group.data;
+    });
+  }
+
+  public addValidation(callbacks: Map<InputDataType, ValidationCallback>): void {
+    this.inputs.forEach((group) => {
+      if (group instanceof Fieldset) group.addValidation(callbacks);
+      else {
+        const callback = callbacks.get(group.type);
+        if (callback) group.addValidation(callback);
+      }
     });
   }
 }

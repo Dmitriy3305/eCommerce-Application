@@ -1,4 +1,4 @@
-import { InputTypes } from './enums';
+import { InputData } from '../input-datas';
 
 export type AnimationParams = {
   name: string;
@@ -9,11 +9,4 @@ export type AnimationParams = {
 export type FormFieldsetData = {
   inputs: InputData[];
   title?: string;
-};
-
-export type InputData = {
-  label: string;
-  type: InputTypes;
-  value?: string;
-  isRequired?: boolean;
 };

@@ -1,10 +1,10 @@
 [
   {
     "label": "Email",
-    "type": "email"
+    "dataType": "email"
   },
   {
     "label": "Password",
-    "type": "password"
+    "dataType": "password"
   }
 ]

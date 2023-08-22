@@ -44,6 +44,7 @@ export default class App {
 
   private getDefaultRouteHandler(link: AppLink): RouteHandler {
     return async (resource?: string, queries?: URLSearchParams) => {
+      const validationCallbacks = this.controller.getValidationCallbacks();
       this.controller.loadCategories((categories) => {
         this.view?.clear();
         switch (link) {
@@ -51,10 +52,22 @@ export default class App {
             this.view = new HomeView(this.router, this.config.appName, this.config.description, categories);
             break;
           case AppLink.Login:
-            this.view = new LoginView(this.router, this.config.appName, this.config.description, categories);
+            this.view = new LoginView(
+              this.router,
+              this.config.appName,
+              this.config.description,
+              categories,
+              validationCallbacks
+            );
             break;
           case AppLink.Register:
-            this.view = new RegistrationView(this.router, this.config.appName, this.config.description, categories);
+            this.view = new RegistrationView(
+              this.router,
+              this.config.appName,
+              this.config.description,
+              categories,
+              validationCallbacks
+            );
             break;
           case AppLink.Cart:
           case AppLink.AboutUs:

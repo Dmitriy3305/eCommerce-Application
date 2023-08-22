@@ -4,19 +4,23 @@
     "inputs": [
       {
         "label": "First Name",
-        "type": "text"
+        "dataType": "name"
       },
       {
         "label": "Last Name",
-        "type": "text"
+        "dataType": "name"
+      },
+      {
+        "label": "Birth Date",
+        "dataType": "birthDate"
       },
       {
         "label": "Email",
-        "type": "email"
+        "dataType": "email"
       },
       {
         "label": "Password",
-        "type": "password"
+        "dataType": "password"
       }
     ]
   },
@@ -25,23 +29,23 @@
     "inputs": [
       {
         "label": "Country",
-        "type": "select"
+        "dataType": "select"
       },
       {
         "label": "City",
-        "type": "text"
+        "dataType": "text"
       },
       {
         "label": "Street",
-        "type": "text"
+        "dataType": "text"
       },
       {
         "label": "Bulding / Appartment",
-        "type": "text"
+        "dataType": "text"
       },
       {
         "label": "Postal Code",
-        "type": "text"
+        "dataType": "text"
       }
     ]
   }

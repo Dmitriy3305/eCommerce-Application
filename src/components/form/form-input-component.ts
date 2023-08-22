@@ -1,5 +1,6 @@
-import { Tags } from '../../types/dom-types/enums';
-import { InputData } from '../../types/dom-types/types';
+import { Events, InputTypes, Tags } from '../../types/dom-types/enums';
+import { InputData, InputDataType } from '../../types/input-datas';
+import ValidationCallback from '../../types/validation-callback';
 import DOMComponent, { ElementParameters } from '../base-component';
 import InputDomComponent from '../input-component';
 
@@ -11,7 +12,7 @@ enum FormInputCssClasses {
 }
 
 export type InputSubmitData = {
-  label: string;
+  dataType: InputDataType;
   value: string;
   required: boolean;
 };
@@ -43,6 +44,8 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   private validationMessage: DOMComponent<HTMLSpanElement>;
 
+  private dataType: InputDataType;
+
   public constructor(inputData: InputData) {
     super(FormInput.WRAPPER_PARAMS);
 
@@ -52,9 +55,29 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       parent: this,
     });
 
+    this.dataType = inputData.dataType;
+
+    let type: InputTypes = InputTypes.Text;
+    switch (inputData.dataType) {
+      case InputDataType.BirthDate:
+        type = InputTypes.Date;
+        break;
+      case InputDataType.Password:
+        type = InputTypes.Password;
+        break;
+      case InputDataType.City:
+      case InputDataType.Email:
+      case InputDataType.Name:
+      case InputDataType.Street:
+      case InputDataType.PostalCode:
+      default:
+        type = InputTypes.Text;
+        break;
+    }
+
     const attributes: { [attribute: string]: string } = {
-      type: inputData.type,
       placeholder: `Input ${inputData.label.toLowerCase()}...`,
+      type,
     };
     if (inputData.isRequired) attributes.required = '';
     attributes.value = inputData.value || '';
@@ -70,9 +93,21 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   public get data(): InputSubmitData {
     return {
-      label: this.label.textContent,
+      dataType: this.dataType,
       value: this.input.value,
       required: this.input.required,
     };
+  }
+
+  public get type(): InputDataType {
+    return this.dataType;
+  }
+
+  public addValidation(callback: ValidationCallback): void {
+    this.input.addEventListener(Events.Input, () => {
+      const message = callback(this.input.value, this.input.required);
+      console.log(message);
+      this.validationMessage.textContent = message;
+    });
   }
 }

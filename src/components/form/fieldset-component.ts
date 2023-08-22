@@ -1,5 +1,7 @@
 import { Tags } from '../../types/dom-types/enums';
 import { FormFieldsetData } from '../../types/dom-types/types';
+import { InputDataType } from '../../types/input-datas';
+import ValidationCallback from '../../types/validation-callback';
 import DOMComponent, { ElementParameters } from '../base-component';
 import FormInput, { InputSubmitData } from './form-input-component';
 
@@ -39,5 +41,12 @@ export default class Fieldset extends DOMComponent<HTMLFieldSetElement> {
 
   public get data(): InputSubmitData[] {
     return this.inputs.map((input) => input.data);
+  }
+
+  public addValidation(callbacks: Map<InputDataType, ValidationCallback>): void {
+    this.inputs.forEach((input) => {
+      const callback = callbacks.get(input.type);
+      if (callback) input.addValidation(callback);
+    });
   }
 }

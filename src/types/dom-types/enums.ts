@@ -51,6 +51,8 @@ export enum InputTypes {
   Text = 'text',
   Checkbox = 'checkbox',
   Submit = 'submit',
+  Password = 'password',
+  Date = 'date',
 }
 
 export enum NodeTypes {

@@ -1,6 +1,14 @@
 import { Customer, CustomerDraft } from '@commercetools/platform-sdk';
 import ProductsRepository, { GrouppedCategories } from '../api/products';
 import AuthorizationManager from '../api/user';
+import { InputDataType } from '../../types/input-datas';
+import ValidationCallback from '../../types/validation-callback';
+import NameValidator from '../../utils/validators/name-validator';
+import Validator from '../../utils/validators/validator';
+import BirthDateValidator from '../../utils/validators/birth-date-validator';
+import EmailValidator from '../../utils/validators/email-validator';
+import PasswordValidator from '../../utils/validators/password-validator';
+import StreetValidator from '../../utils/validators/street-validator';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -34,5 +42,38 @@ export default class AppController {
   public async loadCategories(callback: (categories: GrouppedCategories) => void): Promise<void> {
     const categories = await this.products.getCategoriesGroups();
     callback(categories);
+  }
+
+  public getValidationCallbacks(): Map<InputDataType, ValidationCallback> {
+    const callbacks = new Map();
+    Object.values(InputDataType).forEach((value) => {
+      if (value !== InputDataType.Country) callbacks.set(value, this.getDefaultValidationCallback(value));
+    });
+    return callbacks;
+  }
+
+  private getDefaultValidationCallback(type: InputDataType): ValidationCallback {
+    let validator: Validator;
+
+    switch (type) {
+      case InputDataType.Street:
+        validator = new StreetValidator();
+        break;
+      case InputDataType.Password:
+        validator = new PasswordValidator();
+        break;
+      case InputDataType.Email:
+        validator = new EmailValidator();
+        break;
+      case InputDataType.BirthDate:
+        validator = new BirthDateValidator();
+        break;
+      case InputDataType.Name:
+      default:
+        validator = new NameValidator();
+        break;
+    }
+
+    return validator.validate.bind(validator);
   }
 }
