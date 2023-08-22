@@ -4,32 +4,8 @@
 }
 
 .form {
-  @include flex($direction: column, $gap: 1em);
+  @include flex($direction: column, $gap: 0.5em);
   padding-top: 30px;
-  //   .input-password-container {
-  //     position: relative;
-  //   }
-
-  //   .btn-show-password-visible,
-  //   .btn-show-password-hide {
-  //     @include absolute-center;
-  //     @include flex();
-  //     margin: 0 10px;
-  //     border: none;
-  //     outline: none;
-  //     cursor: pointer;
-  //     width: 30px;
-  //     height: 30px;
-  //     background-repeat: no-repeat;
-  //   }
-
-  //   .btn-show-password-visible {
-  //     background: url('../../assets/images/icon_showPassword.svg');
-  //   }
-
-  //   .btn-show-password-hide {
-  //     background-image: url('../../assets/images/icon_hidePassword.svg');
-  //   }
 }
 
 .form__fieldset {
@@ -43,7 +19,6 @@
 }
 
 .form__input-wrapper {
-  height: 100px;
   @include flex($direction: column);
 }
 
@@ -53,13 +28,17 @@
 
 .form__input {
   @include input-style;
+
+  &_invalid {
+    border: 2px solid $not-valid-color;
+  }
 }
 
 .form__validation-message {
   padding-top: 10px;
-  height: 60px;
+  height: 20px;
   font-family: $font-family;
-  color: $primary-dark;
+  color: $not-valid-color;
 }
 
 .form__submit {

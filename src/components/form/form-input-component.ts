@@ -8,6 +8,7 @@ enum FormInputCssClasses {
   Wrapper = 'form__input-wrapper',
   Label = 'form__label',
   Input = 'form__input',
+  InputNotValid = 'form__input_invalid',
   ValidationMessage = 'form__validation-message',
 }
 
@@ -106,8 +107,9 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
   public addValidation(callback: ValidationCallback): void {
     this.input.addEventListener(Events.Input, () => {
       const message = callback(this.input.value, this.input.required);
-      console.log(message);
       this.validationMessage.textContent = message;
+      if (message) this.input.addClass(FormInputCssClasses.InputNotValid);
+      else this.input.removeClass(FormInputCssClasses.InputNotValid);
     });
   }
 }
