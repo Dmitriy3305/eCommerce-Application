@@ -22,6 +22,8 @@ export enum Tags {
   Anchor = 'a',
   Section = 'section',
   Legend = 'legend',
+  Select = 'select',
+  Option = 'option',
 }
 
 export enum Events {
@@ -53,6 +55,8 @@ export enum InputTypes {
   Submit = 'submit',
   Password = 'password',
   Date = 'date',
+  Select = 'select',
+  Option = 'option',
 }
 
 export enum NodeTypes {

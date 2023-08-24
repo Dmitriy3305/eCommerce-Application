@@ -8,6 +8,8 @@ export enum InputDataType {
   City = 'city',
   PostalCode = 'postalCode',
   BirthDate = 'birthDate',
+  Countrys = 'countrys',
+  Appartment = 'appartment',
 }
 
 export type InputData = {
@@ -16,3 +18,7 @@ export type InputData = {
   value?: string;
   isRequired?: boolean;
 };
+
+export enum SelectType {
+  Country = 'country',
+}

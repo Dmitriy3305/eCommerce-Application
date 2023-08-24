@@ -29,23 +29,23 @@
     "inputs": [
       {
         "label": "Country",
-        "dataType": "select"
+        "dataType": "country"
       },
       {
         "label": "City",
-        "dataType": "text"
+        "dataType": "city"
       },
       {
         "label": "Street",
-        "dataType": "text"
+        "dataType": "street"
       },
       {
         "label": "Bulding / Appartment",
-        "dataType": "text"
+        "dataType": "appartment"
       },
       {
         "label": "Postal Code",
-        "dataType": "text"
+        "dataType": "postalCode"
       }
     ]
   }

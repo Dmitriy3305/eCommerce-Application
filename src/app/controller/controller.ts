@@ -6,9 +6,12 @@ import ValidationCallback from '../../types/validation-callback';
 import NameValidator from '../../utils/validators/name-validator';
 import Validator from '../../utils/validators/validator';
 import BirthDateValidator from '../../utils/validators/birth-date-validator';
+import CityValidator from '../../utils/validators/city-validator';
 import EmailValidator from '../../utils/validators/email-validator';
 import PasswordValidator from '../../utils/validators/password-validator';
 import StreetValidator from '../../utils/validators/street-validator';
+import AppartmentValidator from '../../utils/validators/appartment-validator';
+import PostalCodeValidator from '../../utils/validators/postalCode-validator';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -68,12 +71,20 @@ export default class AppController {
       case InputDataType.BirthDate:
         validator = new BirthDateValidator();
         break;
+      case InputDataType.City:
+        validator = new CityValidator();
+        break;
+      case InputDataType.Appartment:
+        validator = new AppartmentValidator();
+        break;
+      case InputDataType.PostalCode:
+        validator = new PostalCodeValidator();
+        break;
       case InputDataType.Name:
       default:
         validator = new NameValidator();
         break;
     }
-
     return validator.validate.bind(validator);
   }
 }

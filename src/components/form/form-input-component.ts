@@ -3,6 +3,9 @@ import { InputData, InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
 import DOMComponent, { ElementParameters } from '../base-component';
 import InputDomComponent from '../input-component';
+import SelectDomComponent from '../select-components';
+import OptionDomComponent from '../option-components';
+import countries from '../../utils/countries';
 
 enum FormInputCssClasses {
   Wrapper = 'form__input-wrapper',
@@ -34,6 +37,16 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     classList: [FormInputCssClasses.Input],
   };
 
+  private static SELECT_PARAMS: ElementParameters = {
+    tag: Tags.Select,
+    classList: [FormInputCssClasses.Input],
+  };
+
+  private static OPTION_PARAMS: ElementParameters = {
+    tag: Tags.Option,
+    classList: [FormInputCssClasses.Input],
+  };
+
   private static VALIDATION_MESSAGE_PARAMS: ElementParameters = {
     tag: Tags.Span,
     classList: [FormInputCssClasses.ValidationMessage],
@@ -41,7 +54,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   private label: DOMComponent<HTMLLabelElement>;
 
-  private input: InputDomComponent;
+  private input: InputDomComponent | SelectDomComponent;
 
   private validationMessage: DOMComponent<HTMLSpanElement>;
 
@@ -70,24 +83,46 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       case InputDataType.Email:
       case InputDataType.Name:
       case InputDataType.Street:
+        type = InputTypes.Text;
+        break;
       case InputDataType.PostalCode:
+        break;
+      case InputDataType.Country:
+        type = InputTypes.Select;
+        break;
       default:
         type = InputTypes.Text;
         break;
     }
 
-    const attributes: { [attribute: string]: string } = {
-      placeholder: `Input ${inputData.label.toLowerCase()}...`,
-      type,
-    };
-    if (inputData.isRequired) attributes.required = '';
-    attributes.value = inputData.value || '';
-    this.input = new InputDomComponent({
-      ...FormInput.INPUT_PARAMS,
-      parent: this.label,
-      attributes,
-    });
+    if (this.dataType !== InputDataType.Country) {
+      const attributes: { [attribute: string]: string } = {
+        placeholder: `Input ${inputData.label.toLowerCase()}...`,
+        type,
+      };
+      if (inputData.isRequired) attributes.required = '';
+      attributes.value = inputData.value || '';
+      this.input = new InputDomComponent({
+        ...FormInput.INPUT_PARAMS,
+        parent: this.label,
+        attributes,
+      });
+    } else {
+      this.input = new SelectDomComponent({
+        ...FormInput.SELECT_PARAMS,
+        parent: this,
+      });
+      const options = countries.map((country) => {
+        const option = new OptionDomComponent({
+          ...FormInput.OPTION_PARAMS,
+          parent: this.input,
+          textContent: country,
+        });
+        return option;
+      });
 
+      this.input.append(...options);
+    }
     this.validationMessage = new DOMComponent<HTMLSpanElement>(FormInput.VALIDATION_MESSAGE_PARAMS);
     this.append(this.validationMessage);
   }
