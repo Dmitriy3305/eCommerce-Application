@@ -2,8 +2,8 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { Tags } from '../../../types/dom-types/enums';
 
 enum CardSliderCssClasses {
-  NameContainerProduct = 'card__product',
-  NameImgProduct = 'slider__product',
+  NameContainerProduct = 'swiper-slide',
+  NameImgContainer = 'image-slider__image',
   NameProduct = 'name__product',
 }
 
@@ -15,9 +15,12 @@ export default class CardSlider extends DOMComponent<HTMLElement> {
 
   public constructor(url: string, name: string) {
     super(CardSlider.PHOTO_CONTENT_SLIDER);
+    const imgProductContainer = new DOMComponent<HTMLDivElement>({
+      tag: Tags.Div,
+      classList: [CardSliderCssClasses.NameImgContainer],
+    });
     const imgProduct = new DOMComponent<HTMLImageElement>({
       tag: Tags.Image,
-      classList: [CardSliderCssClasses.NameImgProduct],
       attributes: {
         src: url,
         alt: 'shoes',
@@ -28,6 +31,7 @@ export default class CardSlider extends DOMComponent<HTMLElement> {
       classList: [CardSliderCssClasses.NameProduct],
       textContent: name,
     });
-    this.append(imgProduct, nameProduct);
+    this.append(imgProductContainer, nameProduct);
+    imgProductContainer.append(imgProduct);
   }
 }
