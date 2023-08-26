@@ -40,6 +40,19 @@
   color: $primary-dark;
 }
 
+.swiper-button-next,
+.swiper-button-prev {
+  color: $primary-dark;
+  top: 55%;
+}
+
+.swiper-button-prev {
+  left: 2.5rem;
+}
+.swiper-button-next {
+  right: 2.5rem;
+}
+
 @media (min-width: $mobile-width) and (max-width: $tablet-width) {
   .name__product {
     font-size: 1rem;
@@ -47,21 +60,20 @@
   .title__slider {
     font-size: 1.5rem;
   }
+  .swiper-button-next,
+  .swiper-button-prev {
+    top: 65%;
+  }
 }
 @media (max-width: $mobile-width) {
   .section__slider {
     padding: 0.5rem 0 0 0;
   }
   .title__slider {
-    font-size: 0.7rem;
+    font-size: 0.4rem;
   }
   .image-slider__image img {
     max-width: 60%;
-  }
-  .swiper-button-next,
-  .swiper-button-prev {
-    width: 35px;
-    height: 35px;
   }
   .swiper-container {
     border-right: none;
@@ -72,27 +84,18 @@
     font-size: 1rem;
   }
   .swiper-button-prev {
-    left: 0.1rem;
+    left: 1rem;
   }
   .swiper-button-next {
-    right: 0.1rem;
+    right: 1rem;
   }
   .swiper-button-next,
   .swiper-button-prev {
     width: 20px;
     height: 20px;
   }
-}
-
-.swiper-button-next,
-.swiper-button-prev {
-  color: $primary-dark;
-  top: 60%;
-}
-
-.swiper-button-prev {
-  left: 2.5rem;
-}
-.swiper-button-next {
-  right: 2.5rem;
+  .swiper-button-next,
+  .swiper-button-prev {
+    top: 76%;
+  }
 }

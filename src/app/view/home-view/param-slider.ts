@@ -15,11 +15,11 @@ const swiperHomePage: SwiperOptions = {
       slidesPerView: 1,
       spaceBetween: 13,
     },
-    600: {
+    450: {
       slidesPerView: 2,
       spaceBetween: 22,
     },
-    1200: {
+    800: {
       slidesPerView: 3,
       spaceBetween: 30,
     },
