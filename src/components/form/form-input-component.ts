@@ -4,8 +4,9 @@ import ValidationCallback from '../../types/validation-callback';
 import DOMComponent, { ElementParameters } from '../base-component';
 import InputDomComponent from '../input-component';
 import SelectDomComponent from '../select-components';
-import OptionDomComponent from '../option-components';
 import countries from '../../utils/countries';
+// eslint-disable-next-line import/no-cycle
+import PostalCodeInput from './postalCodeinput';
 
 enum FormInputCssClasses {
   Wrapper = 'form__input-wrapper',
@@ -42,11 +43,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     classList: [FormInputCssClasses.Input],
   };
 
-  private static OPTION_PARAMS: ElementParameters = {
-    tag: Tags.Option,
-    classList: [FormInputCssClasses.Input],
-  };
-
   private static VALIDATION_MESSAGE_PARAMS: ElementParameters = {
     tag: Tags.Span,
     classList: [FormInputCssClasses.ValidationMessage],
@@ -54,9 +50,9 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   private label: DOMComponent<HTMLLabelElement>;
 
-  private input: InputDomComponent | SelectDomComponent;
+  protected input: InputDomComponent | SelectDomComponent;
 
-  private validationMessage: DOMComponent<HTMLSpanElement>;
+  protected validationMessage: DOMComponent<HTMLSpanElement>;
 
   private dataType: InputDataType;
 
@@ -108,20 +104,15 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         attributes,
       });
     } else {
-      this.input = new SelectDomComponent({
-        ...FormInput.SELECT_PARAMS,
-        parent: this,
-      });
-      const options = countries.map((country) => {
-        const option = new OptionDomComponent({
-          ...FormInput.OPTION_PARAMS,
-          parent: this.input,
-          textContent: country,
-        });
-        return option;
-      });
-
-      this.input.append(...options);
+      this.input = new SelectDomComponent(
+        {
+          ...FormInput.SELECT_PARAMS,
+          parent: this,
+        },
+        countries
+      );
+      const postalCode = new PostalCodeInput({ label: 'Postal Code', dataType: InputDataType.PostalCode }, this.input);
+      console.log(postalCode);
     }
     this.validationMessage = new DOMComponent<HTMLSpanElement>(FormInput.VALIDATION_MESSAGE_PARAMS);
     this.append(this.validationMessage);

@@ -11,7 +11,7 @@ import EmailValidator from '../../utils/validators/email-validator';
 import PasswordValidator from '../../utils/validators/password-validator';
 import StreetValidator from '../../utils/validators/street-validator';
 import AppartmentValidator from '../../utils/validators/appartment-validator';
-import PostalCodeValidator from '../../utils/validators/postalCode-validator';
+import PostalCodeValidator, { Countries } from '../../utils/validators/postalCode-validator';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -56,35 +56,39 @@ export default class AppController {
   }
 
   private getDefaultValidationCallback(type: InputDataType): ValidationCallback {
-    let validator: Validator;
+    // eslint-disable-next-line func-names
+    return function (value: string, isRequired: boolean, resource?: string) {
+      let validator: Validator;
 
-    switch (type) {
-      case InputDataType.Street:
-        validator = new StreetValidator();
-        break;
-      case InputDataType.Password:
-        validator = new PasswordValidator();
-        break;
-      case InputDataType.Email:
-        validator = new EmailValidator();
-        break;
-      case InputDataType.BirthDate:
-        validator = new BirthDateValidator();
-        break;
-      case InputDataType.City:
-        validator = new CityValidator();
-        break;
-      case InputDataType.Appartment:
-        validator = new AppartmentValidator();
-        break;
-      case InputDataType.PostalCode:
-        validator = new PostalCodeValidator();
-        break;
-      case InputDataType.Name:
-      default:
-        validator = new NameValidator();
-        break;
-    }
-    return validator.validate.bind(validator);
+      switch (type) {
+        case InputDataType.Street:
+          validator = new StreetValidator();
+          break;
+        case InputDataType.Password:
+          validator = new PasswordValidator();
+          break;
+        case InputDataType.Email:
+          validator = new EmailValidator();
+          break;
+        case InputDataType.BirthDate:
+          validator = new BirthDateValidator();
+          break;
+        case InputDataType.City:
+          validator = new CityValidator();
+          break;
+        case InputDataType.Appartment:
+          validator = new AppartmentValidator();
+          break;
+        case InputDataType.PostalCode:
+          if (resource) validator = new PostalCodeValidator(resource as Countries);
+          else throw Error('Select value not defined');
+          break;
+        case InputDataType.Name:
+        default:
+          validator = new NameValidator();
+          break;
+      }
+      return validator.validate(value, isRequired);
+    };
   }
 }

@@ -42,10 +42,6 @@
       {
         "label": "Bulding / Appartment",
         "dataType": "appartment"
-      },
-      {
-        "label": "Postal Code",
-        "dataType": "postalCode"
       }
     ]
   }
