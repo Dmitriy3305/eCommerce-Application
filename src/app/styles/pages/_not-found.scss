@@ -1,5 +1,7 @@
 body:has(.not-found) {
-  .header, .footer, .burger-menu__open-button {
+  .header,
+  .footer,
+  .burger-menu__open-button {
     display: none;
   }
 

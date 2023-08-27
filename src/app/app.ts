@@ -70,6 +70,7 @@ export default class App {
                 validationCallbacks,
                 countries
               );
+              this.view.switchActiveLink(link, queries);
             });
             break;
           case AppLink.Cart:
