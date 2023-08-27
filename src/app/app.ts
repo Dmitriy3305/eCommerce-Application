@@ -38,7 +38,7 @@ export default class App {
   private setupRouter(): AppRouter {
     const routes = new Map<AppLink, RouteHandler>();
     Object.values(AppLink).forEach((link) => routes.set(link, this.getDefaultRouteHandler(link)));
-    const router = new AppRouter(routes, this.controller.isAuthorized, this.config.appName);
+    const router = new AppRouter(routes, this.config.appName);
     return router;
   }
 
