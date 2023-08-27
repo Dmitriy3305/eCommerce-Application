@@ -61,13 +61,17 @@ export default class App {
             );
             break;
           case AppLink.Register:
-            this.view = new RegistrationView(
-              this.router,
-              this.config.appName,
-              this.config.description,
-              categories,
-              validationCallbacks
-            );
+            this.controller.loadCountries().then((countries) => {
+              console.log(countries);
+              this.view = new RegistrationView(
+                this.router,
+                this.config.appName,
+                this.config.description,
+                categories,
+                validationCallbacks,
+                countries
+              );
+            });
             break;
           case AppLink.Cart:
           case AppLink.AboutUs:

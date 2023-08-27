@@ -19,10 +19,12 @@ export default class RegistrationView extends AppView {
     appName: string,
     appDescription: string,
     categories: GrouppedCategories,
-    validationCallbacks: Map<InputDataType, ValidationCallback>
+    validationCallbacks: Map<InputDataType, ValidationCallback>,
+    countries: string[]
   ) {
     super(router, appName, appDescription, categories);
     this.form?.addValidation(validationCallbacks);
+    this.form?.addOptions(InputDataType.Country, countries);
   }
 
   protected createMain(): DOMComponent<HTMLElement> {

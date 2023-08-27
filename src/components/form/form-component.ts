@@ -91,4 +91,14 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
       }
     });
   }
+
+  public addOptions(dataType: InputDataType, options: string[]): void {
+    this.inputs.forEach((group) => {
+      if (group instanceof Fieldset) group.addOptions(dataType, options);
+      else if (group.type === dataType) {
+        const input = group;
+        input.options = options;
+      }
+    });
+  }
 }

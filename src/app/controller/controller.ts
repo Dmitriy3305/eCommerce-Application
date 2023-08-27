@@ -12,17 +12,21 @@ import PasswordValidator from '../../utils/validators/password-validator';
 import StreetValidator from '../../utils/validators/street-validator';
 import AppartmentValidator from '../../utils/validators/appartment-validator';
 import PostalCodeValidator, { Countries } from '../../utils/validators/postalCode-validator';
+import ProjectSettingsRepository from '../api/project';
 
 export default class AppController {
   private products: ProductsRepository;
 
   private authManager: AuthorizationManager;
 
+  private projectSettings: ProjectSettingsRepository;
+
   private currentCustomer: Customer | null = null;
 
   public constructor() {
     this.products = new ProductsRepository();
     this.authManager = new AuthorizationManager();
+    this.projectSettings = new ProjectSettingsRepository();
   }
 
   public get isAuthorized(): boolean {
@@ -90,5 +94,9 @@ export default class AppController {
       }
       return validator.validate(value, isRequired);
     };
+  }
+
+  public loadCountries(): Promise<string[]> {
+    return this.projectSettings.getCountries();
   }
 }

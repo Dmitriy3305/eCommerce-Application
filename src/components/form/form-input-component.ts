@@ -1,4 +1,4 @@
-import { Events, InputTypes, Tags } from '../../types/dom-types/enums';
+import { Events, InputTypes, InsertPositions, Tags } from '../../types/dom-types/enums';
 import { InputData, InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
 import { Countries } from '../../utils/validators/postalCode-validator';
@@ -90,7 +90,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
           classList: [FormInputCssClasses.Input],
           parent: this,
         },
-        Object.values(Countries)
+        inputData.options || Object.values(Countries)
       );
     } else {
       const attributes: { [attribute: string]: string } = {
@@ -126,6 +126,18 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   public get isSelect(): boolean {
     return this.input instanceof SelectDomComponent;
+  }
+
+  public set options(value: string[]) {
+    this.input.remove();
+    this.input = new SelectDomComponent(
+      {
+        classList: [FormInputCssClasses.Input],
+        parent: this,
+      },
+      value
+    );
+    this.label.insert(InsertPositions.After, this.input);
   }
 
   public get labelText(): string {

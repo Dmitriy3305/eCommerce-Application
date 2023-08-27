@@ -17,4 +17,5 @@ export type InputData = {
   value?: string;
   isRequired?: boolean;
   resourceLabel?: string;
+  options?: string[];
 };
