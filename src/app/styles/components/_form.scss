@@ -81,6 +81,24 @@
 
   background-color: $primary-dark;
   color: $primary-light;
+  border: 2px solid $secondary-grey;
+  border-radius: 20px;
+
+  transition: border-color $hover-transition, background-color $hover-transition;
 
   cursor: pointer;
+
+  &:hover {
+    @include shadow();
+    border-color:$secondary-light;
+    background-color: $secondary-yellow;
+  }
+
+  &:disabled {
+    cursor: default;
+    @include shadow();
+    
+    border-color: $secondary-light;
+    background-color: $secondary-grey;
+  }
 }

@@ -85,7 +85,7 @@ export default class AppController {
           break;
         case InputDataType.PostalCode:
           if (resource) validator = new PostalCodeValidator(resource as Countries);
-          else throw Error('Select value not defined');
+          else throw Error('Please select country');
           break;
         case InputDataType.Name:
         default:

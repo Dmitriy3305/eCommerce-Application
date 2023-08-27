@@ -8,13 +8,22 @@ export default class SelectDomComponent extends DOMComponent<HTMLSelectElement> 
       ...params,
     });
     const required = params.attributes && params.attributes.required === '';
-    const optionComponents = options.map((option, index) => {
-      const optionElement = new DOMComponent<HTMLOptionElement>({
+    if (required) {
+      this.append(
+        new DOMComponent<HTMLOptionElement>({
+          tag: Tags.Option,
+          textContent: 'None',
+          attributes: {
+            value: '',
+          },
+        })
+      );
+    }
+    const optionComponents = options.map((option) => {
+      return new DOMComponent<HTMLOptionElement>({
         tag: Tags.Option,
         textContent: option,
       });
-      if (required && index === 0) optionElement.setAttribute('value', '');
-      return optionElement;
     });
     this.append(...optionComponents);
     this.element.required = Boolean(required);

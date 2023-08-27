@@ -13,6 +13,9 @@ export default class PasswordInput extends InputDomComponent {
   private static VISIBILITY_BUTTON_PARAMS: ElementParameters = {
     tag: Tags.Button,
     classList: [PasswordCssClasses.VisibilityButton],
+    attributes: {
+      type: 'button',
+    },
   };
 
   private static BUTTON_IMAGE_PARAMS: ElementParameters = {

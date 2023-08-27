@@ -157,12 +157,18 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   public addValidation(callback: ValidationCallback, resource?: () => string): void {
     this.input.addEventListener(Events.Input, () => {
-      const message = resource
-        ? callback(this.input.value, this.input.required, resource())
-        : callback(this.input.value, this.input.required);
-      this.validationMessage.textContent = message;
-      if (message) this.input.addClass(FormInputCssClasses.InputNotValid);
-      else this.input.removeClass(FormInputCssClasses.InputNotValid);
+      let message = '';
+      try {
+        message = resource
+          ? callback(this.input.value, this.input.required, resource())
+          : callback(this.input.value, this.input.required);
+      } catch (error: unknown) {
+        message = (error as Error).message;
+      } finally {
+        this.validationMessage.textContent = message;
+        if (message) this.input.addClass(FormInputCssClasses.InputNotValid);
+        else this.input.removeClass(FormInputCssClasses.InputNotValid);
+      }
     });
   }
 
