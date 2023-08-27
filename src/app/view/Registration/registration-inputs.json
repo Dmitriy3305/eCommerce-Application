@@ -50,7 +50,7 @@
       {
         "label": "Postal Code",
         "dataType": "postalCode",
-        "resourceLabel": "Country"
+        "resourceName": "country"
       }
     ]
   }

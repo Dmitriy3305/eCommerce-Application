@@ -29,6 +29,7 @@ export enum Tags {
 export enum Events {
   Click = 'click',
   Input = 'input',
+  Change = 'change',
   MouseDown = 'mousedown',
   MouseUp = 'mouseup',
   MouseMove = 'mousemove',

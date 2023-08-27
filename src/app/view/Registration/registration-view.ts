@@ -10,6 +10,7 @@ import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
 import Fieldset from '../../../components/form/fieldset-component';
 import FormInput from '../../../components/form/form-input-component';
+import toKebabCase from '../../../utils/to-kebab-case';
 
 export default class RegistrationView extends AppView {
   private static FORM_TITLE = 'Registration';
@@ -25,8 +26,8 @@ export default class RegistrationView extends AppView {
     countries: string[]
   ) {
     super(router, appName, appDescription, categories);
-    this.form?.addValidation(validationCallbacks);
     this.form?.addOptions(InputDataType.Country, countries);
+    this.form?.addValidation(validationCallbacks);
   }
 
   protected createMain(): DOMComponent<HTMLElement> {
@@ -38,6 +39,7 @@ export default class RegistrationView extends AppView {
       fieldset.inputs.forEach((input) => {
         const currentInput = input;
         currentInput.isRequired = true;
+        currentInput.name = toKebabCase(currentInput.label);
       })
     );
 

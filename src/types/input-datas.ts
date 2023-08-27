@@ -15,8 +15,9 @@ export enum InputDataType {
 export type InputData = {
   label: string;
   dataType: InputDataType;
+  name?: string;
   value?: string;
   isRequired?: boolean;
-  resourceLabel?: string;
+  resourceName?: string;
   options?: string[];
 };

@@ -136,6 +136,11 @@ export default class DOMComponent<T extends HTMLElement> {
     this.element.removeEventListener(event, listener);
   }
 
+  public emitEvent(eventType: Events, bubbles = false): void {
+    const event = new Event(eventType, { bubbles });
+    this.element.dispatchEvent(event);
+  }
+
   public addText(text: string) {
     this.element.append(document.createTextNode(text));
   }

@@ -17,9 +17,8 @@ export enum FormInputCssClasses {
 }
 
 export type InputSubmitData = {
-  dataType: InputDataType;
+  name: string;
   value: string;
-  required: boolean;
 };
 
 export default class FormInput extends DOMComponent<HTMLDivElement> {
@@ -51,7 +50,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   private dataType: InputDataType;
 
-  private resourceLabel?: string;
+  private resourceName?: string;
 
   public constructor(inputData: InputData) {
     super(FormInput.WRAPPER_PARAMS);
@@ -112,17 +111,18 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       else this.input = new InputDomComponent({ ...inputParams, attributes });
     }
 
+    if (inputData.name) this.input.setAttribute('name', inputData.name);
+
     this.validationMessage = new DOMComponent<HTMLSpanElement>(FormInput.VALIDATION_MESSAGE_PARAMS);
     this.append(this.validationMessage);
 
-    this.resourceLabel = inputData.resourceLabel;
+    this.resourceName = inputData.resourceName;
   }
 
   public get data(): InputSubmitData {
     return {
-      dataType: this.dataType,
+      name: this.name,
       value: this.input.value,
-      required: this.input.required,
     };
   }
 
@@ -136,7 +136,8 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   public set options(value: string[]) {
     this.input.remove();
-    const attributes = this.input.required ? { required: '' } : undefined;
+    const attributes: { [attribute: string]: string } = { name: this.name };
+    if (this.input.required) attributes.required = '';
     this.input = new SelectDomComponent(
       {
         classList: [FormInputCssClasses.Input],
@@ -151,8 +152,12 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     return this.label.textContent;
   }
 
+  public get name(): string {
+    return this.input.getAttribute('name') || '';
+  }
+
   public get resource(): string {
-    return this.resourceLabel || '';
+    return this.resourceName || '';
   }
 
   public addValidation(callback: ValidationCallback, resource?: () => string): void {
@@ -173,8 +178,12 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
   }
 
   public addInputListener(listener: (value: string) => void): void {
-    this.input.addEventListener(Events.Input, () => {
+    this.input.addEventListener(this.isSelect ? Events.Change : Events.Input, () => {
       listener(this.input instanceof Checkbox ? this.input.checked.toString() : this.input.value);
     });
+  }
+
+  public emitInput(): void {
+    this.input.emitEvent(Events.Input, true);
   }
 }

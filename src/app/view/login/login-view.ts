@@ -7,6 +7,7 @@ import { InputData, InputDataType } from '../../../types/input-datas';
 import ValidationCallback from '../../../types/validation-callback';
 import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
+import toKebabCase from '../../../utils/to-kebab-case';
 
 export default class LoginView extends AppView {
   private static FORM_TITLE = 'Login';
@@ -32,6 +33,7 @@ export default class LoginView extends AppView {
     const inputs = loginInputs as InputData[];
     inputs.forEach((input) => {
       const currentInput = input;
+      currentInput.name = toKebabCase(currentInput.label);
       currentInput.isRequired = true;
     });
 
