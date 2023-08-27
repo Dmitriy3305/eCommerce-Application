@@ -5,7 +5,7 @@ import AppView from './view/view';
 import HomeView from './view/home-view/home-view';
 import NotFoundView from './view/not-found/not-found-view';
 import LoginView from './view/login/login-view';
-import RegistrationView from './view/Registration/registration-view';
+import RegistrationView from './view/registration/registration-view';
 import { Events } from '../types/dom-types/enums';
 import './styles/main.scss';
 

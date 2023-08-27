@@ -1,14 +1,12 @@
 import { Events, InputTypes, Tags } from '../../types/dom-types/enums';
 import { InputData, InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
+import { Countries } from '../../utils/validators/postalCode-validator';
 import DOMComponent, { ElementParameters } from '../base-component';
 import InputDomComponent from '../input-component';
 import SelectDomComponent from '../select-components';
-import countries from '../../utils/countries';
-// eslint-disable-next-line import/no-cycle
-import PostalCodeInput from './postalCodeinput';
 
-enum FormInputCssClasses {
+export enum FormInputCssClasses {
   Wrapper = 'form__input-wrapper',
   Label = 'form__label',
   Input = 'form__input',
@@ -38,11 +36,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     classList: [FormInputCssClasses.Input],
   };
 
-  private static SELECT_PARAMS: ElementParameters = {
-    tag: Tags.Select,
-    classList: [FormInputCssClasses.Input],
-  };
-
   private static VALIDATION_MESSAGE_PARAMS: ElementParameters = {
     tag: Tags.Span,
     classList: [FormInputCssClasses.ValidationMessage],
@@ -56,6 +49,8 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   private dataType: InputDataType;
 
+  private resourceLabel?: string;
+
   public constructor(inputData: InputData) {
     super(FormInput.WRAPPER_PARAMS);
 
@@ -68,6 +63,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     this.dataType = inputData.dataType;
 
     let type: InputTypes = InputTypes.Text;
+
     switch (inputData.dataType) {
       case InputDataType.BirthDate:
         type = InputTypes.Date;
@@ -75,23 +71,28 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       case InputDataType.Password:
         type = InputTypes.Password;
         break;
+      case InputDataType.Country:
+        type = InputTypes.Select;
+        break;
       case InputDataType.City:
       case InputDataType.Email:
       case InputDataType.Name:
       case InputDataType.Street:
-        type = InputTypes.Text;
-        break;
       case InputDataType.PostalCode:
-        break;
-      case InputDataType.Country:
-        type = InputTypes.Select;
-        break;
       default:
         type = InputTypes.Text;
         break;
     }
 
-    if (this.dataType !== InputDataType.Country) {
+    if (inputData.dataType === InputDataType.Country) {
+      this.input = new SelectDomComponent(
+        {
+          classList: [FormInputCssClasses.Input],
+          parent: this,
+        },
+        Object.values(Countries)
+      );
+    } else {
       const attributes: { [attribute: string]: string } = {
         placeholder: `Input ${inputData.label.toLowerCase()}...`,
         type,
@@ -103,19 +104,12 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         parent: this.label,
         attributes,
       });
-    } else {
-      this.input = new SelectDomComponent(
-        {
-          ...FormInput.SELECT_PARAMS,
-          parent: this,
-        },
-        countries
-      );
-      const postalCode = new PostalCodeInput({ label: 'Postal Code', dataType: InputDataType.PostalCode }, this.input);
-      console.log(postalCode);
     }
+
     this.validationMessage = new DOMComponent<HTMLSpanElement>(FormInput.VALIDATION_MESSAGE_PARAMS);
     this.append(this.validationMessage);
+
+    this.resourceLabel = inputData.resourceLabel;
   }
 
   public get data(): InputSubmitData {
@@ -130,9 +124,23 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     return this.dataType;
   }
 
-  public addValidation(callback: ValidationCallback): void {
+  public get isSelect(): boolean {
+    return this.input instanceof SelectDomComponent;
+  }
+
+  public get labelText(): string {
+    return this.label.textContent;
+  }
+
+  public get resource(): string {
+    return this.resourceLabel || '';
+  }
+
+  public addValidation(callback: ValidationCallback, resource?: () => string): void {
     this.input.addEventListener(Events.Input, () => {
-      const message = callback(this.input.value, this.input.required);
+      const message = resource
+        ? callback(this.input.value, this.input.required, resource())
+        : callback(this.input.value, this.input.required);
       this.validationMessage.textContent = message;
       if (message) this.input.addClass(FormInputCssClasses.InputNotValid);
       else this.input.removeClass(FormInputCssClasses.InputNotValid);
