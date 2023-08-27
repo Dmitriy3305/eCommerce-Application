@@ -5,9 +5,4 @@ export default abstract class Validator {
   }
 
   protected abstract validateContent(value: string): string;
-
-  protected containsSpecialCharactersOrDigits(value: string): boolean {
-    const regex = /[!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?0-9]/;
-    return regex.test(value);
-  }
 }

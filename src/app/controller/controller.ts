@@ -9,10 +9,10 @@ import BirthDateValidator from '../../utils/validators/birth-date-validator';
 import CityValidator from '../../utils/validators/city-validator';
 import EmailValidator from '../../utils/validators/email-validator';
 import PasswordValidator from '../../utils/validators/password-validator';
-import StreetValidator from '../../utils/validators/street-validator';
 import AppartmentValidator from '../../utils/validators/appartment-validator';
 import PostalCodeValidator, { Countries } from '../../utils/validators/postalCode-validator';
 import ProjectSettingsRepository from '../api/project';
+import StreetValidator from '../../utils/validators/street-validator';
 
 export default class AppController {
   private products: ProductsRepository;

@@ -47,7 +47,7 @@ export default class RegistrationView extends AppView {
       title: RegistrationView.FORM_TITLE,
     });
 
-    const billingAddressTemplate = inputs[1];
+    const billingAddressTemplate = structuredClone(inputs[1]);
     billingAddressTemplate.title = 'Billing Address';
     const billingAddressFieldSet = new Fieldset(billingAddressTemplate);
     const billingAddressCheckbox = new FormInput({

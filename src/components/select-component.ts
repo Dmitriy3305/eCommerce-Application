@@ -7,14 +7,17 @@ export default class SelectDomComponent extends DOMComponent<HTMLSelectElement> 
       tag: Tags.Select,
       ...params,
     });
-    const optionComponents = options.map(
-      (option) =>
-        new DOMComponent<HTMLOptionElement>({
-          tag: Tags.Option,
-          textContent: option,
-        })
-    );
+    const required = params.attributes && params.attributes.required === '';
+    const optionComponents = options.map((option, index) => {
+      const optionElement = new DOMComponent<HTMLOptionElement>({
+        tag: Tags.Option,
+        textContent: option,
+      });
+      if (required && index === 0) optionElement.setAttribute('value', '');
+      return optionElement;
+    });
     this.append(...optionComponents);
+    this.element.required = Boolean(required);
   }
 
   public get value(): string {

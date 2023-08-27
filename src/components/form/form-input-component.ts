@@ -1,11 +1,11 @@
-import { Events, InputTypes, InsertPositions, Tags } from '../../types/dom-types/enums';
+import { Events, InputTypes, Tags } from '../../types/dom-types/enums';
 import { InputData, InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
 import { Countries } from '../../utils/validators/postalCode-validator';
 import DOMComponent, { ElementParameters } from '../base-component';
 import Checkbox from '../checkbox';
 import InputDomComponent from '../input-component';
-import SelectDomComponent from '../select-components';
+import SelectDomComponent from '../select-component';
 
 export enum FormInputCssClasses {
   Wrapper = 'form__input-wrapper',
@@ -89,10 +89,12 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     }
 
     if (inputData.dataType === InputDataType.Country) {
+      const attributes = inputData.isRequired ? { required: '' } : undefined;
       this.input = new SelectDomComponent(
         {
           classList: [FormInputCssClasses.Input],
-          parent: this,
+          parent: this.label,
+          attributes,
         },
         inputData.options || Object.values(Countries)
       );
@@ -136,14 +138,15 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   public set options(value: string[]) {
     this.input.remove();
+    const attributes = this.input.required ? { required: '' } : undefined;
     this.input = new SelectDomComponent(
       {
         classList: [FormInputCssClasses.Input],
-        parent: this,
+        parent: this.label,
+        attributes,
       },
       value
     );
-    this.label.insert(InsertPositions.After, this.input);
   }
 
   public get labelText(): string {

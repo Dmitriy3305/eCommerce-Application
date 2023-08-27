@@ -1,4 +1,5 @@
 input[type='checkbox'] {
+  position: relative;
   appearance: none;
 
   aspect-ratio: 1/1;
@@ -22,11 +23,11 @@ input[type='checkbox'] {
     background-color: $secondary-yellow;
 
     &::before {
-        content: '\2714';
-        position: absolute;
-        top: 2px;
-        left: 4px;
-        color: $primary-light;
-      }
+      content: '\2714';
+      position: absolute;
+      top: 0;
+      left: 2.5px;
+      color: $primary-light;
+    }
   }
 }

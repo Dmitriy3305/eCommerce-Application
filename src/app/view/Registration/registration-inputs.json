@@ -28,6 +28,10 @@
     "title": "Shipping Address",
     "inputs": [
       {
+        "label": "Set as default",
+        "dataType": "toggle"
+      },
+      {
         "label": "Country",
         "dataType": "country"
       },

@@ -6,10 +6,14 @@
 .form {
   @include flex($direction: column, $gap: 1em);
   padding-top: 30px;
+
+  &:not(:has(fieldset)) {
+    gap: 0;
+  }
 }
 
 .form__fieldset {
-  @include flex($direction: column, $gap: 1rem);
+  @include flex($direction: column, $justify-content: space-around);
   width: max(60vw, 300px);
 }
 
@@ -23,10 +27,31 @@
 
   &:has(input[type='checkbox']) {
     @include flex($direction: row-reverse);
-    translate: -70%;
-
+    align-self: flex-start;
+    margin-left: 0.5em;
+    
     input {
       margin-right: 0.5em;
+    }
+  }
+
+  &:has(.form__input[required]) {
+    position: relative;
+    .form__label {
+      padding-left: 1em;
+    }
+
+    .form__label::before {
+      content: '*';
+      position: relative;
+      top: 1.7em;
+      right: 0.5em;
+      color: $not-valid-color;
+    }
+
+    .form__input {
+      position: relative;
+      right: 0.5em;
     }
   }
 }
