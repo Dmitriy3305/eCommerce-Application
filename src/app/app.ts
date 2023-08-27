@@ -62,7 +62,6 @@ export default class App {
             break;
           case AppLink.Register:
             this.controller.loadCountries().then((countries) => {
-              console.log(countries);
               this.view = new RegistrationView(
                 this.router,
                 this.config.appName,
