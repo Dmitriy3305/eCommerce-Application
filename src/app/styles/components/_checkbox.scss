@@ -1,4 +1,4 @@
-input[type="checkbox"] {
+input[type='checkbox'] {
   appearance: none;
 
   aspect-ratio: 1/1;
@@ -10,17 +10,23 @@ input[type="checkbox"] {
   border-radius: 4px;
   outline: none;
 
-  transition: background-color $active-transition, box-shadow $hover-transition;
+  transition:
+    background-color $active-transition,
+    box-shadow $hover-transition;
 
   &:hover {
     @include shadow();
   }
 
-  &:checked::before {
-    content: '\2714';
-    position: absolute;
-    top: 2px;
-    left: 4px;
-    color: $primary-light;
+  &:checked {
+    background-color: $secondary-yellow;
+
+    &::before {
+        content: '\2714';
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        color: $primary-light;
+      }
   }
 }
