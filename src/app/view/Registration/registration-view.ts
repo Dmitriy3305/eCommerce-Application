@@ -1,5 +1,5 @@
 import DOMComponent from '../../../components/base-component';
-import { InsertPositions, Tags } from '../../../types/dom-types/enums';
+import { Tags } from '../../../types/dom-types/enums';
 import AppView from '../view';
 import FormComponent from '../../../components/form/form-component';
 import registrationInputs from './registration-inputs.json';
@@ -57,8 +57,8 @@ export default class RegistrationView extends AppView {
       dataType: InputDataType.Toggle,
     });
     billingAddressCheckbox.addInputListener((value: string) => {
-      if (value === 'false') billingAddressCheckbox.insert(InsertPositions.After, billingAddressFieldSet);
-      else billingAddressFieldSet.remove();
+      if (value === 'false') this.form?.append(billingAddressFieldSet);
+      else this.form?.removeFormElement(billingAddressFieldSet);
     });
 
     this.form.append(billingAddressCheckbox, billingAddressFieldSet);

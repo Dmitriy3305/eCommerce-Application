@@ -44,6 +44,10 @@ export default class Fieldset extends DOMComponent<HTMLFieldSetElement> {
     return this.inputs.map((input) => input.data);
   }
 
+  public get isValid(): boolean {
+    return this.inputs.every((input) => input.isValid);
+  }
+
   public addValidation(callbacks: Map<InputDataType, ValidationCallback>): void {
     this.inputs.forEach((input) => {
       const callback = callbacks.get(input.type);

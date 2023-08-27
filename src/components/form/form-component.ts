@@ -49,13 +49,13 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
 
   private submitButton: InputDomComponent;
 
+  private onInit: boolean;
+
   public constructor({ inputs, onSubmit, validationCallbacks, title }: FormParams) {
     super(FormComponent.FORM_PARAMS);
+    this.onInit = true;
 
     if (title) this.append(new DOMComponent<HTMLHeadingElement>({ ...FormComponent.TITLE_PARAMS, textContent: title }));
-
-    this.submitButton = new InputDomComponent(FormComponent.SUBMIT_BUTTON_PARAMS);
-    this.append(this.submitButton);
 
     this.inputs = inputs.map((group) => {
       if (Object.prototype.hasOwnProperty.call(group, 'label')) return new FormInput(group as InputData);
@@ -63,6 +63,11 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
       return fieldset;
     });
     this.append(...this.inputs);
+
+    this.submitButton = new InputDomComponent(FormComponent.SUBMIT_BUTTON_PARAMS);
+    this.append(this.submitButton);
+
+    this.onInit = false;
 
     this.addEventListener(Events.Submit, (event: Event) => {
       event.preventDefault();
@@ -84,12 +89,19 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
   }
 
   public addValidation(callbacks: Map<InputDataType, ValidationCallback>): void {
+    this.submitButton.setAttribute('disabled', '');
+
     this.inputs.forEach((group) => {
       if (group instanceof Fieldset) group.addValidation(callbacks);
       else {
         const callback = callbacks.get(group.type);
         if (callback) group.addValidation(callback);
       }
+    });
+    this.addEventListener(Events.Input, () => {
+      const allValid = this.inputs.every((group) => group.isValid);
+      if (allValid) this.submitButton.removeAttribute('disabled');
+      else this.submitButton.setAttribute('disabled', '');
     });
   }
 
@@ -103,12 +115,20 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     });
   }
 
-  public override append(...elements: (HTMLElement | DOMComponent<HTMLElement>)[]): void {
+  public override append(...elements: DOMComponent<HTMLElement>[]): void {
     elements.forEach((element) => {
-      if (element instanceof FormInput || element instanceof Fieldset) {
+      if (!this.onInit) {
         this.submitButton.insert(InsertPositions.Before, element);
-        this.inputs.push(element);
+
+        if (element instanceof Fieldset || element instanceof FormInput) this.inputs.push(element);
       } else super.append(element);
     });
+  }
+
+  public removeFormElement(element: Fieldset | FormInput): void {
+    element.remove();
+    const index = this.inputs.indexOf(element);
+    if (index === -1) throw Error('No such element in form');
+    this.inputs.splice(index, 1);
   }
 }

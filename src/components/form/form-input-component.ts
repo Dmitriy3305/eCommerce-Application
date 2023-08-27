@@ -160,6 +160,11 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     return this.resourceName || '';
   }
 
+  public get isValid(): boolean {
+    const validRequired = (this.input.required && this.input.value.length > 0) || !this.input.required;
+    return !this.input.checkSelectorMatch(`.${FormInputCssClasses.InputNotValid}`) && validRequired;
+  }
+
   public addValidation(callback: ValidationCallback, resource?: () => string): void {
     this.input.addEventListener(Events.Input, () => {
       let message = '';
