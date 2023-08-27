@@ -3,9 +3,10 @@ import { InputData, InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
 import { Countries } from '../../utils/validators/postalCode-validator';
 import DOMComponent, { ElementParameters } from '../base-component';
-import Checkbox from '../checkbox';
-import InputDomComponent from '../input-component';
-import SelectDomComponent from '../select-component';
+import Checkbox from '../inputs/checkbox';
+import InputDomComponent from '../inputs/input-component';
+import PasswordInput from '../inputs/password';
+import SelectDomComponent from '../inputs/select-component';
 
 export enum FormInputCssClasses {
   Wrapper = 'form__input-wrapper',
@@ -88,18 +89,20 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         break;
     }
 
+    const inputParams = { ...FormInput.INPUT_PARAMS, parent: this.label };
     if (inputData.dataType === InputDataType.Country) {
       const attributes = inputData.isRequired ? { required: '' } : undefined;
       this.input = new SelectDomComponent(
         {
-          classList: [FormInputCssClasses.Input],
-          parent: this.label,
+          ...inputParams,
           attributes,
         },
         inputData.options || Object.values(Countries)
       );
     } else if (inputData.dataType === InputDataType.Toggle) {
       this.input = new Checkbox(this);
+    } else if (inputData.dataType === InputDataType.Password) {
+      this.input = new PasswordInput(inputParams);
     } else {
       const attributes: { [attribute: string]: string } = {
         placeholder: `Input ${inputData.label.toLowerCase()}...`,
@@ -108,8 +111,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       if (inputData.isRequired) attributes.required = '';
       attributes.value = inputData.value || '';
       this.input = new InputDomComponent({
-        ...FormInput.INPUT_PARAMS,
-        parent: this.label,
+        ...inputParams,
         attributes,
       });
     }

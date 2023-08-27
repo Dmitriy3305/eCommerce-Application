@@ -1,5 +1,5 @@
-import DOMComponent, { ElementParameters } from './base-component';
-import { Tags } from '../types/dom-types/enums';
+import DOMComponent, { ElementParameters } from '../base-component';
+import { Tags } from '../../types/dom-types/enums';
 
 export default class InputDomComponent extends DOMComponent<HTMLInputElement> {
   public constructor(params: Omit<ElementParameters, 'tag'>) {

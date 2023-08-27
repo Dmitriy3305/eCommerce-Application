@@ -3,7 +3,7 @@ import { FormFieldsetData } from '../../types/dom-types/types';
 import { InputData, InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
 import DOMComponent, { ElementParameters } from '../base-component';
-import InputDomComponent from '../input-component';
+import InputDomComponent from '../inputs/input-component';
 import Fieldset from './fieldset-component';
 import FormInput, { InputSubmitData } from './form-input-component';
 

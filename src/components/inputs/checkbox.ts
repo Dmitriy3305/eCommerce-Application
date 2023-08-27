@@ -1,5 +1,5 @@
-import { Tags, InputTypes } from '../types/dom-types/enums';
-import DOMComponent, { ElementParameters } from './base-component';
+import { Tags, InputTypes } from '../../types/dom-types/enums';
+import DOMComponent, { ElementParameters } from '../base-component';
 import InputDomComponent from './input-component';
 
 export default class Checkbox extends InputDomComponent {
