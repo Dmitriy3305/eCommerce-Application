@@ -4,7 +4,7 @@
 }
 
 .form {
-  @include flex($direction: column, $gap: 0.5em);
+  @include flex($direction: column, $gap: 1em);
   padding-top: 30px;
 }
 
@@ -20,6 +20,22 @@
 
 .form__input-wrapper {
   @include flex($direction: column);
+
+  
+  &:has(input[type="checkbox"]) {
+    @include flex($direction: row-reverse);
+    translate: -70%;
+
+    input {
+      aspect-ratio: 1/1;
+      height: 20px;
+      margin-right: 0.5em;
+
+      &:checked {
+        background-color: $secondary-yellow;
+      }
+    }
+  }
 }
 
 .form__label {

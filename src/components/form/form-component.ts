@@ -1,4 +1,4 @@
-import { Tags, InputTypes, Events } from '../../types/dom-types/enums';
+import { Tags, InputTypes, Events, InsertPositions } from '../../types/dom-types/enums';
 import { FormFieldsetData } from '../../types/dom-types/types';
 import { InputData, InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
@@ -10,7 +10,6 @@ import FormInput, { InputSubmitData } from './form-input-component';
 enum FormCssclassList {
   Form = 'form',
   Title = 'form__title',
-  FieldSet = 'form__fieldset',
   Submit = 'form__submit',
 }
 
@@ -48,20 +47,22 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
 
   private inputs: (Fieldset | FormInput)[];
 
+  private submitButton: InputDomComponent;
+
   public constructor({ inputs, onSubmit, validationCallbacks, title }: FormParams) {
     super(FormComponent.FORM_PARAMS);
 
     if (title) this.append(new DOMComponent<HTMLHeadingElement>({ ...FormComponent.TITLE_PARAMS, textContent: title }));
 
+    this.submitButton = new InputDomComponent(FormComponent.SUBMIT_BUTTON_PARAMS);
+    this.append(this.submitButton);
+
     this.inputs = inputs.map((group) => {
       if (Object.prototype.hasOwnProperty.call(group, 'label')) return new FormInput(group as InputData);
       const fieldset = new Fieldset(group as FormFieldsetData);
-      fieldset.addClass(FormCssclassList.FieldSet);
       return fieldset;
     });
     this.append(...this.inputs);
-
-    this.append(new InputDomComponent(FormComponent.SUBMIT_BUTTON_PARAMS));
 
     this.addEventListener(Events.Submit, (event: Event) => {
       event.preventDefault();
@@ -99,6 +100,15 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
         const input = group;
         input.options = options;
       }
+    });
+  }
+
+  public override append(...elements: (HTMLElement | DOMComponent<HTMLElement>)[]): void {
+    elements.forEach((element) => {
+      if (element instanceof FormInput || element instanceof Fieldset) {
+        this.submitButton.insert(InsertPositions.Before, element);
+        this.inputs.push(element);
+      } else super.append(element);
     });
   }
 }

@@ -6,6 +6,7 @@ import DOMComponent, { ElementParameters } from '../base-component';
 import FormInput, { InputSubmitData } from './form-input-component';
 
 enum FieldsetCssClasses {
+  Fieldset = 'form__fieldset',
   Title = 'fieldset__title',
 }
 
@@ -20,7 +21,7 @@ export default class Fieldset extends DOMComponent<HTMLFieldSetElement> {
   private inputs: FormInput[];
 
   public constructor(data: FormFieldsetData) {
-    super({ tag: Tags.FieldSet });
+    super({ tag: Tags.FieldSet, classList: [FieldsetCssClasses.Fieldset] });
     const { inputs, title } = data;
 
     if (title) {

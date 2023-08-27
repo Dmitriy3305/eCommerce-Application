@@ -9,6 +9,7 @@ export enum InputDataType {
   PostalCode = 'postalCode',
   BirthDate = 'birthDate',
   Appartment = 'appartment',
+  Toggle = 'toggle',
 }
 
 export type InputData = {

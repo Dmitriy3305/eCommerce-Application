@@ -3,6 +3,7 @@ import { InputData, InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
 import { Countries } from '../../utils/validators/postalCode-validator';
 import DOMComponent, { ElementParameters } from '../base-component';
+import Checkbox from '../checkbox';
 import InputDomComponent from '../input-component';
 import SelectDomComponent from '../select-components';
 
@@ -74,6 +75,9 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       case InputDataType.Country:
         type = InputTypes.Select;
         break;
+      case InputDataType.Toggle:
+        type = InputTypes.Checkbox;
+        break;
       case InputDataType.City:
       case InputDataType.Email:
       case InputDataType.Name:
@@ -92,6 +96,8 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         },
         inputData.options || Object.values(Countries)
       );
+    } else if (inputData.dataType === InputDataType.Toggle) {
+      this.input = new Checkbox(this);
     } else {
       const attributes: { [attribute: string]: string } = {
         placeholder: `Input ${inputData.label.toLowerCase()}...`,
@@ -156,6 +162,12 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       this.validationMessage.textContent = message;
       if (message) this.input.addClass(FormInputCssClasses.InputNotValid);
       else this.input.removeClass(FormInputCssClasses.InputNotValid);
+    });
+  }
+
+  public addInputListener(listener: (value: string) => void): void {
+    this.input.addEventListener(Events.Input, () => {
+      listener(this.input instanceof Checkbox ? this.input.checked.toString() : this.input.value);
     });
   }
 }
