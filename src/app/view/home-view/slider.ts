@@ -1,20 +1,18 @@
+import Swiper from 'swiper';
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
 import CardSlider from './cardSlider';
 import AppRouter from '../../router/router';
 import ProductsRepository from '../../api/products';
+import swiperHomePage from './param-slider';
 
 enum SliderCssClasses {
   NameSection = 'section__slider',
-  NameWrapper = 'wrapper__slider',
   NameTitle = 'title__slider',
-  NameContainer = 'slider__container',
-  NameBtn = 'btn__arrow',
-  WrapperPhoto = 'wrapper__photo',
-  NamePhotoContent = 'slider__photo',
-  NameContainerProduct = 'card__product',
-  NameImgProduct = 'slider__product',
-  NameProduct = 'name__product',
+  NameContainer = 'swiper-container',
+  WrapperPhoto = 'swiper-wrapper',
+  NameLeftBtn = 'swiper-button-prev',
+  NameRightBtn = 'swiper-button-next',
 }
 
 export default class Slider extends DOMComponent<HTMLElement> {
@@ -23,11 +21,7 @@ export default class Slider extends DOMComponent<HTMLElement> {
     classList: [SliderCssClasses.NameSection],
   };
 
-  private sliderPhoto: DOMComponent<HTMLDivElement>;
-
-  private leftBtn: DOMComponent<HTMLButtonElement>;
-
-  private rightBtn: DOMComponent<HTMLButtonElement>;
+  private sliderWrapper: DOMComponent<HTMLDivElement>;
 
   private router: AppRouter;
 
@@ -35,10 +29,7 @@ export default class Slider extends DOMComponent<HTMLElement> {
     super(Slider.SECTION_SLIDER_PARAMS);
 
     this.router = router;
-    const wrapperSlider = new DOMComponent<HTMLDivElement>({
-      tag: Tags.Div,
-      classList: [SliderCssClasses.NameWrapper],
-    });
+
     const titleSlider = new DOMComponent<HTMLHeadingElement>({
       tag: Tags.Heading2,
       classList: [SliderCssClasses.NameTitle],
@@ -48,54 +39,43 @@ export default class Slider extends DOMComponent<HTMLElement> {
       tag: Tags.Div,
       classList: [SliderCssClasses.NameContainer],
     });
-    this.leftBtn = new DOMComponent<HTMLButtonElement>({
-      tag: Tags.Input,
-      classList: [SliderCssClasses.NameBtn],
-      attributes: {
-        type: 'button',
-        id: 'left',
-      },
-    });
-    const wrapperPhoto = new DOMComponent<HTMLDivElement>({
+    this.sliderWrapper = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [SliderCssClasses.WrapperPhoto],
     });
-    this.sliderPhoto = new DOMComponent<HTMLDivElement>({
+    const leftBtn = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
-      classList: [SliderCssClasses.NamePhotoContent],
+      classList: [SliderCssClasses.NameLeftBtn],
     });
-    this.rightBtn = new DOMComponent<HTMLButtonElement>({
-      tag: Tags.Input,
-      classList: [SliderCssClasses.NameBtn],
-      attributes: {
-        type: 'button',
-        id: 'right',
-      },
+    const rightBtn = new DOMComponent<HTMLDivElement>({
+      tag: Tags.Div,
+      classList: [SliderCssClasses.NameRightBtn],
     });
-    this.append(wrapperSlider);
-    wrapperSlider.append(titleSlider, container);
-    container.append(this.leftBtn, wrapperPhoto, this.rightBtn);
-    wrapperPhoto.append(this.sliderPhoto);
-    this.drawSlider();
+    this.append(titleSlider, container);
+    container.append(this.sliderWrapper, leftBtn, rightBtn);
+    this.showSlider();
   }
 
-  public drawSlider(): void {
+  public showSlider(): void {
     const cards: string[] = [];
     const names: string[] = [];
     const cardsProduct = [];
     const productsRepository = new ProductsRepository();
+    productsRepository.getProducts().then((response) => console.log(response));
     productsRepository.getProducts().then((response) => {
       for (let i = 0; i < response.length; i += 1) {
         const { images } = response[i].masterData.current.masterVariant;
         const { name } = response[i].masterData.current;
         const urlImg = images ? images[0].url : '';
-        const nameProduct = Object.values(name);
+        const nameProduct: string[] = Object.values(name);
         cards.push(urlImg);
         names.push(nameProduct[0]);
         const cardSlider = new CardSlider(cards[i], names[i]);
         cardsProduct.push(cardSlider);
-        this.sliderPhoto.append(cardSlider);
+        this.sliderWrapper.append(cardSlider);
       }
+      const slider = new Swiper('.swiper-container', swiperHomePage);
+      slider.init();
     });
   }
 }
