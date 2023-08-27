@@ -101,8 +101,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       );
     } else if (inputData.dataType === InputDataType.Toggle) {
       this.input = new Checkbox(this);
-    } else if (inputData.dataType === InputDataType.Password) {
-      this.input = new PasswordInput(inputParams);
     } else {
       const attributes: { [attribute: string]: string } = {
         placeholder: `Input ${inputData.label.toLowerCase()}...`,
@@ -110,10 +108,8 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       };
       if (inputData.isRequired) attributes.required = '';
       attributes.value = inputData.value || '';
-      this.input = new InputDomComponent({
-        ...inputParams,
-        attributes,
-      });
+      if (inputData.dataType === InputDataType.Password) this.input = new PasswordInput({ ...inputParams, attributes });
+      else this.input = new InputDomComponent({ ...inputParams, attributes });
     }
 
     this.validationMessage = new DOMComponent<HTMLSpanElement>(FormInput.VALIDATION_MESSAGE_PARAMS);
