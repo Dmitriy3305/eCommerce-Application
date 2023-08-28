@@ -68,4 +68,8 @@ export default class Fieldset extends DOMComponent<HTMLFieldSetElement> {
       if (input.type === dataType) currentInput.options = options;
     });
   }
+
+  public signalNotValidFields(): void {
+    this.inputs.filter((input) => !input.isValid).forEach((input) => input.emitInput());
+  }
 }

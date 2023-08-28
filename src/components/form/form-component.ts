@@ -29,6 +29,9 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
   private static FORM_PARAMS: ElementParameters = {
     tag: Tags.Form,
     classList: [FormCssclassList.Form],
+    attributes: {
+      novalidate: '',
+    },
   };
 
   private static TITLE_PARAMS: ElementParameters = {
@@ -71,7 +74,17 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
 
     this.addEventListener(Events.Submit, (event: Event) => {
       event.preventDefault();
-      onSubmit(this.data);
+      const notValid = this.inputs.filter((group) => !group.isValid);
+      console.log(notValid);
+      if (notValid.length) {
+        notValid.forEach((input) => (input instanceof Fieldset ? input.signalNotValidFields() : input.emitInput()));
+        console.log(notValid[0]);
+        window.scrollTo({
+          left: 0,
+          top: notValid[0].pageY - 150, // 150 = header height
+          behavior: 'smooth',
+        });
+      } else onSubmit(this.data);
     });
 
     if (validationCallbacks) this.addValidation(validationCallbacks);
@@ -89,19 +102,12 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
   }
 
   public addValidation(callbacks: Map<InputDataType, ValidationCallback>): void {
-    this.submitButton.setAttribute('disabled', '');
-
     this.inputs.forEach((group) => {
       if (group instanceof Fieldset) group.addValidation(callbacks);
       else {
         const callback = callbacks.get(group.type);
         if (callback) group.addValidation(callback);
       }
-    });
-    this.addEventListener(Events.Input, () => {
-      const allValid = this.inputs.every((group) => group.isValid);
-      if (allValid) this.submitButton.removeAttribute('disabled');
-      else this.submitButton.setAttribute('disabled', '');
     });
   }
 

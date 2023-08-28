@@ -13,6 +13,7 @@ import AppartmentValidator from '../../utils/validators/appartment-validator';
 import PostalCodeValidator, { Countries } from '../../utils/validators/postalCode-validator';
 import ProjectSettingsRepository from '../api/project';
 import StreetValidator from '../../utils/validators/street-validator';
+import CountryValidator from '../../utils/validators/country-validator';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -54,7 +55,7 @@ export default class AppController {
   public getValidationCallbacks(): Map<InputDataType, ValidationCallback> {
     const callbacks = new Map();
     Object.values(InputDataType).forEach((value) => {
-      if (value !== InputDataType.Country) callbacks.set(value, this.getDefaultValidationCallback(value));
+      callbacks.set(value, this.getDefaultValidationCallback(value));
     });
     return callbacks;
   }
@@ -82,6 +83,9 @@ export default class AppController {
           break;
         case InputDataType.Appartment:
           validator = new AppartmentValidator();
+          break;
+        case InputDataType.Country:
+          validator = new CountryValidator();
           break;
         case InputDataType.PostalCode:
           if (resource) validator = new PostalCodeValidator(resource as Countries);
