@@ -45,6 +45,10 @@
     width: 50%;
     padding-bottom: 0.5em;
     border-bottom: 2px solid $primary-dark;
+
+    &:last-of-type {
+      border: none;
+    }
   }
 }
 

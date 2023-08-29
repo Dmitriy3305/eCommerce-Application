@@ -1,18 +1,7 @@
-import { Customer, CustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import ctpClient from './buildClient';
+import { CustomerDraft, Customer } from '@commercetools/platform-sdk';
+import Repository from './repository';
 
-export default class AuthorizationManager {
-  private static PROJECT_KEY = 'ecommerce-application2023q1';
-
-  private apiRoot: ByProjectKeyRequestBuilder;
-
-  public constructor() {
-    this.apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-      projectKey: AuthorizationManager.PROJECT_KEY,
-    });
-  }
-
+export default class AuthorizationManager extends Repository {
   public async register(user: CustomerDraft): Promise<Customer> {
     try {
       const response = await this.apiRoot.customers().post({ body: user }).execute();

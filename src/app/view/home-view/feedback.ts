@@ -1,6 +1,6 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
-import imgFeedback from '../../../assets/feedback3.jpg';
+import imgFeedback from '../../../assets/images/feedback3.jpg';
 
 enum FeedbackCssClasses {
   SectionFeedback = 'section__feedback',

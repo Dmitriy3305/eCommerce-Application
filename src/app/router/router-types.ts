@@ -1,8 +1,3 @@
-export type RouterLink = {
-  description: string;
-  url: string;
-};
-
 export type RouteHandler = (resource?: string, queries?: URLSearchParams) => void;
 
 export enum AppLink {

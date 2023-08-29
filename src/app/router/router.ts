@@ -7,11 +7,7 @@ export default class AppRouter {
 
   private appName: string;
 
-  public constructor(
-    routeCallbacks: Map<AppLink, (resource?: string) => void>,
-    isAuthorized: boolean,
-    appName: string
-  ) {
+  public constructor(routeCallbacks: Map<AppLink, (resource?: string) => void>, appName: string) {
     this.routeCallbacks = routeCallbacks;
     this.appName = appName;
 

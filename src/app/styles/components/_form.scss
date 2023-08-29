@@ -1,0 +1,107 @@
+.form__title {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.form {
+  @include flex($direction: column, $gap: 1em);
+  padding-top: 30px;
+
+  &:not(:has(fieldset)) {
+    gap: 0;
+  }
+}
+
+.form__fieldset {
+  @include flex($direction: column, $justify-content: space-around);
+  width: max(60vw, 300px);
+  padding-bottom: 20px;
+}
+
+.fieldset__title {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.form__input-wrapper {
+  @include flex($direction: column);
+
+  &:has(input[type='checkbox']) {
+    @include flex($direction: row-reverse);
+    align-self: flex-start;
+    margin-left: 0.5em;
+
+    input {
+      margin-right: 0.5em;
+    }
+  }
+
+  &:has(.form__input[required]) {
+    position: relative;
+    .form__label {
+      padding-left: 1em;
+    }
+
+    .form__label::before {
+      content: '*';
+      position: relative;
+      top: 1.7em;
+      right: 0.5em;
+      color: $not-valid-color;
+    }
+
+    .form__input {
+      position: relative;
+      right: 0.5em;
+    }
+  }
+}
+
+.form__label {
+  @include flex($direction: column, $align-items: flex-start, $gap: 5px);
+}
+
+.form__input {
+  @include input-style;
+
+  &_invalid {
+    border: 2px solid $not-valid-color;
+  }
+}
+
+.form__validation-message {
+  padding-top: 10px;
+  height: 20px;
+  font-family: $font-family;
+  color: $not-valid-color;
+}
+
+.form__submit {
+  width: max(20vw, 100px);
+  height: 40px;
+
+  background-color: $primary-dark;
+  color: $primary-light;
+  border: 2px solid $secondary-grey;
+  border-radius: 20px;
+
+  transition:
+    border-color $hover-transition,
+    background-color $hover-transition;
+
+  cursor: pointer;
+
+  &:hover {
+    @include shadow();
+    border-color: $secondary-light;
+    background-color: $secondary-yellow;
+  }
+
+  &:disabled {
+    cursor: default;
+    @include shadow();
+
+    border-color: $secondary-light;
+    background-color: $secondary-grey;
+  }
+}

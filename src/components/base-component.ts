@@ -64,6 +64,10 @@ export default class DOMComponent<T extends HTMLElement> {
     return this.element.offsetWidth;
   }
 
+  public get pageY(): number {
+    return this.element.offsetTop;
+  }
+
   public get fullHeight(): number {
     const marginTop = parseFloat(this.getCSSProperty('margin-top'));
     const marginBottom = parseFloat(this.getCSSProperty('margin-bottom'));
@@ -120,6 +124,10 @@ export default class DOMComponent<T extends HTMLElement> {
     this.element.setAttribute(attributeName, attributeValue);
   }
 
+  public getAttribute(attributeName: string): string | null {
+    return this.element.getAttribute(attributeName);
+  }
+
   public removeAttribute(attributeName: string): void {
     this.element.removeAttribute(attributeName);
   }
@@ -130,6 +138,11 @@ export default class DOMComponent<T extends HTMLElement> {
 
   public removeEventListener(event: Events, listener: (e: Event) => void): void {
     this.element.removeEventListener(event, listener);
+  }
+
+  public emitEvent(eventType: Events, bubbles = false): void {
+    const event = new Event(eventType, { bubbles });
+    this.element.dispatchEvent(event);
   }
 
   public addText(text: string) {

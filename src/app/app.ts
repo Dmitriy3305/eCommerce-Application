@@ -1,9 +1,11 @@
 import AppController from './controller/controller';
 import AppRouter from './router/router';
 import { AppLink, RouteHandler } from './router/router-types';
+import AppView from './view/view';
 import HomeView from './view/home-view/home-view';
 import NotFoundView from './view/not-found/not-found-view';
-import AppView from './view/view';
+import LoginView from './view/login/login-view';
+import RegistrationView from './view/registration/registration-view';
 import { Events } from '../types/dom-types/enums';
 import './styles/main.scss';
 
@@ -23,7 +25,7 @@ export default class App {
 
   public constructor(config: AppConfig) {
     this.config = config;
-    this.controller = new AppController(); // Some implementation needed here
+    this.controller = new AppController();
     this.router = this.setupRouter();
   }
 
@@ -36,26 +38,46 @@ export default class App {
   private setupRouter(): AppRouter {
     const routes = new Map<AppLink, RouteHandler>();
     Object.values(AppLink).forEach((link) => routes.set(link, this.getDefaultRouteHandler(link)));
-    const router = new AppRouter(routes, this.controller.isAuthorized, this.config.appName);
+    const router = new AppRouter(routes, this.config.appName);
     return router;
   }
 
   private getDefaultRouteHandler(link: AppLink): RouteHandler {
     return async (resource?: string, queries?: URLSearchParams) => {
+      const validationCallbacks = this.controller.getValidationCallbacks();
       this.controller.loadCategories((categories) => {
         this.view?.clear();
         switch (link) {
           case AppLink.Main:
             this.view = new HomeView(this.router, this.config.appName, this.config.description, categories);
             break;
+          case AppLink.Login:
+            this.view = new LoginView(
+              this.router,
+              this.config.appName,
+              this.config.description,
+              categories,
+              validationCallbacks
+            );
+            break;
+          case AppLink.Register:
+            this.controller.loadCountries().then((countries) => {
+              this.view = new RegistrationView(
+                this.router,
+                this.config.appName,
+                this.config.description,
+                categories,
+                validationCallbacks,
+                countries
+              );
+              this.view.switchActiveLink(link, queries);
+            });
+            break;
+          case AppLink.Cart:
           case AppLink.AboutUs:
           case AppLink.Catalog:
-          case AppLink.Login:
-          case AppLink.Register:
-          case AppLink.Cart:
-            this.view = new NotFoundView(this.router, this.config.appName, this.config.description, categories);
-            break;
           default:
+            this.view = new NotFoundView(this.router, this.config.appName, this.config.description, categories);
             break;
         }
         this.view?.switchActiveLink(link, queries);

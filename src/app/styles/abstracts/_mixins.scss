@@ -30,3 +30,25 @@
     scale: 1;
   }
 }
+
+@mixin flex($direction: row, $justify-content: center, $align-items: center, $gap: none) {
+  display: flex;
+  align-items: $align-items;
+  justify-content: $justify-content;
+  flex-direction: $direction;
+  gap: $gap;
+}
+
+@mixin input-style {
+  padding: 1rem;
+  width: 75vw;
+  max-width: 400px;
+  outline: none;
+}
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}

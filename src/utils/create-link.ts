@@ -7,11 +7,14 @@ export default function createLink(
   router: AppRouter,
   link: string
 ): DOMComponent<HTMLAnchorElement> {
+  const attributes = { ...params.attributes, href: link };
   const linkElement = new DOMComponent<HTMLAnchorElement>({
     tag: Tags.Anchor,
     ...params,
+    attributes,
   });
-  linkElement.addEventListener(Events.Click, () => {
+  linkElement.addEventListener(Events.Click, (event: Event) => {
+    event.preventDefault();
     router.navigate(link);
   });
   return linkElement;
