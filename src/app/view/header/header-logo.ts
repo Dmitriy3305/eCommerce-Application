@@ -31,8 +31,12 @@ export default class HeaderLogo extends DOMComponent<HTMLElement> {
   public constructor(router: AppRouter, logoText: string) {
     super({
       tag: Tags.Anchor,
+      attributes: {
+        href: AppLink.Main,
+      },
     });
-    this.addEventListener(Events.Click, () => {
+    this.addEventListener(Events.Click, (event: Event) => {
+      event.preventDefault();
       router.navigate(AppLink.Main);
     });
 

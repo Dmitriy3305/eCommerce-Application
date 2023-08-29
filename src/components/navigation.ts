@@ -25,14 +25,14 @@ export default class Navigation extends DOMComponent<HTMLElement> {
   public constructor(links: string[], router?: Router) {
     super(Navigation.ELEMENT_PARAMS);
     this.links = links.map((linkURL) => {
-      const attributes = router ? undefined : { href: linkURL };
       const link = new DOMComponent<HTMLAnchorElement>({
         ...Navigation.LINK_PARAMS,
-        attributes,
+        attributes: { href: linkURL },
         parent: this,
       });
       if (router)
-        link.addEventListener(Events.Click, () => {
+        link.addEventListener(Events.Click, (event: Event) => {
+          event.preventDefault();
           router.navigate(linkURL);
         });
       return link;

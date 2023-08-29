@@ -5,11 +5,11 @@ const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: 'https://auth.europe-west1.gcp.commercetools.com',
   projectKey: 'ecommerce-application2023q1',
   credentials: {
-    clientId: '3SQRi8X5vyy752mC-JwcErrg',
-    clientSecret: '3QhObAHoWNm4YVbydeOxdUnDI9xxYg0Q',
+    clientId: 'l6uBcwmAGKqxB-YYeKVO9VlX',
+    clientSecret: 'Zr0iZBp6l7sAKHF2aI9poqU0GFfeOvaS',
   },
   scopes: [
-    'view_cart_discounts:ecommerce-application2023q1 manage_my_shopping_lists:ecommerce-application2023q1 manage_my_payments:ecommerce-application2023q1 manage_my_quotes:ecommerce-application2023q1 manage_my_profile:ecommerce-application2023q1 view_categories:ecommerce-application2023q1 manage_my_business_units:ecommerce-application2023q1 create_anonymous_token:ecommerce-application2023q1 view_published_products:ecommerce-application2023q1 manage_my_quote_requests:ecommerce-application2023q1 manage_my_orders:ecommerce-application2023q1 view_products:ecommerce-application2023q1 manage_customers:ecommerce-application2023q1',
+    'manage_my_shopping_lists:ecommerce-application2023q1 view_discount_codes:ecommerce-application2023q1 manage_my_quotes:ecommerce-application2023q1 manage_my_profile:ecommerce-application2023q1 view_categories:ecommerce-application2023q1 manage_my_business_units:ecommerce-application2023q1 create_anonymous_token:ecommerce-application2023q1 view_published_products:ecommerce-application2023q1 manage_my_quote_requests:ecommerce-application2023q1 manage_my_orders:ecommerce-application2023q1 view_products:ecommerce-application2023q1 manage_customers:ecommerce-application2023q1 manage_my_payments:ecommerce-application2023q1 view_project_settings:ecommerce-application2023q1',
   ],
   fetch,
 };
