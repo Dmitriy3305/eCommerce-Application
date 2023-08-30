@@ -1,7 +1,7 @@
 import DOMComponent from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
 import AppView from '../view';
-import FormComponent from '../../../components/form/form-component';
+import FormComponent, { FormSubmitCallback } from '../../../components/form/form-component';
 import registrationInputs from './registration-inputs.json';
 import { FormFieldsetData } from '../../../types/dom-types/types';
 import { InputDataType } from '../../../types/input-datas';
@@ -11,6 +11,8 @@ import AppRouter from '../../router/router';
 import Fieldset from '../../../components/form/fieldset-component';
 import FormInput from '../../../components/form/form-input-component';
 import toKebabCase from '../../../utils/to-kebab-case';
+import { showErrorToastify, showSuccessToastify } from '../../../utils/toastify';
+import { AppLink } from '../../router/router-types';
 
 export default class RegistrationView extends AppView {
   private static FORM_TITLE = 'Registration';
@@ -23,11 +25,22 @@ export default class RegistrationView extends AppView {
     appDescription: string,
     categories: GrouppedCategories,
     validationCallbacks: Map<InputDataType, ValidationCallback>,
-    countries: string[]
+    countries: string[],
+    submitCallback: FormSubmitCallback
   ) {
     super(router, appName, appDescription, categories);
     this.form?.addOptions(InputDataType.Country, countries);
     this.form?.addValidation(validationCallbacks);
+
+    this.form?.addSubmitCallback(async (data) => {
+      try {
+        await submitCallback(data);
+        showSuccessToastify('Signed up successfully');
+        this.router.navigate(AppLink.Main);
+      } catch (error) {
+        showErrorToastify((error as Error).message);
+      }
+    });
   }
 
   protected createMain(): DOMComponent<HTMLElement> {
@@ -38,23 +51,26 @@ export default class RegistrationView extends AppView {
     inputs.forEach((fieldset) =>
       fieldset.inputs.forEach((input) => {
         const currentInput = input;
-        currentInput.isRequired = true;
+        if (currentInput.label !== 'Apartment') currentInput.isRequired = true;
         currentInput.name = toKebabCase(currentInput.label);
       })
     );
 
     this.form = new FormComponent({
       inputs,
-      onSubmit() {},
       title: RegistrationView.FORM_TITLE,
     });
+    this.form.setAttribute('novalidate', '');
 
     const billingAddressTemplate = structuredClone(inputs[1]);
     billingAddressTemplate.title = 'Billing Address';
     const billingAddressFieldSet = new Fieldset(billingAddressTemplate);
+
+    const checkboxLabel = 'Billing Address is the same as Shipping Address';
     const billingAddressCheckbox = new FormInput({
-      label: 'Billing Address is the same as Shipping Address',
+      label: checkboxLabel,
       dataType: InputDataType.Toggle,
+      name: toKebabCase(checkboxLabel),
     });
     billingAddressCheckbox.addInputListener((value: string) => {
       if (value === 'false') this.form?.append(billingAddressFieldSet);

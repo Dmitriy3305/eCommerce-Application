@@ -1,0 +1,11 @@
+.toastify_error, .toastify_success {
+  max-width: 200px;
+}
+
+.toastify_error {
+  background: $not-valid-color !important;
+}
+
+.toastify_success {
+  background: $secondary-yellow !important;
+}

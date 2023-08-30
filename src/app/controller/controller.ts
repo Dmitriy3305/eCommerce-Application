@@ -1,4 +1,4 @@
-import { Customer, CustomerDraft } from '@commercetools/platform-sdk';
+import { BaseAddress, Customer, CustomerDraft } from '@commercetools/platform-sdk';
 import ProductsRepository, { GrouppedCategories } from '../api/products';
 import AuthorizationManager from '../api/user';
 import { InputDataType } from '../../types/input-datas';
@@ -14,6 +14,10 @@ import PostalCodeValidator, { Countries } from '../../utils/validators/postalCod
 import ProjectSettingsRepository from '../api/project';
 import StreetValidator from '../../utils/validators/street-validator';
 import CountryValidator from '../../utils/validators/country-validator';
+import { FieldsetSubmitData } from '../../components/form/form-component';
+import { InputSubmitData } from '../../components/form/form-input-component';
+import createFromFieldset from '../../utils/create-client';
+import getCountryCode from '../../utils/country-code';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -34,17 +38,45 @@ export default class AppController {
     return this.currentCustomer !== null;
   }
 
-  public async tryAuthorize(email: string, password: string): Promise<boolean> {
-    try {
-      this.currentCustomer = await this.authManager.authorize(email, password);
-      return true;
-    } catch {
-      return false;
-    }
+  public async authorize(loginFormData: (InputSubmitData | FieldsetSubmitData)[]) {
+    const [email, password] = (loginFormData as InputSubmitData[]).map((data) => data.value);
+    this.currentCustomer = await this.authManager.authorize(email, password);
   }
 
-  public async register(credentials: CustomerDraft) {
-    this.currentCustomer = await this.authManager.register(credentials);
+  public async register(registerFormData: (InputSubmitData | FieldsetSubmitData)[]) {
+    const [personalInfo, shippingAddressFieldset, , billingAddressFieldSet] = registerFormData as [
+      FieldsetSubmitData,
+      FieldsetSubmitData,
+      InputSubmitData,
+      FieldsetSubmitData,
+    ];
+    const customer = createFromFieldset<CustomerDraft>(personalInfo);
+    Object.defineProperty(customer, 'addresses', { value: [] });
+
+    Object.defineProperty(customer, 'shippingAddresses', { value: [] });
+    const shippingAddress = createFromFieldset<BaseAddress>(shippingAddressFieldset);
+    Object.defineProperty(shippingAddress, 'country', { value: getCountryCode(shippingAddress.country) });
+    const isShippingDefault =
+      shippingAddressFieldset.inputs.find((input) => input.name === 'set-as-default')?.value === 'on';
+
+    customer.addresses?.push(shippingAddress);
+    customer.shippingAddresses?.push(0);
+    if (isShippingDefault) Object.defineProperty(customer, 'defaultShippingAddress', { value: 0 });
+
+    if (billingAddressFieldSet) {
+      Object.defineProperty(customer, 'billingAddresses', { value: [] });
+      const billingAddress = createFromFieldset<BaseAddress>(billingAddressFieldSet);
+      Object.defineProperty(billingAddress, 'country', { value: getCountryCode(billingAddress.country) });
+
+      customer.addresses?.push(billingAddress);
+      customer.billingAddresses?.push(1);
+      const isBillingDefault =
+        billingAddressFieldSet.inputs.find((input) => input.name === 'set-as-default')?.value === 'on';
+      if (isBillingDefault) Object.defineProperty(customer, 'defaultBillingAddress', { value: 1 });
+    } else if (isShippingDefault) {
+      Object.defineProperty(customer, 'defaultBillingAddress', { value: 0 });
+    }
+    this.currentCustomer = await this.authManager.register(customer);
   }
 
   public async loadCategories(callback: (categories: GrouppedCategories) => void): Promise<void> {
@@ -61,8 +93,7 @@ export default class AppController {
   }
 
   private getDefaultValidationCallback(type: InputDataType): ValidationCallback {
-    // eslint-disable-next-line func-names
-    return function (value: string, isRequired: boolean, resource?: string) {
+    return (value: string, isRequired: boolean, resource?: string) => {
       let validator: Validator;
 
       switch (type) {
@@ -81,7 +112,7 @@ export default class AppController {
         case InputDataType.City:
           validator = new CityValidator();
           break;
-        case InputDataType.Appartment:
+        case InputDataType.Apartment:
           validator = new AppartmentValidator();
           break;
         case InputDataType.Country:

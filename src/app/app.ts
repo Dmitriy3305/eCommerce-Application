@@ -43,8 +43,8 @@ export default class App {
   }
 
   private getDefaultRouteHandler(link: AppLink): RouteHandler {
+    const validationCallbacks = this.controller.getValidationCallbacks();
     return async (resource?: string, queries?: URLSearchParams) => {
-      const validationCallbacks = this.controller.getValidationCallbacks();
       this.controller.loadCategories((categories) => {
         this.view?.clear();
         switch (link) {
@@ -57,7 +57,8 @@ export default class App {
               this.config.appName,
               this.config.description,
               categories,
-              validationCallbacks
+              validationCallbacks,
+              this.controller.authorize.bind(this.controller)
             );
             break;
           case AppLink.Register:
@@ -68,7 +69,8 @@ export default class App {
                 this.config.description,
                 categories,
                 validationCallbacks,
-                countries
+                countries,
+                this.controller.register.bind(this.controller)
               );
               this.view.switchActiveLink(link, queries);
             });

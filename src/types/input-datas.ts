@@ -8,7 +8,7 @@ export enum InputDataType {
   City = 'city',
   PostalCode = 'postalCode',
   BirthDate = 'birthDate',
-  Appartment = 'appartment',
+  Apartment = 'apartment',
   Toggle = 'toggle',
 }
 

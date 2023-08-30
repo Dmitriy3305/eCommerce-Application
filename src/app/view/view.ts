@@ -44,6 +44,11 @@ export default abstract class AppView {
 
   public clear(): void {
     this.main.remove();
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
   }
 
   public switchActiveLink(link: AppLink, queries?: URLSearchParams): void {
