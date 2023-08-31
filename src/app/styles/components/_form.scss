@@ -75,7 +75,19 @@
   font-family: $font-family;
   color: $not-valid-color;
 }
-
+.form__edit-button {
+  margin-top: 10px;
+  transform: translate(20vw, 7vh);
+  width: max(20vw, 100px);
+  height: 40px;
+  background-color: $primary-dark;
+  color: $primary-light;
+  border: 2px solid $secondary-grey;
+  border-radius: 20px;
+}
+.form__edit-button:hover {
+  cursor: pointer;
+}
 .form__submit {
   width: max(20vw, 100px);
   height: 40px;

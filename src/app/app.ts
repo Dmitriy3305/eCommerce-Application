@@ -6,6 +6,7 @@ import HomeView from './view/home-view/home-view';
 import NotFoundView from './view/not-found/not-found-view';
 import LoginView from './view/login/login-view';
 import RegistrationView from './view/Registration/registration-view';
+import ProfileView from './view/profile/profile-view';
 import { Events } from '../types/dom-types/enums';
 import './styles/main.scss';
 
@@ -75,6 +76,19 @@ export default class App {
             break;
           case AppLink.Cart:
           case AppLink.AboutUs:
+          case AppLink.Profile:
+            this.controller.loadCountries().then((countries) => {
+              this.view = new ProfileView(
+                this.router,
+                this.config.appName,
+                this.config.description,
+                categories,
+                validationCallbacks,
+                countries
+              );
+              this.view.switchActiveLink(link, queries);
+            });
+            break;
           case AppLink.Catalog:
           default:
             this.view = new NotFoundView(this.router, this.config.appName, this.config.description, categories);

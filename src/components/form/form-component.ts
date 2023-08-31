@@ -11,6 +11,7 @@ enum FormCssclassList {
   Form = 'form',
   Title = 'form__title',
   Submit = 'form__submit',
+  Edit = 'form__edit',
 }
 
 export type FieldsetSubmitData = {
@@ -48,26 +49,38 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     },
   };
 
+  private static EDIT_BUTTONS_PARAMS: ElementParameters = {
+    tag: Tags.Button,
+    classList: [FormCssclassList.Submit],
+    textContent: 'Edit',
+  };
+
   private inputs: (Fieldset | FormInput)[];
 
   private submitButton: InputDomComponent;
 
   private onInit: boolean;
 
+  editButton!: FormInput;
+
   public constructor({ inputs, onSubmit, validationCallbacks, title }: FormParams) {
     super(FormComponent.FORM_PARAMS);
     this.onInit = true;
-
     if (title) this.append(new DOMComponent<HTMLHeadingElement>({ ...FormComponent.TITLE_PARAMS, textContent: title }));
-
     this.inputs = inputs.map((group) => {
       if (Object.prototype.hasOwnProperty.call(group, 'label')) return new FormInput(group as InputData);
       const fieldset = new Fieldset(group as FormFieldsetData);
       return fieldset;
     });
+
+    if (title === 'Profile') {
+      this.append(this.editButton);
+    }
+
     this.append(...this.inputs);
 
     this.submitButton = new InputDomComponent(FormComponent.SUBMIT_BUTTON_PARAMS);
+
     this.append(this.submitButton);
 
     this.onInit = false;
@@ -75,10 +88,8 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     this.addEventListener(Events.Submit, (event: Event) => {
       event.preventDefault();
       const notValid = this.inputs.filter((group) => !group.isValid);
-      console.log(notValid);
       if (notValid.length) {
         notValid.forEach((input) => (input instanceof Fieldset ? input.signalNotValidFields() : input.emitInput()));
-        console.log(notValid[0]);
         window.scrollTo({
           left: 0,
           top: notValid[0].pageY - 150, // 150 = header height

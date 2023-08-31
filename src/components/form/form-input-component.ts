@@ -21,6 +21,11 @@ export type InputSubmitData = {
   value: string;
 };
 
+export type InputEditData = {
+  name: string;
+  value: string;
+};
+
 export default class FormInput extends DOMComponent<HTMLDivElement> {
   private static WRAPPER_PARAMS: ElementParameters = {
     tag: Tags.Div,
@@ -42,6 +47,11 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     classList: [FormInputCssClasses.ValidationMessage],
   };
 
+  private static EDIT_BUTTONS_PARAMS: ElementParameters = {
+    tag: Tags.Button,
+    classList: [FormInputCssClasses.Input],
+  };
+
   private label: DOMComponent<HTMLLabelElement>;
 
   protected input: InputDomComponent | SelectDomComponent;
@@ -51,6 +61,8 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
   private dataType: InputDataType;
 
   private resourceName?: string;
+
+  public editButton?: DOMComponent<HTMLButtonElement>;
 
   public constructor(inputData: InputData) {
     super(FormInput.WRAPPER_PARAMS);
@@ -62,6 +74,14 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     });
 
     this.dataType = inputData.dataType;
+
+    if (this.dataType !== 'toggle') {
+      this.editButton = new DOMComponent<HTMLButtonElement>({
+        ...FormInput.EDIT_BUTTONS_PARAMS,
+        textContent: 'Edit',
+        parent: this.label,
+      });
+    }
 
     let type: InputTypes = InputTypes.Text;
 
@@ -98,6 +118,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         },
         inputData.options || Object.values(Countries)
       );
+      if (inputData.isDisabled) this.input.setAttribute('disabled', '');
     } else if (inputData.dataType === InputDataType.Toggle) {
       this.input = new Checkbox(this);
     } else {

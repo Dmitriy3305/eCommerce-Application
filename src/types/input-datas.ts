@@ -20,4 +20,5 @@ export type InputData = {
   isRequired?: boolean;
   resourceName?: string;
   options?: string[];
+  isDisabled?: boolean;
 };
