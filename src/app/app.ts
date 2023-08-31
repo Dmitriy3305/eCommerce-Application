@@ -32,6 +32,11 @@ export default class App {
   public start(): void {
     document.addEventListener(Events.ContentLoaded, () => {
       this.router.navigate('');
+      try {
+        this.controller.authorizeSavedUser();
+      } catch (error) {
+        this.view?.showError((error as Error).message);
+      }
     });
   }
 

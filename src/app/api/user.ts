@@ -1,8 +1,29 @@
-import { CustomerDraft, Customer, Address } from '@commercetools/platform-sdk';
+import { CustomerDraft, Customer, Address, CustomerToken } from '@commercetools/platform-sdk';
 import Repository from './repository';
 
-export default class AuthorizationManager extends Repository {
-  public async register(user: CustomerDraft): Promise<Customer> {
+export default class UserRepository extends Repository {
+  private static STORAGE_KEY = 'shoe-corner:auth-token';
+
+  private token: CustomerToken | null = null;
+
+  public checkToken(): void {
+    const tokenJson = localStorage.getItem(UserRepository.STORAGE_KEY);
+    if (tokenJson) {
+      const token = JSON.parse(tokenJson) as CustomerToken;
+      if (new Date(token.expiresAt) > new Date()) throw Error('Token expired');
+      else this.token = token;
+    }
+  }
+
+  public get user(): Promise<Customer> | null {
+    if (this.token) {
+      const request = this.apiRoot.customers().withPasswordToken({ passwordToken: this.token.value }).get().execute();
+      return request.then((response) => response.body);
+    }
+    return null;
+  }
+
+  public async register(user: CustomerDraft) {
     try {
       const response = await this.apiRoot.customers().post({ body: user }).execute();
       let { customer } = response.body;
@@ -19,7 +40,7 @@ export default class AuthorizationManager extends Repository {
         customer = await this.setDefaultAddress(customer, billingAddress, 'Billing');
       }
 
-      return customer;
+      this.token = await this.getToken(customer.email);
     } catch (error) {
       const { message } = error as Error;
       if (message === 'There is already an existing customer with the provided email.')
@@ -30,7 +51,7 @@ export default class AuthorizationManager extends Repository {
     }
   }
 
-  public async authorize(email: string, password: string): Promise<Customer> {
+  public async authorize(email: string, password: string) {
     try {
       const response = await this.apiRoot
         .login()
@@ -41,7 +62,7 @@ export default class AuthorizationManager extends Repository {
           },
         })
         .execute();
-      return response.body.customer;
+      this.token = await this.getToken(response.body.customer.email);
     } catch (error) {
       const { message } = error as Error;
       if (message.includes('credentials')) throw Error('Incorrect email or password');
@@ -87,5 +108,20 @@ export default class AuthorizationManager extends Repository {
       .execute();
     if (updateResponse.statusCode && updateResponse.statusCode >= 400) throw Error();
     return updateResponse.body;
+  }
+
+  private async getToken(email: string): Promise<CustomerToken> {
+    const response = await this.apiRoot
+      .customers()
+      .passwordToken()
+      .post({
+        body: {
+          email,
+        },
+      })
+      .execute();
+    const token = response.body;
+    localStorage.setItem(UserRepository.STORAGE_KEY, JSON.stringify(token));
+    return token;
   }
 }

@@ -5,6 +5,7 @@ import { InsertPositions } from '../../types/dom-types/enums';
 import AppRouter from '../router/router';
 import { AppLink } from '../router/router-types';
 import { GrouppedCategories } from '../api/products';
+import { showErrorToastify } from '../../utils/toastify';
 
 enum ViewCssClasses {
   Main = 'main',
@@ -58,5 +59,9 @@ export default abstract class AppView {
 
     if (Footer.NAVIGATION_LINKS.includes(link)) AppView.FOOTER?.switchActiveLink(url);
     else AppView.FOOTER?.disableActiveLinks();
+  }
+
+  public showError(message: string): void {
+    showErrorToastify(message);
   }
 }

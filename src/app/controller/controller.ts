@@ -1,6 +1,5 @@
-import { BaseAddress, Customer, CustomerDraft } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import ProductsRepository, { GrouppedCategories } from '../api/products';
-import AuthorizationManager from '../api/user';
 import { InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
 import NameValidator from '../../utils/validators/name-validator';
@@ -18,29 +17,32 @@ import { FieldsetSubmitData } from '../../components/form/form-component';
 import { InputSubmitData } from '../../components/form/form-input-component';
 import createFromFieldset from '../../utils/create-client';
 import getCountryCode from '../../utils/country-code';
+import UserRepository from '../api/user';
 
 export default class AppController {
   private products: ProductsRepository;
 
-  private authManager: AuthorizationManager;
+  private authManager: UserRepository;
 
   private projectSettings: ProjectSettingsRepository;
 
-  private currentCustomer: Customer | null = null;
-
   public constructor() {
     this.products = new ProductsRepository();
-    this.authManager = new AuthorizationManager();
     this.projectSettings = new ProjectSettingsRepository();
+    this.authManager = new UserRepository();
+  }
+
+  public authorizeSavedUser(): void {
+    this.authManager.checkToken();
   }
 
   public get isAuthorized(): boolean {
-    return this.currentCustomer !== null;
+    return this.authManager.user !== null;
   }
 
   public async authorize(loginFormData: (InputSubmitData | FieldsetSubmitData)[]) {
     const [email, password] = (loginFormData as InputSubmitData[]).map((data) => data.value);
-    this.currentCustomer = await this.authManager.authorize(email, password);
+    await this.authManager.authorize(email, password);
   }
 
   public async register(registerFormData: (InputSubmitData | FieldsetSubmitData)[]) {
@@ -76,7 +78,7 @@ export default class AppController {
     } else if (isShippingDefault) {
       Object.defineProperty(customer, 'defaultBillingAddress', { value: 0 });
     }
-    this.currentCustomer = await this.authManager.register(customer);
+    await this.authManager.register(customer);
   }
 
   public async loadCategories(callback: (categories: GrouppedCategories) => void): Promise<void> {
