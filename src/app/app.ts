@@ -5,10 +5,10 @@ import AppView from './view/view';
 import HomeView from './view/home-view/home-view';
 import NotFoundView from './view/not-found/not-found-view';
 import LoginView from './view/login/login-view';
-import RegistrationView from './view/registration/registration-view';
 import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
+import RegistrationView from './view/registration/registration-view';
 
 export type AppConfig = {
   appName: string;
