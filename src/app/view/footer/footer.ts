@@ -1,11 +1,11 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
-import createLink from '../../../utils/create-link';
 import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
 import RoutedComponent from '../../../components/routed-component';
 import courseLinkHtml from './course-link.html';
 import { AppInfo } from '../../../types/app-parameters';
+import RoutedLink from '../../../components/routed-link';
 
 enum FooterCssClasses {
   Footer = 'footer',
@@ -89,13 +89,13 @@ export default class Footer extends RoutedComponent {
     });
 
     const linkElements = links.map((url) => {
-      const link = createLink(
+      const link = new RoutedLink(
         {
           classList: [FooterCssClasses.Link],
           textContent: url.replace('-', ' '),
         },
-        this.router,
-        url
+        url,
+        this.router
       );
       this.links.set(url as AppLink, link);
       return link;

@@ -1,9 +1,9 @@
 import DOMComponent from '../../../components/base-component';
 import DropdownMenu from '../../../components/dropdown-menu/dropdown-menu';
+import RoutedLink from '../../../components/routed-link';
 import { Tags } from '../../../types/dom-types/enums';
 import FontAwesome from '../../../types/font-awesome';
 import { LinkCreateCallback } from '../../../types/header-types';
-import createLink from '../../../utils/create-link';
 import getLinkIcon from '../../../utils/get-link-icon';
 import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
@@ -28,7 +28,7 @@ export default class CategoriesDropdown extends DropdownMenu {
         });
         categoryGroups[group].forEach((category) => {
           const url = router.buildCategoryUrl(category);
-          const link = createLink({ textContent: category }, router, url);
+          const link = new RoutedLink({ textContent: category }, url, router);
           link.append(getLinkIcon(category));
           callback(url, link);
           groupWrapper.append(link);

@@ -95,15 +95,17 @@ body:has(.not-found) {
 .not-found__go-back {
   cursor: pointer;
 
+  @include flex();
+
   width: max(50%, 150px);
   aspect-ratio: 5 / 1;
   border-radius: 25px;
 
   background-color: $primary-light;
   color: $primary-dark;
-  border-color: $primary-dark;
+  border: 2px solid $primary-dark;
 
-  transition: background-color ease-in-out 500ms;
+  transition: background-color $hover-transition, scale $active-transition;
 
   &:hover {
     background-color: $secondary-light;
