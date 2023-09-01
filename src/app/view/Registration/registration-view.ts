@@ -6,6 +6,8 @@ import Fieldset from '../../../components/form/fieldset-component';
 import FormInput from '../../../components/form/form-input-component';
 import toKebabCase from '../../../utils/to-kebab-case';
 import FormView from '../form-view';
+import RoutedLink from '../../../components/routed-link';
+import { AppLink } from '../../router/router-types';
 
 export default class RegistrationView extends FormView {
   protected get formTitle(): string {
@@ -31,7 +33,15 @@ export default class RegistrationView extends FormView {
       else form?.removeFormElement(billingAddressFieldSet);
     });
 
+    const loginLink = new RoutedLink(
+      {
+        textContent: 'Already have an account? Login here',
+      },
+      AppLink.Login,
+      this.router
+    );
     form.append(billingAddressCheckbox, billingAddressFieldSet);
+    form.prepend(loginLink);
     return form;
   }
 

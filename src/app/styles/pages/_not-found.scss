@@ -105,7 +105,9 @@ body:has(.not-found) {
   color: $primary-dark;
   border: 2px solid $primary-dark;
 
-  transition: background-color $hover-transition, scale $active-transition;
+  transition:
+    background-color $hover-transition,
+    scale $active-transition;
 
   &:hover {
     background-color: $secondary-light;

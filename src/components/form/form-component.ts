@@ -46,6 +46,8 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     },
   };
 
+  private title?: DOMComponent<HTMLHeadingElement>;
+
   private inputs: (Fieldset | FormInput)[];
 
   private submitButton: InputDomComponent;
@@ -56,7 +58,13 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     super(FormComponent.FORM_PARAMS);
     this.onInit = true;
 
-    if (title) this.append(new DOMComponent<HTMLHeadingElement>({ ...FormComponent.TITLE_PARAMS, textContent: title }));
+    if (title) {
+      this.title = new DOMComponent<HTMLHeadingElement>({
+        ...FormComponent.TITLE_PARAMS,
+        textContent: title,
+        parent: this,
+      });
+    }
 
     this.inputs = inputs.map((group) => {
       if (Object.prototype.hasOwnProperty.call(group, 'label')) return new FormInput(group as InputData);
@@ -102,6 +110,14 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
         input.options = options;
       }
     });
+  }
+
+  public override prepend(...elements: DOMComponent<HTMLElement>[]): void {
+    if (this.title)
+      elements.forEach((element) => {
+        if (this.title) this.title.insert(InsertPositions.After, element);
+        else super.prepend(element);
+      });
   }
 
   public override append(...elements: DOMComponent<HTMLElement>[]): void {
