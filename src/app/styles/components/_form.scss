@@ -74,11 +74,15 @@
   height: 20px;
   font-family: $font-family;
   color: $not-valid-color;
+  text-align: center;
+  font-size: 0.9em;
 }
 
 .form__submit {
   width: max(20vw, 100px);
   height: 40px;
+
+  margin-top: 20px;
 
   background-color: $primary-dark;
   color: $primary-light;
