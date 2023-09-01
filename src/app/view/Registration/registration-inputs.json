@@ -11,7 +11,7 @@
         "dataType": "name"
       },
       {
-        "label": "Birth Date",
+        "label": "Date of Birth",
         "dataType": "birthDate"
       },
       {
@@ -40,12 +40,16 @@
         "dataType": "city"
       },
       {
-        "label": "Street",
+        "label": "Street Name",
         "dataType": "street"
       },
       {
-        "label": "Bulding / Appartment",
-        "dataType": "appartment"
+        "label": "Building",
+        "dataType": "apartment"
+      },
+      {
+        "label": "Apartment",
+        "dataType": "apartment"
       },
       {
         "label": "Postal Code",

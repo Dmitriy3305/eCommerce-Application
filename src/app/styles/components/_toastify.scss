@@ -1,0 +1,17 @@
+.toastify_error,
+.toastify_success {
+  max-width: 300px;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  text-align: justify;
+  z-index: $header-layer;
+}
+
+.toastify_error {
+  background: linear-gradient(50deg, lighten($not-valid-color, 10), $not-valid-color);
+}
+
+.toastify_success {
+  background: linear-gradient(50deg, lighten($secondary-yellow, 10), $secondary-yellow);
+}

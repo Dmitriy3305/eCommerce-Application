@@ -54,7 +54,6 @@ export default class Fieldset extends DOMComponent<HTMLFieldSetElement> {
       if (callback && input.resource) {
         const resourceInput = this.inputs.find((field) => field.name === input.resource);
         resourceInput?.addInputListener(() => {
-          console.log('resource input');
           input.emitInput();
         });
         input.addValidation(callback, resourceInput ? () => resourceInput?.data.value : undefined);

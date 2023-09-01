@@ -21,6 +21,9 @@ export default function getLinkIcon(title: string): DOMComponent<HTMLElement> {
     case 'Cart':
       icon.addClass(FontAwesome.Cart);
       break;
+    case FontAwesome.SignOut:
+      icon.addClass(FontAwesome.SignOut);
+      break;
     default:
       break;
   }

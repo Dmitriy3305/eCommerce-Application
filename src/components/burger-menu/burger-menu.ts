@@ -42,7 +42,7 @@ export default class BurgerMenu extends DOMComponent<HTMLElement> {
   public show(): void {
     this.parent.append(this.background, this);
     this.parent.setCSSProperty('overflow', 'hidden');
-    queueMicrotask(() => {
+    setTimeout(() => {
       this.addClass(BurgerMenuCssClasses.BurgerMenuShown);
       this.background.addClass(BurgerMenuCssClasses.BurgerMenuBackgroundShown);
     });

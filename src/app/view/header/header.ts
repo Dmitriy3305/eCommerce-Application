@@ -1,5 +1,5 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import { Tags } from '../../../types/dom-types/enums';
+import { Events, Tags } from '../../../types/dom-types/enums';
 import { LinkCreateCallback } from '../../../types/header-types';
 import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
@@ -10,6 +10,8 @@ import UserNavigation from './user-navigation';
 import CategoriesDropdown from './categories-dropdown';
 import HoverMenu from '../../../components/hover-menu/hover-menu';
 import { GrouppedCategories } from '../../api/products';
+import FontAwesome from '../../../types/font-awesome';
+import { AuthorizationParameters } from '../../../types/app-parameters';
 
 enum HeaderCssClasses {
   Header = 'header',
@@ -44,9 +46,11 @@ export default class Header extends RoutedComponent {
 
   private hoverMenu: HoverMenu;
 
-  private userNavigation: UserNavigation;
+  private userNavigation?: UserNavigation;
 
-  private burgerMenu: MobileNavigation;
+  private burgerMenu?: MobileNavigation;
+
+  private mobileChangeHandler?: () => void;
 
   private categoriesDropdown: CategoriesDropdown;
 
@@ -54,10 +58,18 @@ export default class Header extends RoutedComponent {
 
   private linkCallback: LinkCreateCallback;
 
-  public constructor(router: AppRouter, appName: string, categories: GrouppedCategories) {
+  private authParams: AuthorizationParameters;
+
+  public constructor(
+    router: AppRouter,
+    appName: string,
+    categories: GrouppedCategories,
+    authParams: AuthorizationParameters
+  ) {
     super(Header.HEADER_PARAMS);
     this.router = router;
     this.links = new Map();
+    this.authParams = authParams;
 
     this.logo = new HeaderLogo(router, appName);
     this.logo.addClass(HeaderCssClasses.Logo);
@@ -77,14 +89,14 @@ export default class Header extends RoutedComponent {
       this.links.set(url, link);
     };
     this.categoriesDropdown = new CategoriesDropdown(router, categories, this.linkCallback);
-    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS.slice(2), this.linkCallback); // TODO: get if user is authorized from services
+    this.updateNavigation();
     this.burgerMenu = this.createBurgerMenu();
   }
 
   public override switchActiveLink(url: string): void {
     super.switchActiveLink(url);
 
-    if (this.burgerMenu.isShown) this.burgerMenu.hide();
+    if (this.burgerMenu?.isShown) this.burgerMenu.hide();
   }
 
   private createBurgerMenu(): MobileNavigation {
@@ -93,11 +105,14 @@ export default class Header extends RoutedComponent {
     const burgerMenu = new MobileNavigation(this.router, body);
     const openButton = burgerMenu.generateOpenButton({ tag: Tags.Button });
 
-    const mediaQueryChangeHandler = () => {
+    this.mobileChangeHandler = () => {
       if (mobileMediaQuery.matches) {
         body.append(openButton);
-        this.userNavigation.removeClass(HeaderCssClasses.UserNav);
-        burgerMenu.userNavigation = this.userNavigation;
+
+        if (this.userNavigation) {
+          this.userNavigation?.removeClass(HeaderCssClasses.UserNav);
+          burgerMenu.userNavigation = this.userNavigation;
+        }
 
         burgerMenu.categoriesNavigation = this.categoriesDropdown;
       } else {
@@ -105,15 +120,45 @@ export default class Header extends RoutedComponent {
         burgerMenu.removeNavigation();
         if (burgerMenu.isShown) burgerMenu.hide();
 
-        this.userNavigation.addClass(HeaderCssClasses.UserNav);
-        this.append(this.userNavigation);
+        if (this.userNavigation) {
+          this.userNavigation.addClass(HeaderCssClasses.UserNav);
+          this.append(this.userNavigation);
+        }
 
         this.hoverMenu.append(this.categoriesDropdown);
         this.categoriesDropdown.disable();
       }
     };
-    mobileMediaQuery.addEventListener('change', mediaQueryChangeHandler);
-    mediaQueryChangeHandler();
+    mobileMediaQuery.addEventListener('change', this.mobileChangeHandler);
+    this.mobileChangeHandler();
     return burgerMenu;
+  }
+
+  public switchNavigationLinks(): void {
+    this.authParams.isAuthorized = !this.authParams.isAuthorized;
+    this.updateNavigation();
+  }
+
+  private updateNavigation(): void {
+    const links = this.authParams.isAuthorized ? Header.AUTH_LINKS.slice(2) : Header.NOT_AUTH_LINKS.slice(2);
+
+    const addNavigation = () => {
+      this.userNavigation = new UserNavigation(this.router, links, this.linkCallback);
+      if (this.authParams.isAuthorized) {
+        this.userNavigation.addButtonWithIcon(FontAwesome.SignOut, this.authParams.logoutCallback);
+      }
+      if (this.mobileChangeHandler) this.mobileChangeHandler();
+    };
+
+    if (this.userNavigation) {
+      this.userNavigation?.addEventListener(Events.AnimationEnd, () => {
+        this.userNavigation?.remove();
+        addNavigation();
+      });
+      this.userNavigation?.showAnimation({
+        name: 'fade-out',
+        duration: 300,
+      });
+    } else addNavigation();
   }
 }
