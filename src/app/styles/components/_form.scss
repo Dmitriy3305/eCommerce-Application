@@ -12,8 +12,13 @@
   }
 
   a {
+    margin-top: 10px;
     text-decoration: underline;
   }
+}
+
+.form__title + a {
+  margin-top: 0;
 }
 
 .form__fieldset {
