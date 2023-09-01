@@ -81,9 +81,9 @@ export default class AppController {
     await this.authManager.register(customer);
   }
 
-  public async loadCategories(callback: (categories: GrouppedCategories) => void): Promise<void> {
+  public async loadCategories(): Promise<GrouppedCategories> {
     const categories = await this.products.getCategoriesGroups();
-    callback(categories);
+    return categories;
   }
 
   public loadCountries(): Promise<string[]> {

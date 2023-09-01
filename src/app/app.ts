@@ -7,8 +7,8 @@ import NotFoundView from './view/not-found/not-found-view';
 import LoginView from './view/login/login-view';
 import RegistrationView from './view/registration/registration-view';
 import { Events } from '../types/dom-types/enums';
-import './styles/main.scss';
 import { FormSubmitCallback } from '../components/form/form-component';
+import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
 
 export type AppConfig = {
   appName: string;
@@ -43,15 +43,25 @@ export default class App {
     });
   }
 
-  private setupRouter(): AppRouter {
-    const routes = new Map<AppLink, RouteHandler>();
-    Object.values(AppLink).forEach((link) => routes.set(link, this.getDefaultRouteHandler(link)));
-    const router = new AppRouter(routes, this.config.appName);
-    return router;
+  private get appInfo(): AppInfo {
+    return {
+      name: this.config.appName,
+      description: this.config.description,
+    };
   }
 
-  private getDefaultRouteHandler(link: AppLink): RouteHandler {
-    const validationCallbacks = this.controller.getValidationCallbacks();
+  private get authorizationParameters(): AuthorizationParameters {
+    return {
+      isAuthorized: this.controller.isAuthorized,
+      logoutCallback: () => {
+        this.controller.logout();
+        this.view?.switchNavigationLinks();
+        this.view?.showMessage('Successfully logged out');
+      },
+    };
+  }
+
+  private async getFormViewParameters(link: AppLink.Login | AppLink.Register): Promise<FormParameters> {
     const authCallback: FormSubmitCallback = async (data) => {
       try {
         if (link === AppLink.Login) await this.controller.authorize(data);
@@ -63,69 +73,56 @@ export default class App {
         this.view?.showError((error as Error).message);
       }
     };
-    const logoutCallback = () => {
-      this.controller.logout();
-      this.view?.switchNavigationLinks();
-      this.view?.showMessage('Successfully logged out');
+
+    const countries: string[] | undefined =
+      link === AppLink.Register ? await this.controller.loadCountries() : undefined;
+
+    return {
+      validationCallbacks: this.controller.getValidationCallbacks(),
+      submitCallback: authCallback,
+      countries,
     };
+  }
+
+  private setupRouter(): AppRouter {
+    const routes = new Map<AppLink, RouteHandler>();
+    Object.values(AppLink).forEach((link) => routes.set(link, this.getDefaultRouteHandler(link)));
+    const router = new AppRouter(routes, this.config.appName);
+    return router;
+  }
+
+  private getDefaultRouteHandler(link: AppLink): RouteHandler {
     return async (resource?: string, queries?: URLSearchParams) => {
-      this.controller.loadCategories((categories) => {
-        this.view?.clear();
-        switch (link) {
-          case AppLink.Main:
-            this.view = new HomeView(
-              this.router,
-              this.config.appName,
-              this.config.description,
-              categories,
-              this.controller.isAuthorized,
-              logoutCallback
-            );
-            break;
-          case AppLink.Login:
-            this.view = new LoginView(
-              this.router,
-              this.config.appName,
-              this.config.description,
-              categories,
-              this.controller.isAuthorized,
-              logoutCallback,
-              validationCallbacks,
-              authCallback
-            );
-            break;
-          case AppLink.Register:
-            this.controller.loadCountries().then((countries) => {
-              this.view = new RegistrationView(
-                this.router,
-                this.config.appName,
-                this.config.description,
-                categories,
-                this.controller.isAuthorized,
-                logoutCallback,
-                validationCallbacks,
-                countries,
-                authCallback
-              );
-              this.view.switchActiveLink(link, queries);
-            });
-            break;
-          case AppLink.Cart:
-          case AppLink.AboutUs:
-          case AppLink.Catalog:
-          default:
-            this.view = new NotFoundView(
-              this.router,
-              this.config.appName,
-              this.config.description,
-              categories,
-              this.controller.isAuthorized,
-              logoutCallback
-            );
-            break;
+      const categories = await this.controller.loadCategories();
+      this.view?.clear();
+      switch (link) {
+        case AppLink.Main:
+          this.view = new HomeView(this.router, this.appInfo, categories, this.authorizationParameters);
+          break;
+        case AppLink.Login: {
+          const formParams = await this.getFormViewParameters(link);
+          this.view = new LoginView(this.router, this.appInfo, categories, this.authorizationParameters, formParams);
+          break;
         }
-        this.view?.switchActiveLink(link, queries);
-      });
+        case AppLink.Register: {
+          const formParams = await this.getFormViewParameters(link);
+          this.view = new RegistrationView(
+            this.router,
+            this.appInfo,
+            categories,
+            this.authorizationParameters,
+            formParams
+          );
+          break;
+        }
+        case AppLink.Cart:
+        case AppLink.AboutUs:
+        case AppLink.Catalog:
+        default:
+          this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
+          break;
+      }
+      this.view?.switchActiveLink(link, queries);
     };
   }
 }

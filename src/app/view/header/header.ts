@@ -11,6 +11,7 @@ import CategoriesDropdown from './categories-dropdown';
 import HoverMenu from '../../../components/hover-menu/hover-menu';
 import { GrouppedCategories } from '../../api/products';
 import FontAwesome from '../../../types/font-awesome';
+import { AuthorizationParameters } from '../../../types/app-parameters';
 
 enum HeaderCssClasses {
   Header = 'header',
@@ -55,23 +56,20 @@ export default class Header extends RoutedComponent {
 
   private router: AppRouter;
 
-  private isAuthorized: boolean;
-
   private linkCallback: LinkCreateCallback;
 
-  private logoutCallback: () => void;
+  private authParams: AuthorizationParameters;
 
   public constructor(
     router: AppRouter,
     appName: string,
     categories: GrouppedCategories,
-    isAuthorized: boolean,
-    logoutCallback: () => void
+    authParams: AuthorizationParameters
   ) {
     super(Header.HEADER_PARAMS);
     this.router = router;
     this.links = new Map();
-    this.isAuthorized = isAuthorized;
+    this.authParams = authParams;
 
     this.logo = new HeaderLogo(router, appName);
     this.logo.addClass(HeaderCssClasses.Logo);
@@ -86,8 +84,6 @@ export default class Header extends RoutedComponent {
       ...Header.CATEGORIES_BUTTON_PARAMS,
       parent: this,
     });
-
-    this.logoutCallback = logoutCallback;
 
     this.linkCallback = (url: string, link: DOMComponent<HTMLElement>) => {
       this.links.set(url, link);
@@ -139,17 +135,17 @@ export default class Header extends RoutedComponent {
   }
 
   public switchNavigationLinks(): void {
-    this.isAuthorized = !this.isAuthorized;
+    this.authParams.isAuthorized = !this.authParams.isAuthorized;
     this.updateNavigation();
   }
 
   private updateNavigation(): void {
-    const links = this.isAuthorized ? Header.AUTH_LINKS.slice(2) : Header.NOT_AUTH_LINKS.slice(2);
+    const links = this.authParams.isAuthorized ? Header.AUTH_LINKS.slice(2) : Header.NOT_AUTH_LINKS.slice(2);
 
     this.userNavigation?.remove();
     this.userNavigation = new UserNavigation(this.router, links, this.linkCallback);
-    if (this.isAuthorized) {
-      this.userNavigation.addButtonWithIcon(FontAwesome.SignOut, this.logoutCallback);
+    if (this.authParams.isAuthorized) {
+      this.userNavigation.addButtonWithIcon(FontAwesome.SignOut, this.authParams.logoutCallback);
     }
     if (this.mobileChangeHandler) this.mobileChangeHandler();
   }

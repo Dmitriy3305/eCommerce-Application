@@ -5,6 +5,7 @@ import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
 import RoutedComponent from '../../../components/routed-component';
 import courseLinkHtml from './course-link.html';
+import { AppInfo } from '../../../types/app-parameters';
 
 enum FooterCssClasses {
   Footer = 'footer',
@@ -37,40 +38,40 @@ export default class Footer extends RoutedComponent {
 
   private router: AppRouter;
 
-  public constructor(router: AppRouter, appName: string, appDescription: string) {
+  public constructor(router: AppRouter, appInfo: AppInfo) {
     super(Footer.FOOTER_PARAMS);
 
     this.router = router;
 
-    this.shopSection = this.createShopSection(appName, appDescription);
+    this.shopSection = this.createShopSection(appInfo);
     this.append(this.shopSection);
 
     this.courseLinkSection = DOMComponent.FromHTML(courseLinkHtml);
     this.append(this.courseLinkSection);
   }
 
-  private createShopSection(appName: string, appDescription: string): DOMComponent<HTMLElement> {
+  private createShopSection(appInfo: AppInfo): DOMComponent<HTMLElement> {
     const shopSection = new DOMComponent<HTMLElement>(Footer.SHOP_SECTION_PARAMS);
-    shopSection.append(this.createAppDescriptionRow(appName, appDescription));
+    shopSection.append(this.createAppDescriptionRow(appInfo));
 
     shopSection.append(this.createLinksRow('Useful Links', Footer.NAVIGATION_LINKS));
 
     return shopSection;
   }
 
-  private createAppDescriptionRow(appName: string, appDescription: string): DOMComponent<HTMLElement> {
+  private createAppDescriptionRow(appInfo: AppInfo): DOMComponent<HTMLElement> {
     const appInfoRow = new DOMComponent<HTMLElement>({
       classList: [FooterCssClasses.ShopInfoWrapper],
     });
     const appNameLabel = new DOMComponent<HTMLSpanElement>({
       tag: Tags.Span,
       classList: [FooterCssClasses.ShopNameLabel],
-      textContent: appName,
+      textContent: appInfo.name,
     });
     const appDescriptionLabel = new DOMComponent<HTMLSpanElement>({
       tag: Tags.Span,
       classList: [FooterCssClasses.ShopDescriptionLabel],
-      textContent: appDescription,
+      textContent: appInfo.description,
     });
     appInfoRow.append(appNameLabel, appDescriptionLabel);
     return appInfoRow;

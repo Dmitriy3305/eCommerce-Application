@@ -6,6 +6,8 @@ import AppRouter from '../router/router';
 import { AppLink } from '../router/router-types';
 import { GrouppedCategories } from '../api/products';
 import { showErrorToastify, showSuccessToastify } from '../../utils/toastify';
+import { AppInfo, AuthorizationParameters } from '../../types/app-parameters';
+import '../styles/main.scss';
 
 enum ViewCssClasses {
   Main = 'main',
@@ -24,22 +26,20 @@ export default abstract class AppView {
 
   public constructor(
     router: AppRouter,
-    appName: string,
-    appDescription: string,
+    appInfo: AppInfo,
     categories: GrouppedCategories,
-    isAuthorized: boolean,
-    logoutCallback: () => void
+    authParams: AuthorizationParameters
   ) {
     this.router = router;
 
     this.body = DOMComponent.FromElement(document.body);
 
     if (!AppView.HEADER) {
-      AppView.HEADER = new Header(router, appName, categories, isAuthorized, logoutCallback);
+      AppView.HEADER = new Header(router, appInfo.name, categories, authParams);
       this.body.append(AppView.HEADER);
     }
     if (!AppView.FOOTER) {
-      AppView.FOOTER = new Footer(router, appName, appDescription);
+      AppView.FOOTER = new Footer(router, appInfo);
       this.body.append(AppView.FOOTER);
     }
 
