@@ -104,6 +104,10 @@ export default class DOMComponent<T extends HTMLElement> {
     this.element.innerHTML = '';
   }
 
+  public replaceWith(component: DOMComponent<HTMLElement>): void {
+    this.element.replaceWith(component.element);
+  }
+
   public addClass(...classNames: string[]): void {
     classNames.forEach((className) => this.element.classList.add(className));
   }
