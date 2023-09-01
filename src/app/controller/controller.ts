@@ -2,17 +2,14 @@ import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import ProductsRepository, { GrouppedCategories } from '../api/products';
 import { InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
-import NameValidator from '../../utils/validators/name-validator';
 import Validator from '../../utils/validators/validator';
 import BirthDateValidator from '../../utils/validators/birth-date-validator';
-import CityValidator from '../../utils/validators/city-validator';
 import EmailValidator from '../../utils/validators/email-validator';
 import PasswordValidator from '../../utils/validators/password-validator';
-import AppartmentValidator from '../../utils/validators/appartment-validator';
 import PostalCodeValidator, { Countries } from '../../utils/validators/postalCode-validator';
+import NonSpecialCharactersValidator from '../../utils/validators/non-special-chars-validator';
+import OnlyLettersValidator from '../../utils/validators/only-letters-validator';
 import ProjectSettingsRepository from '../api/project';
-import StreetValidator from '../../utils/validators/street-validator';
-import CountryValidator from '../../utils/validators/country-validator';
 import { FieldsetSubmitData } from '../../components/form/form-component';
 import { InputSubmitData } from '../../components/form/form-input-component';
 import createFromFieldset from '../../utils/create-client';
@@ -108,7 +105,8 @@ export default class AppController {
 
       switch (type) {
         case InputDataType.Street:
-          validator = new StreetValidator();
+        case InputDataType.Apartment:
+          validator = new NonSpecialCharactersValidator();
           break;
         case InputDataType.Password:
           validator = new PasswordValidator();
@@ -119,22 +117,15 @@ export default class AppController {
         case InputDataType.BirthDate:
           validator = new BirthDateValidator();
           break;
-        case InputDataType.City:
-          validator = new CityValidator();
-          break;
-        case InputDataType.Apartment:
-          validator = new AppartmentValidator();
-          break;
-        case InputDataType.Country:
-          validator = new CountryValidator();
-          break;
         case InputDataType.PostalCode:
           if (resource) validator = new PostalCodeValidator(resource as Countries);
           else throw Error('Please select country');
           break;
+        case InputDataType.City:
         case InputDataType.Name:
+        case InputDataType.Country:
         default:
-          validator = new NameValidator();
+          validator = new OnlyLettersValidator();
           break;
       }
       return validator.validate(value, isRequired);
