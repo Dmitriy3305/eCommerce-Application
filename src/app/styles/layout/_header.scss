@@ -77,4 +77,6 @@
   @media (max-width: $mobile-width) {
     display: none;
   }
+
+  animation: fade-in $active-transition forwards;
 }

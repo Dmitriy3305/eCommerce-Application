@@ -1,5 +1,5 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import { Tags } from '../../../types/dom-types/enums';
+import { Events, Tags } from '../../../types/dom-types/enums';
 import { LinkCreateCallback } from '../../../types/header-types';
 import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
@@ -142,11 +142,23 @@ export default class Header extends RoutedComponent {
   private updateNavigation(): void {
     const links = this.authParams.isAuthorized ? Header.AUTH_LINKS.slice(2) : Header.NOT_AUTH_LINKS.slice(2);
 
-    this.userNavigation?.remove();
-    this.userNavigation = new UserNavigation(this.router, links, this.linkCallback);
-    if (this.authParams.isAuthorized) {
-      this.userNavigation.addButtonWithIcon(FontAwesome.SignOut, this.authParams.logoutCallback);
-    }
-    if (this.mobileChangeHandler) this.mobileChangeHandler();
+    const addNavigation = () => {
+      this.userNavigation = new UserNavigation(this.router, links, this.linkCallback);
+      if (this.authParams.isAuthorized) {
+        this.userNavigation.addButtonWithIcon(FontAwesome.SignOut, this.authParams.logoutCallback);
+      }
+      if (this.mobileChangeHandler) this.mobileChangeHandler();
+    };
+
+    if (this.userNavigation) {
+      this.userNavigation?.addEventListener(Events.AnimationEnd, () => {
+        this.userNavigation?.remove();
+        addNavigation();
+      });
+      this.userNavigation?.showAnimation({
+        name: 'fade-out',
+        duration: 300,
+      });
+    } else addNavigation();
   }
 }
