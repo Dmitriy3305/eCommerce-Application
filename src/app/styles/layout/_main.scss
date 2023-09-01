@@ -1,0 +1,10 @@
+.main {
+  padding-top: $header-height;
+  min-height: calc(100vh - $footer-height);
+  width: 100%;
+  margin: auto;
+
+  &:not(:has(*)) {
+    height: 100vh;
+  }
+}

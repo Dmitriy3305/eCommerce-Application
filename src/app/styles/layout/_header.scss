@@ -1,0 +1,82 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $header-layer;
+
+  @include shadow();
+
+  width: 100%;
+  height: $header-height;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: $primary-light;
+
+  @media (max-width: $desktop-width) {
+    font-size: 0.6rem;
+  }
+
+  @media (max-width: $mobile-width) {
+    justify-content: center;
+  }
+}
+
+.header__logo {
+  width: max(30%, 250px);
+  height: 100%;
+
+  @include app-logo();
+
+  @media (max-width: $desktop-width) {
+    .logo__icon {
+      max-height: 75%;
+    }
+  }
+}
+
+.header__categories-show {
+  border: none;
+  outline: none;
+  background-color: transparent;
+
+  cursor: pointer;
+
+  color: darken($secondary-light, 20);
+  font-size: 1.5em;
+
+  border-bottom: 2px solid transparent;
+  transition:
+    color $hover-transition,
+    border-color $hover-transition;
+
+  &:hover {
+    color: $primary-dark;
+    border-color: $primary-dark;
+  }
+
+  @media (max-width: $mobile-width) {
+    display: none;
+  }
+}
+
+.header__user-nav {
+  width: 30%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+
+  .navigation__link {
+    font-size: 2em;
+  }
+
+  @media (max-width: $mobile-width) {
+    display: none;
+  }
+
+  animation: fade-in $active-transition forwards;
+}

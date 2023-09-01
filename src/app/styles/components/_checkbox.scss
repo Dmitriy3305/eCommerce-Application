@@ -1,0 +1,33 @@
+input[type='checkbox'] {
+  position: relative;
+  appearance: none;
+
+  aspect-ratio: 1/1;
+  width: 20px;
+
+  padding: 5px;
+
+  border: 2px solid $secondary-light;
+  border-radius: 4px;
+  outline: none;
+
+  transition:
+    background-color $active-transition,
+    box-shadow $hover-transition;
+
+  &:hover {
+    @include shadow();
+  }
+
+  &:checked {
+    background-color: $secondary-yellow;
+
+    &::before {
+      content: '\2714';
+      position: absolute;
+      top: 0;
+      left: 2.5px;
+      color: $primary-light;
+    }
+  }
+}
