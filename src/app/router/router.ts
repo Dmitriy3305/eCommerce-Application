@@ -3,12 +3,12 @@ import { getEnumKey, isEnumValue } from '../../utils/enum-utils';
 import { AppLink, LinkQueries, RouteHandler } from './router-types';
 
 export default class AppRouter {
-  private routeCallbacks: Map<AppLink, RouteHandler>;
+  private routeCallback: RouteHandler;
 
   private appName: string;
 
-  public constructor(routeCallbacks: Map<AppLink, (resource?: string) => void>, appName: string) {
-    this.routeCallbacks = routeCallbacks;
+  public constructor(routeCallback: RouteHandler, appName: string) {
+    this.routeCallback = routeCallback;
     this.appName = appName;
 
     window.addEventListener(Events.Popstate, (event) => {
@@ -25,13 +25,13 @@ export default class AppRouter {
     const path = urlParams[0] ? (urlParams[0] as AppLink) : AppLink.Main;
     if (isEnumValue(AppLink, path)) {
       const resource = urlParams[1];
-      this.routeCallbacks.get(path)?.(resource, queries);
+      this.routeCallback(path, resource, queries);
 
       let pageName = getEnumKey(AppLink, path);
       pageName = pageName === 'AboutUs' ? 'About Us' : pageName;
       document.title = `${this.appName} | ${pageName}`;
     } else {
-      this.routeCallbacks.get(AppLink.NotFound)?.();
+      this.routeCallback(AppLink.NotFound);
       document.title = `${this.appName} | Not Found`;
     }
   }

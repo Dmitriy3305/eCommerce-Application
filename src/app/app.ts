@@ -85,34 +85,47 @@ export default class App {
   }
 
   private setupRouter(): AppRouter {
-    const routes = new Map<AppLink, RouteHandler>();
-    Object.values(AppLink).forEach((link) => routes.set(link, this.getDefaultRouteHandler(link)));
-    const router = new AppRouter(routes, this.config.appName);
+    const router = new AppRouter(this.getDefaultRouteHandler(), this.config.appName);
     return router;
   }
 
-  private getDefaultRouteHandler(link: AppLink): RouteHandler {
-    return async (resource?: string, queries?: URLSearchParams) => {
+  private getDefaultRouteHandler(): RouteHandler {
+    let accessFormsWhenAuthorized = false;
+    return async (link: AppLink, resource?: string, queries?: URLSearchParams) => {
       const categories = await this.controller.loadCategories();
       this.view?.clear();
       switch (link) {
         case AppLink.Main:
           this.view = new HomeView(this.router, this.appInfo, categories, this.authorizationParameters);
+          if (accessFormsWhenAuthorized) {
+            accessFormsWhenAuthorized = false;
+            this.view.showMessage('You are already authorized. Sign out to access your page');
+          }
           break;
         case AppLink.Login: {
           const formParams = await this.getFormViewParameters(link);
-          this.view = new LoginView(this.router, this.appInfo, categories, this.authorizationParameters, formParams);
+          try {
+            this.view = new LoginView(this.router, this.appInfo, categories, this.authorizationParameters, formParams);
+          } catch {
+            accessFormsWhenAuthorized = true;
+            this.router.navigate(AppLink.Main);
+          }
           break;
         }
         case AppLink.Register: {
           const formParams = await this.getFormViewParameters(link);
-          this.view = new RegistrationView(
-            this.router,
-            this.appInfo,
-            categories,
-            this.authorizationParameters,
-            formParams
-          );
+          try {
+            this.view = new RegistrationView(
+              this.router,
+              this.appInfo,
+              categories,
+              this.authorizationParameters,
+              formParams
+            );
+          } catch {
+            accessFormsWhenAuthorized = true;
+            this.router.navigate(AppLink.Main);
+          }
           break;
         }
         case AppLink.Cart:
