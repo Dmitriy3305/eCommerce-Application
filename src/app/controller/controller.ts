@@ -59,7 +59,7 @@ export default class AppController {
     const shippingAddress = createFromFieldset<BaseAddress>(shippingAddressFieldset);
     Object.defineProperty(shippingAddress, 'country', { value: getCountryCode(shippingAddress.country) });
     const isShippingDefault =
-      shippingAddressFieldset.inputs.find((input) => input.name === 'set-as-default')?.value === 'on';
+      shippingAddressFieldset.inputs.find((input) => input.name === 'set-as-default')?.value === 'true';
 
     customer.addresses?.push(shippingAddress);
     customer.shippingAddresses?.push(0);
@@ -73,7 +73,7 @@ export default class AppController {
       customer.addresses?.push(billingAddress);
       customer.billingAddresses?.push(1);
       const isBillingDefault =
-        billingAddressFieldSet.inputs.find((input) => input.name === 'set-as-default')?.value === 'on';
+        billingAddressFieldSet.inputs.find((input) => input.name === 'set-as-default')?.value === 'true';
       if (isBillingDefault) Object.defineProperty(customer, 'defaultBillingAddress', { value: 1 });
     } else if (isShippingDefault) {
       Object.defineProperty(customer, 'defaultBillingAddress', { value: 0 });

@@ -2,6 +2,9 @@
 .toastify_success {
   max-width: 300px;
   font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  text-align: justify;
 }
 
 .toastify_error {
