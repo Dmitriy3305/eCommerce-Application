@@ -2,7 +2,7 @@ import { CustomerDraft, Customer, Address, CustomerToken } from '@commercetools/
 import Repository from './repository';
 
 export default class UserRepository extends Repository {
-  private static STORAGE_KEY = 'shoe-corner:auth-token';
+  public static STORAGE_KEY = 'shoe-corner:auth-token';
 
   private token: CustomerToken | null = null;
 
