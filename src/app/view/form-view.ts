@@ -44,6 +44,7 @@ export default abstract class FormView extends AppView {
       inputs,
       title: this.formTitle,
     });
+    form.setAttribute('novalidate', '');
     return form;
   }
 
