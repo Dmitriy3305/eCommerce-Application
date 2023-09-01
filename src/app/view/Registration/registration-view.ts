@@ -11,8 +11,6 @@ import AppRouter from '../../router/router';
 import Fieldset from '../../../components/form/fieldset-component';
 import FormInput from '../../../components/form/form-input-component';
 import toKebabCase from '../../../utils/to-kebab-case';
-import { showErrorToastify, showSuccessToastify } from '../../../utils/toastify';
-import { AppLink } from '../../router/router-types';
 
 export default class RegistrationView extends AppView {
   private static FORM_TITLE = 'Registration';
@@ -24,23 +22,17 @@ export default class RegistrationView extends AppView {
     appName: string,
     appDescription: string,
     categories: GrouppedCategories,
+    isAuthorized: boolean,
+    logoutCallback: () => void,
     validationCallbacks: Map<InputDataType, ValidationCallback>,
     countries: string[],
     submitCallback: FormSubmitCallback
   ) {
-    super(router, appName, appDescription, categories);
+    super(router, appName, appDescription, categories, isAuthorized, logoutCallback);
     this.form?.addOptions(InputDataType.Country, countries);
     this.form?.addValidation(validationCallbacks);
 
-    this.form?.addSubmitCallback(async (data) => {
-      try {
-        await submitCallback(data);
-        showSuccessToastify('Signed up successfully');
-        this.router.navigate(AppLink.Main);
-      } catch (error) {
-        showErrorToastify((error as Error).message);
-      }
-    });
+    this.form?.addSubmitCallback(submitCallback);
   }
 
   protected createMain(): DOMComponent<HTMLElement> {

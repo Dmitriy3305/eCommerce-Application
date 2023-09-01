@@ -10,8 +10,10 @@ export default class UserRepository extends Repository {
     const tokenJson = localStorage.getItem(UserRepository.STORAGE_KEY);
     if (tokenJson) {
       const token = JSON.parse(tokenJson) as CustomerToken;
-      if (new Date(token.expiresAt) > new Date()) throw Error('Token expired');
-      else this.token = token;
+      if (new Date(token.expiresAt) < new Date()) {
+        this.logout();
+        throw Error('Authorization token expired. Please login again');
+      } else this.token = token;
     }
   }
 
@@ -68,6 +70,11 @@ export default class UserRepository extends Repository {
       if (message.includes('credentials')) throw Error('Incorrect email or password');
       throw Error('Something went wrong. Please try again later');
     }
+  }
+
+  public logout(): void {
+    this.token = null;
+    localStorage.removeItem(UserRepository.STORAGE_KEY);
   }
 
   public async addAdresses(customer: Customer, ...addresses: Address[]): Promise<Customer> {

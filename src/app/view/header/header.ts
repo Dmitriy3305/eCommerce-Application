@@ -10,6 +10,7 @@ import UserNavigation from './user-navigation';
 import CategoriesDropdown from './categories-dropdown';
 import HoverMenu from '../../../components/hover-menu/hover-menu';
 import { GrouppedCategories } from '../../api/products';
+import FontAwesome from '../../../types/font-awesome';
 
 enum HeaderCssClasses {
   Header = 'header',
@@ -44,20 +45,33 @@ export default class Header extends RoutedComponent {
 
   private hoverMenu: HoverMenu;
 
-  private userNavigation: UserNavigation;
+  private userNavigation?: UserNavigation;
 
-  private burgerMenu: MobileNavigation;
+  private burgerMenu?: MobileNavigation;
+
+  private mobileChangeHandler?: () => void;
 
   private categoriesDropdown: CategoriesDropdown;
 
   private router: AppRouter;
 
+  private isAuthorized: boolean;
+
   private linkCallback: LinkCreateCallback;
 
-  public constructor(router: AppRouter, appName: string, categories: GrouppedCategories) {
+  private logoutCallback: () => void;
+
+  public constructor(
+    router: AppRouter,
+    appName: string,
+    categories: GrouppedCategories,
+    isAuthorized: boolean,
+    logoutCallback: () => void
+  ) {
     super(Header.HEADER_PARAMS);
     this.router = router;
     this.links = new Map();
+    this.isAuthorized = isAuthorized;
 
     this.logo = new HeaderLogo(router, appName);
     this.logo.addClass(HeaderCssClasses.Logo);
@@ -73,18 +87,20 @@ export default class Header extends RoutedComponent {
       parent: this,
     });
 
+    this.logoutCallback = logoutCallback;
+
     this.linkCallback = (url: string, link: DOMComponent<HTMLElement>) => {
       this.links.set(url, link);
     };
     this.categoriesDropdown = new CategoriesDropdown(router, categories, this.linkCallback);
-    this.userNavigation = new UserNavigation(router, Header.NOT_AUTH_LINKS.slice(2), this.linkCallback); // TODO: get if user is authorized from services
+    this.updateNavigation();
     this.burgerMenu = this.createBurgerMenu();
   }
 
   public override switchActiveLink(url: string): void {
     super.switchActiveLink(url);
 
-    if (this.burgerMenu.isShown) this.burgerMenu.hide();
+    if (this.burgerMenu?.isShown) this.burgerMenu.hide();
   }
 
   private createBurgerMenu(): MobileNavigation {
@@ -93,11 +109,14 @@ export default class Header extends RoutedComponent {
     const burgerMenu = new MobileNavigation(this.router, body);
     const openButton = burgerMenu.generateOpenButton({ tag: Tags.Button });
 
-    const mediaQueryChangeHandler = () => {
+    this.mobileChangeHandler = () => {
       if (mobileMediaQuery.matches) {
         body.append(openButton);
-        this.userNavigation.removeClass(HeaderCssClasses.UserNav);
-        burgerMenu.userNavigation = this.userNavigation;
+
+        if (this.userNavigation) {
+          this.userNavigation?.removeClass(HeaderCssClasses.UserNav);
+          burgerMenu.userNavigation = this.userNavigation;
+        }
 
         burgerMenu.categoriesNavigation = this.categoriesDropdown;
       } else {
@@ -105,15 +124,33 @@ export default class Header extends RoutedComponent {
         burgerMenu.removeNavigation();
         if (burgerMenu.isShown) burgerMenu.hide();
 
-        this.userNavigation.addClass(HeaderCssClasses.UserNav);
-        this.append(this.userNavigation);
+        if (this.userNavigation) {
+          this.userNavigation.addClass(HeaderCssClasses.UserNav);
+          this.append(this.userNavigation);
+        }
 
         this.hoverMenu.append(this.categoriesDropdown);
         this.categoriesDropdown.disable();
       }
     };
-    mobileMediaQuery.addEventListener('change', mediaQueryChangeHandler);
-    mediaQueryChangeHandler();
+    mobileMediaQuery.addEventListener('change', this.mobileChangeHandler);
+    this.mobileChangeHandler();
     return burgerMenu;
+  }
+
+  public switchNavigationLinks(): void {
+    this.isAuthorized = !this.isAuthorized;
+    this.updateNavigation();
+  }
+
+  private updateNavigation(): void {
+    const links = this.isAuthorized ? Header.AUTH_LINKS.slice(2) : Header.NOT_AUTH_LINKS.slice(2);
+
+    this.userNavigation?.remove();
+    this.userNavigation = new UserNavigation(this.router, links, this.linkCallback);
+    if (this.isAuthorized) {
+      this.userNavigation.addButtonWithIcon(FontAwesome.SignOut, this.logoutCallback);
+    }
+    if (this.mobileChangeHandler) this.mobileChangeHandler();
   }
 }

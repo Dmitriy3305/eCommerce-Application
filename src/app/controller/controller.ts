@@ -86,6 +86,14 @@ export default class AppController {
     callback(categories);
   }
 
+  public loadCountries(): Promise<string[]> {
+    return this.projectSettings.getCountries();
+  }
+
+  public logout(): void {
+    this.authManager.logout();
+  }
+
   public getValidationCallbacks(): Map<InputDataType, ValidationCallback> {
     const callbacks = new Map();
     Object.values(InputDataType).forEach((value) => {
@@ -131,9 +139,5 @@ export default class AppController {
       }
       return validator.validate(value, isRequired);
     };
-  }
-
-  public loadCountries(): Promise<string[]> {
-    return this.projectSettings.getCountries();
   }
 }

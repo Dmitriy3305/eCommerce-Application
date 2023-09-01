@@ -1,4 +1,4 @@
-a {
+a, button.navigation__link {
   text-decoration: none;
   color: $primary-dark;
   cursor: pointer;
@@ -19,4 +19,9 @@ a {
   &[disabled] {
     pointer-events: none;
   }
+}
+
+button.navigation__link {
+  background: none;
+  border: none;
 }

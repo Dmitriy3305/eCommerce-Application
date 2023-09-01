@@ -5,7 +5,7 @@ import { InsertPositions } from '../../types/dom-types/enums';
 import AppRouter from '../router/router';
 import { AppLink } from '../router/router-types';
 import { GrouppedCategories } from '../api/products';
-import { showErrorToastify } from '../../utils/toastify';
+import { showErrorToastify, showSuccessToastify } from '../../utils/toastify';
 
 enum ViewCssClasses {
   Main = 'main',
@@ -22,13 +22,20 @@ export default abstract class AppView {
 
   protected router: AppRouter;
 
-  public constructor(router: AppRouter, appName: string, appDescription: string, categories: GrouppedCategories) {
+  public constructor(
+    router: AppRouter,
+    appName: string,
+    appDescription: string,
+    categories: GrouppedCategories,
+    isAuthorized: boolean,
+    logoutCallback: () => void
+  ) {
     this.router = router;
 
     this.body = DOMComponent.FromElement(document.body);
 
     if (!AppView.HEADER) {
-      AppView.HEADER = new Header(router, appName, categories);
+      AppView.HEADER = new Header(router, appName, categories, isAuthorized, logoutCallback);
       this.body.append(AppView.HEADER);
     }
     if (!AppView.FOOTER) {
@@ -63,5 +70,13 @@ export default abstract class AppView {
 
   public showError(message: string): void {
     showErrorToastify(message);
+  }
+
+  public showMessage(message: string): void {
+    showSuccessToastify(message);
+  }
+
+  public switchNavigationLinks(): void {
+    AppView.HEADER?.switchNavigationLinks();
   }
 }

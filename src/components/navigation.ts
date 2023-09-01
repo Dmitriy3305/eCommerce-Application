@@ -20,7 +20,7 @@ export default class Navigation extends DOMComponent<HTMLElement> {
     classList: [NavigationCssClasses.Link],
   };
 
-  protected links: DOMComponent<HTMLAnchorElement>[];
+  protected links: (DOMComponent<HTMLAnchorElement> | DOMComponent<HTMLButtonElement>)[];
 
   public constructor(links: string[], router?: Router) {
     super(Navigation.ELEMENT_PARAMS);
@@ -37,5 +37,15 @@ export default class Navigation extends DOMComponent<HTMLElement> {
         });
       return link;
     });
+  }
+
+  public addButton(clickCallback: () => void): void {
+    const button = new DOMComponent<HTMLButtonElement>({
+      tag: Tags.Button,
+      classList: [NavigationCssClasses.Link],
+    });
+    button.addEventListener(Events.Click, clickCallback);
+    this.links.push(button);
+    this.append(button);
   }
 }
