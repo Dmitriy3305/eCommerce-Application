@@ -9,6 +9,7 @@ import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
 import RegistrationView from './view/Registration/registration-view';
+import ProfileView from './view/profile/profile-view';
 
 export type AppConfig = {
   appName: string;
@@ -61,7 +62,9 @@ export default class App {
     };
   }
 
-  private async getFormViewParameters(link: AppLink.Login | AppLink.Register): Promise<FormParameters> {
+  private async getFormViewParameters(
+    link: AppLink.Login | AppLink.Register | AppLink.Profile
+  ): Promise<FormParameters> {
     const authCallback: FormSubmitCallback = async (data) => {
       try {
         if (link === AppLink.Login) await this.controller.authorize(data);
@@ -129,6 +132,22 @@ export default class App {
           break;
         }
         case AppLink.Cart:
+        case AppLink.Profile: {
+          const formParams = await this.getFormViewParameters(AppLink.Profile);
+          try {
+            this.view = new ProfileView(
+              this.router,
+              this.appInfo,
+              categories,
+              this.authorizationParameters,
+              formParams
+            );
+          } catch {
+            accessFormsWhenAuthorized = true;
+            this.router.navigate(AppLink.Main);
+          }
+          break;
+        }
         case AppLink.AboutUs:
         case AppLink.Catalog:
         default:

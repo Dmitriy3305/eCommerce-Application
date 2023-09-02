@@ -26,6 +26,11 @@ export type InputEditData = {
   value: string;
 };
 
+export type InputSaveData = {
+  name: string;
+  value: string;
+};
+
 export default class FormInput extends DOMComponent<HTMLDivElement> {
   private static WRAPPER_PARAMS: ElementParameters = {
     tag: Tags.Div,
@@ -52,6 +57,11 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     classList: [FormInputCssClasses.Input],
   };
 
+  private static SAVE_BUTTONS_PARAMS: ElementParameters = {
+    tag: Tags.Button,
+    classList: [FormInputCssClasses.Input],
+  };
+
   private label: DOMComponent<HTMLLabelElement>;
 
   protected input: InputDomComponent | SelectDomComponent;
@@ -63,6 +73,8 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
   private resourceName?: string;
 
   public editButton?: DOMComponent<HTMLButtonElement>;
+
+  public saveButton?: DOMComponent<HTMLButtonElement>;
 
   public constructor(inputData: InputData) {
     super(FormInput.WRAPPER_PARAMS);
@@ -137,6 +149,11 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       this.editButton = new DOMComponent<HTMLButtonElement>({
         ...FormInput.EDIT_BUTTONS_PARAMS,
         textContent: 'Edit',
+        parent: this.label,
+      });
+      this.saveButton = new DOMComponent<HTMLButtonElement>({
+        ...FormInput.SAVE_BUTTONS_PARAMS,
+        textContent: 'Save',
         parent: this.label,
       });
       this.input.setAttribute('disabled', '');
