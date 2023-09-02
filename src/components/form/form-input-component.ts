@@ -66,7 +66,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   public constructor(inputData: InputData) {
     super(FormInput.WRAPPER_PARAMS);
-
     this.label = new DOMComponent<HTMLLabelElement>({
       ...FormInput.LABEL_PARAMS,
       textContent: inputData.label,
@@ -74,14 +73,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     });
 
     this.dataType = inputData.dataType;
-
-    if (this.dataType !== 'toggle') {
-      this.editButton = new DOMComponent<HTMLButtonElement>({
-        ...FormInput.EDIT_BUTTONS_PARAMS,
-        textContent: 'Edit',
-        parent: this.label,
-      });
-    }
 
     let type: InputTypes = InputTypes.Text;
 
@@ -109,8 +100,16 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     }
 
     const inputParams = { ...FormInput.INPUT_PARAMS, parent: this.label };
+
     if (inputData.dataType === InputDataType.Country) {
-      const attributes = inputData.isRequired ? { required: '' } : undefined;
+      let attributes = {};
+    
+    if (inputData.isRequired) {
+        attributes = { ...attributes, required: '' };
+    } 
+    if (inputData.isDisabled) {
+        attributes = { ...attributes, disabled: '' };
+    }
       this.input = new SelectDomComponent(
         {
           ...inputParams,
@@ -118,7 +117,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         },
         inputData.options || Object.values(Countries)
       );
-      if (inputData.isDisabled) this.input.setAttribute('disabled', '');
+      if (inputData.isDisabled) this.input.setAttribute('diabled', '');
     } else if (inputData.dataType === InputDataType.Toggle) {
       this.input = new Checkbox(this);
     } else {
@@ -127,9 +126,20 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         type,
       };
       if (inputData.isRequired) attributes.required = '';
+      if (inputData.isDisabled) attributes.diabled = '';
       attributes.value = inputData.value || '';
       if (inputData.dataType === InputDataType.Password) this.input = new PasswordInput({ ...inputParams, attributes });
       else this.input = new InputDomComponent({ ...inputParams, attributes });
+    }
+    if (inputData.isEditable === false) {
+      this.editButton?.remove();
+    } else if (inputData.isEditable === true && this.dataType !== 'toggle') {
+      this.editButton = new DOMComponent<HTMLButtonElement>({
+        ...FormInput.EDIT_BUTTONS_PARAMS,
+        textContent: 'Edit',
+        parent: this.label,
+      });
+      this.input.setAttribute('disabled', '');
     }
 
     if (inputData.name) this.input.setAttribute('name', inputData.name);

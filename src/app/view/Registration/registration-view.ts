@@ -17,6 +17,8 @@ export default class RegistrationView extends AppView {
 
   private form?: FormComponent;
 
+  public isEditable?: boolean;
+
   public constructor(
     router: AppRouter,
     appName: string,
@@ -31,9 +33,11 @@ export default class RegistrationView extends AppView {
   }
 
   protected createMain(): DOMComponent<HTMLElement> {
+    this.isEditable = false;
     const main = new DOMComponent<HTMLElement>({
       tag: Tags.Main,
     });
+
     const inputs = registrationInputs as FormFieldsetData[];
     inputs.forEach((fieldset) =>
       fieldset.inputs.forEach((input) => {

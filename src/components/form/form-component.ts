@@ -11,7 +11,6 @@ enum FormCssclassList {
   Form = 'form',
   Title = 'form__title',
   Submit = 'form__submit',
-  Edit = 'form__edit',
 }
 
 export type FieldsetSubmitData = {
@@ -49,19 +48,11 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     },
   };
 
-  private static EDIT_BUTTONS_PARAMS: ElementParameters = {
-    tag: Tags.Button,
-    classList: [FormCssclassList.Submit],
-    textContent: 'Edit',
-  };
-
   private inputs: (Fieldset | FormInput)[];
 
   private submitButton: InputDomComponent;
 
   private onInit: boolean;
-
-  editButton!: FormInput;
 
   public constructor({ inputs, onSubmit, validationCallbacks, title }: FormParams) {
     super(FormComponent.FORM_PARAMS);
@@ -72,10 +63,6 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
       const fieldset = new Fieldset(group as FormFieldsetData);
       return fieldset;
     });
-
-    if (title === 'Profile') {
-      this.append(this.editButton);
-    }
 
     this.append(...this.inputs);
 

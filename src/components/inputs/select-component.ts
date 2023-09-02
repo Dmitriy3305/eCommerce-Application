@@ -15,7 +15,6 @@ export default class SelectDomComponent extends DOMComponent<HTMLSelectElement> 
           textContent: 'None',
           attributes: {
             value: '',
-            disabled: '',
           },
         })
       );

@@ -2,7 +2,7 @@ import DOMComponent from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
 import AppView from '../view';
 import FormComponent from '../../../components/form/form-component';
-import registrationInputs from '../Registration/registration-inputs.json';
+import profileInputs from './profile-inputs.json';
 import { FormFieldsetData } from '../../../types/dom-types/types';
 import { InputDataType } from '../../../types/input-datas';
 import ValidationCallback from '../../../types/validation-callback';
@@ -16,6 +16,10 @@ export default class ProfileView extends AppView {
   private static FORM_TITLE = 'Profile';
 
   private form?: FormComponent;
+
+  private isEditable?: boolean;
+
+  private isDiasbled?: boolean;
 
   public constructor(
     router: AppRouter,
@@ -34,8 +38,9 @@ export default class ProfileView extends AppView {
     const main = new DOMComponent<HTMLElement>({
       tag: Tags.Main,
     });
-
-    const inputs = registrationInputs as FormFieldsetData[];
+    this.isEditable = true;
+    this.isDiasbled = true;
+    const inputs = profileInputs as FormFieldsetData[];
     inputs.forEach((fieldset) =>
       fieldset.inputs.forEach((input) => {
         const currentInput = input;
@@ -43,6 +48,7 @@ export default class ProfileView extends AppView {
         currentInput.name = toKebabCase(currentInput.label);
         currentInput.value = '';
         currentInput.isDisabled = true;
+        currentInput.isEditable = true;
       })
     );
 

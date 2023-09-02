@@ -21,4 +21,5 @@ export type InputData = {
   resourceName?: string;
   options?: string[];
   isDisabled?: boolean;
+  isEditable?: boolean;
 };
