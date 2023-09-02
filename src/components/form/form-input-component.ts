@@ -14,6 +14,9 @@ export enum FormInputCssClasses {
   Input = 'form__input',
   InputNotValid = 'form__input_invalid',
   ValidationMessage = 'form__validation-message',
+  WrapperButtons = 'form__buttons-wrapper',
+  EditButton = 'form__edit-button',
+  SaveButton = 'form__save-button',
 }
 
 export type InputSubmitData = {
@@ -37,6 +40,11 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     classList: [FormInputCssClasses.Wrapper],
   };
 
+  private static WRAPPER_BUTTONS_PARAMS: ElementParameters = {
+    tag: Tags.Div,
+    classList: [FormInputCssClasses.WrapperButtons],
+  };
+
   private static LABEL_PARAMS: ElementParameters = {
     tag: Tags.Label,
     classList: [FormInputCssClasses.Label],
@@ -54,12 +62,12 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   private static EDIT_BUTTONS_PARAMS: ElementParameters = {
     tag: Tags.Button,
-    classList: [FormInputCssClasses.Input],
+    classList: [FormInputCssClasses.EditButton],
   };
 
   private static SAVE_BUTTONS_PARAMS: ElementParameters = {
     tag: Tags.Button,
-    classList: [FormInputCssClasses.Input],
+    classList: [FormInputCssClasses.SaveButton],
   };
 
   private label: DOMComponent<HTMLLabelElement>;
@@ -71,6 +79,8 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
   private dataType: InputDataType;
 
   private resourceName?: string;
+
+  public wrapperButtons?: DOMComponent<HTMLDivElement>;
 
   public editButton?: DOMComponent<HTMLButtonElement>;
 
@@ -138,7 +148,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         type,
       };
       if (inputData.isRequired) attributes.required = '';
-      if (inputData.isDisabled) attributes.diabled = '';
       attributes.value = inputData.value || '';
       if (inputData.dataType === InputDataType.Password) this.input = new PasswordInput({ ...inputParams, attributes });
       else this.input = new InputDomComponent({ ...inputParams, attributes });
@@ -146,17 +155,20 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     if (inputData.isEditable === false) {
       this.editButton?.remove();
     } else if (inputData.isEditable === true && this.dataType !== 'toggle') {
+      this.wrapperButtons = new DOMComponent<HTMLDivElement>({
+        ...FormInput.WRAPPER_BUTTONS_PARAMS,
+        parent: this.label,
+      });
+
       this.editButton = new DOMComponent<HTMLButtonElement>({
         ...FormInput.EDIT_BUTTONS_PARAMS,
-        textContent: 'Edit',
-        parent: this.label,
+        parent: this.wrapperButtons,
       });
       this.saveButton = new DOMComponent<HTMLButtonElement>({
         ...FormInput.SAVE_BUTTONS_PARAMS,
-        textContent: 'Save',
-        parent: this.label,
+        parent: this.wrapperButtons,
       });
-      this.input.setAttribute('disabled', '');
+      // this.input.setAttribute('disabled', '');
     }
 
     if (inputData.name) this.input.setAttribute('name', inputData.name);
