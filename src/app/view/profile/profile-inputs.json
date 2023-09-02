@@ -44,8 +44,12 @@
         "dataType": "street"
       },
       {
-        "label": "Bulding / Appartment",
-        "dataType": "appartment"
+        "label": "Building",
+        "dataType": "apartment"
+      },
+      {
+        "label": "Apartment",
+        "dataType": "apartment"
       },
       {
         "label": "Postal Code",
