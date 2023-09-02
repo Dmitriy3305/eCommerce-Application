@@ -9,9 +9,7 @@ body:has(.not-found) {
 }
 
 .not-found {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex();
 
   height: 100vh;
   padding-top: 0;
@@ -19,7 +17,7 @@ body:has(.not-found) {
 
 .not-found__content-wrapper {
   width: max(60vw, 300px);
-  height: 50vh;
+  height: 60vh;
   background-color: $secondary-brown;
   border-radius: 50px;
   @include shadow();
@@ -40,13 +38,9 @@ body:has(.not-found) {
     height: 40vh;
   }
 
-  @media (max-width: 700px) {
-    font-size: 0.5rem;
-    height: 25vh;
-  }
-
-  @media (max-width: 500px) {
-    font-size: 0.4rem;
+  @media (max-width: $tablet-width) {
+    height: auto;
+    @include flex($direction: column);
   }
 }
 
@@ -95,15 +89,19 @@ body:has(.not-found) {
 .not-found__go-back {
   cursor: pointer;
 
+  @include flex();
+
   width: max(50%, 150px);
   aspect-ratio: 5 / 1;
   border-radius: 25px;
 
   background-color: $primary-light;
   color: $primary-dark;
-  border-color: $primary-dark;
+  border: 2px solid $primary-dark;
 
-  transition: background-color ease-in-out 500ms;
+  transition:
+    background-color $hover-transition,
+    scale $active-transition;
 
   &:hover {
     background-color: $secondary-light;

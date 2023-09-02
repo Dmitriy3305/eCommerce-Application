@@ -20,18 +20,16 @@ export type FieldsetSubmitData = {
 
 type FormParams = {
   inputs: (InputData | FormFieldsetData)[];
-  onSubmit: (formData: (InputSubmitData | FieldsetSubmitData)[]) => void;
   validationCallbacks?: Map<InputDataType, ValidationCallback>;
   title?: string;
 };
+
+export type FormSubmitCallback = (data: (FieldsetSubmitData | InputSubmitData)[]) => void;
 
 export default class FormComponent extends DOMComponent<HTMLFormElement> {
   private static FORM_PARAMS: ElementParameters = {
     tag: Tags.Form,
     classList: [FormCssclassList.Form],
-    attributes: {
-      novalidate: '',
-    },
   };
 
   private static TITLE_PARAMS: ElementParameters = {
@@ -48,17 +46,25 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     },
   };
 
+  private title?: DOMComponent<HTMLHeadingElement>;
+
   private inputs: (Fieldset | FormInput)[];
 
   private submitButton: InputDomComponent;
 
   private onInit: boolean;
 
-  public constructor({ inputs, onSubmit, validationCallbacks, title }: FormParams) {
+  public constructor({ inputs, validationCallbacks, title }: FormParams) {
     super(FormComponent.FORM_PARAMS);
     this.onInit = true;
 
-    if (title) this.append(new DOMComponent<HTMLHeadingElement>({ ...FormComponent.TITLE_PARAMS, textContent: title }));
+    if (title) {
+      this.title = new DOMComponent<HTMLHeadingElement>({
+        ...FormComponent.TITLE_PARAMS,
+        textContent: title,
+        parent: this,
+      });
+    }
 
     this.inputs = inputs.map((group) => {
       if (Object.prototype.hasOwnProperty.call(group, 'label')) return new FormInput(group as InputData);
@@ -71,21 +77,6 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     this.append(this.submitButton);
 
     this.onInit = false;
-
-    this.addEventListener(Events.Submit, (event: Event) => {
-      event.preventDefault();
-      const notValid = this.inputs.filter((group) => !group.isValid);
-      console.log(notValid);
-      if (notValid.length) {
-        notValid.forEach((input) => (input instanceof Fieldset ? input.signalNotValidFields() : input.emitInput()));
-        console.log(notValid[0]);
-        window.scrollTo({
-          left: 0,
-          top: notValid[0].pageY - 150, // 150 = header height
-          behavior: 'smooth',
-        });
-      } else onSubmit(this.data);
-    });
 
     if (validationCallbacks) this.addValidation(validationCallbacks);
   }
@@ -121,6 +112,14 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     });
   }
 
+  public override prepend(...elements: DOMComponent<HTMLElement>[]): void {
+    if (this.title)
+      elements.forEach((element) => {
+        if (this.title) this.title.insert(InsertPositions.After, element);
+        else super.prepend(element);
+      });
+  }
+
   public override append(...elements: DOMComponent<HTMLElement>[]): void {
     elements.forEach((element) => {
       if (!this.onInit) {
@@ -136,5 +135,20 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
     const index = this.inputs.indexOf(element);
     if (index === -1) throw Error('No such element in form');
     this.inputs.splice(index, 1);
+  }
+
+  public addSubmitCallback(callback: FormSubmitCallback): void {
+    this.addEventListener(Events.Submit, (event: Event) => {
+      event.preventDefault();
+      const notValid = this.inputs.filter((group) => !group.isValid);
+      if (notValid.length) {
+        notValid.forEach((input) => (input instanceof Fieldset ? input.signalNotValidFields() : input.emitInput()));
+        window.scrollTo({
+          left: 0,
+          top: notValid[0].pageY - 150, // 150 = header height
+          behavior: 'smooth',
+        });
+      } else callback(this.data);
+    });
   }
 }

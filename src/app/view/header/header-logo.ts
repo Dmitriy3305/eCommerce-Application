@@ -1,15 +1,16 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import { Events, Tags } from '../../../types/dom-types/enums';
+import { Tags } from '../../../types/dom-types/enums';
 import logo from '../../../assets/images/logo-color.svg';
 import { AppLink } from '../../router/router-types';
 import AppRouter from '../../router/router';
+import RoutedLink from '../../../components/routed-link';
 
 enum LogoCssClasses {
   Name = 'logo__name',
   Icon = 'logo__icon',
 }
 
-export default class HeaderLogo extends DOMComponent<HTMLElement> {
+export default class HeaderLogo extends RoutedLink {
   private static NAME_PARAMS: ElementParameters = {
     tag: Tags.Heading1,
     classList: [LogoCssClasses.Name],
@@ -29,16 +30,7 @@ export default class HeaderLogo extends DOMComponent<HTMLElement> {
   private icon: DOMComponent<HTMLImageElement>;
 
   public constructor(router: AppRouter, logoText: string) {
-    super({
-      tag: Tags.Anchor,
-      attributes: {
-        href: AppLink.Main,
-      },
-    });
-    this.addEventListener(Events.Click, (event: Event) => {
-      event.preventDefault();
-      router.navigate(AppLink.Main);
-    });
+    super({}, AppLink.Main, router);
 
     this.name = new DOMComponent<HTMLHeadingElement>({
       ...HeaderLogo.NAME_PARAMS,

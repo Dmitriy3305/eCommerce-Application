@@ -1,8 +1,6 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
+import RoutedLink from '../../../components/routed-link';
 import { Tags } from '../../../types/dom-types/enums';
-import createLink from '../../../utils/create-link';
-import { GrouppedCategories } from '../../api/products';
-import AppRouter from '../../router/router';
 import { AppLink } from '../../router/router-types';
 import AppView from '../view';
 import layout from './not-found.html';
@@ -18,21 +16,16 @@ export default class NotFoundView extends AppView {
     classList: [NotFoundCssClasses.Main],
   };
 
-  public constructor(router: AppRouter, appName: string, appDescription: string, categories: GrouppedCategories) {
-    super(router, appName, appDescription, categories);
-  }
-
   protected override createMain(): DOMComponent<HTMLElement> {
     const main = new DOMComponent<HTMLElement>(NotFoundView.MAIN_PARAMS);
     const contentWrapper = DOMComponent.FromHTML(layout);
-    const returnToHomeButton = createLink(
+    const returnToHomeButton = new RoutedLink(
       {
-        tag: Tags.Button,
         classList: [NotFoundCssClasses.HomeButton],
         textContent: 'Return to home',
       },
-      this.router,
-      AppLink.Main
+      AppLink.Main,
+      this.router
     );
     contentWrapper.append(returnToHomeButton);
     main.append(contentWrapper);
