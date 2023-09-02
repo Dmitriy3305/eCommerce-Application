@@ -164,13 +164,21 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         ...FormInput.EDIT_BUTTONS_PARAMS,
         parent: this.wrapperButtons,
       });
+
       this.saveButton = new DOMComponent<HTMLButtonElement>({
         ...FormInput.SAVE_BUTTONS_PARAMS,
         parent: this.wrapperButtons,
       });
-      // this.input.setAttribute('disabled', '');
+      this.input.setAttribute('disabled', '');
     }
-
+    this.editButton?.addEventListener(Events.Click, (event) => {
+      this.handleButtonClick(event, true);
+    });
+    if (this.saveButton) {
+      this.saveButton.addEventListener(Events.Click, (event) => {
+        this.handleButtonClick(event, false);
+      });
+    }
     if (inputData.name) this.input.setAttribute('name', inputData.name);
 
     this.validationMessage = new DOMComponent<HTMLSpanElement>(FormInput.VALIDATION_MESSAGE_PARAMS);
@@ -250,5 +258,18 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   public emitInput(): void {
     this.input.emitEvent(Events.Input, true);
+  }
+
+  public handleButtonClick(event: Event, enable: boolean): void {
+    event.preventDefault();
+    const currentParent = (event.target as Element).parentNode?.parentNode;
+    const currentInput = currentParent?.childNodes[1] as HTMLInputElement;
+    if (currentInput) {
+      if (enable) {
+        currentInput.removeAttribute('disabled');
+      } else {
+        currentInput.setAttribute('disabled', '');
+      }
+    }
   }
 }
