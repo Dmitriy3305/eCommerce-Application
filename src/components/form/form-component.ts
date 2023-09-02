@@ -50,7 +50,7 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
 
   private inputs: (Fieldset | FormInput)[];
 
-  private submitButton: InputDomComponent;
+  private submitButton!: InputDomComponent;
 
   private onInit: boolean;
 
@@ -74,9 +74,10 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
 
     this.append(...this.inputs);
 
-    this.submitButton = new InputDomComponent(FormComponent.SUBMIT_BUTTON_PARAMS);
-
-    this.append(this.submitButton);
+    if (title !== 'Profile') {
+      this.submitButton = new InputDomComponent(FormComponent.SUBMIT_BUTTON_PARAMS);
+      this.append(this.submitButton);
+    }
 
     this.onInit = false;
 
@@ -125,10 +126,17 @@ export default class FormComponent extends DOMComponent<HTMLFormElement> {
   public override append(...elements: DOMComponent<HTMLElement>[]): void {
     elements.forEach((element) => {
       if (!this.onInit) {
-        this.submitButton.insert(InsertPositions.Before, element);
-
-        if (element instanceof Fieldset || element instanceof FormInput) this.inputs.push(element);
-      } else super.append(element);
+        if (this.submitButton) {
+          this.submitButton.insert(InsertPositions.Before, element);
+        } else {
+          super.append(element);
+        }
+        if (element instanceof Fieldset || element instanceof FormInput) {
+          this.inputs.push(element);
+        }
+      } else {
+        super.append(element);
+      }
     });
   }
 
