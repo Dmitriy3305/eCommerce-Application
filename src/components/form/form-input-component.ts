@@ -103,13 +103,13 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
     if (inputData.dataType === InputDataType.Country) {
       let attributes = {};
-    
-    if (inputData.isRequired) {
+
+      if (inputData.isRequired) {
         attributes = { ...attributes, required: '' };
-    } 
-    if (inputData.isDisabled) {
+      }
+      if (inputData.isDisabled) {
         attributes = { ...attributes, disabled: '' };
-    }
+      }
       this.input = new SelectDomComponent(
         {
           ...inputParams,
