@@ -134,18 +134,7 @@ export default class App {
         case AppLink.Cart:
         case AppLink.Profile: {
           const formParams = await this.getFormViewParameters(AppLink.Profile);
-          try {
-            this.view = new ProfileView(
-              this.router,
-              this.appInfo,
-              categories,
-              this.authorizationParameters,
-              formParams
-            );
-          } catch {
-            accessFormsWhenAuthorized = true;
-            this.router.navigate(AppLink.Main);
-          }
+          this.view = new ProfileView(this.router, this.appInfo, categories, this.authorizationParameters, formParams);
           break;
         }
         case AppLink.AboutUs:
