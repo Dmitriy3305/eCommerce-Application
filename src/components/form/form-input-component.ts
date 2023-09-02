@@ -153,7 +153,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
   public get data(): InputSubmitData {
     return {
       name: this.name,
-      value: this.input.value,
+      value: this.input instanceof Checkbox ? this.input.checked.toString() : this.input.value,
     };
   }
 

@@ -41,6 +41,7 @@ export enum Events {
   ContentLoaded = 'DOMContentLoaded',
   Popstate = 'popstate',
   Submit = 'submit',
+  AnimationEnd = 'animationend',
 }
 
 export enum InsertPositions {

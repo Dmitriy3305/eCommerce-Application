@@ -2,14 +2,17 @@
   @include shadow();
 
   min-height: 10vh;
-  padding: 10px;
+  padding: 15px 50px;
 
-  background-color: $secondary-light;
+  border: 3px solid rgba($primary-dark, 0.5);
+  border-radius: 20px;
+
+  background: linear-gradient($primary-light, $secondary-light);
 
   z-index: $menu-layer;
 
   .dropdown-menu {
-    font-size: 2em;
+    font-size: 1.5em;
   }
 
   .dropdown-menu__content {
@@ -29,8 +32,9 @@
 
   .categories-group:nth-of-type(2) {
     padding: 0 1em;
-    border-left: 2px solid $primary-dark;
-    border-right: 2px solid $primary-dark;
+    $border-color: rgba($primary-dark, 0.5);
+    border-left: 2px solid $border-color;
+    border-right: 2px solid $border-color;
   }
 }
 
@@ -38,6 +42,8 @@
   border: none;
   outline: none;
   background: transparent;
+  width: 100%;
+  font-size: 1.5em;
 
   color: $primary-dark;
 
@@ -70,6 +76,5 @@
 }
 
 .categories-group {
-  display: flex;
-  flex-direction: column;
+  @include flex($direction: column, $justify-content: flex-start);
 }

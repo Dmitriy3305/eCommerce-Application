@@ -1,50 +1,37 @@
-import DOMComponent from '../../../components/base-component';
-import { Tags } from '../../../types/dom-types/enums';
 import loginInputs from './login-inputs.json';
-import AppView from '../view';
-import FormComponent from '../../../components/form/form-component';
-import { InputData, InputDataType } from '../../../types/input-datas';
-import ValidationCallback from '../../../types/validation-callback';
-import { GrouppedCategories } from '../../api/products';
-import AppRouter from '../../router/router';
+import { InputData } from '../../../types/input-datas';
 import toKebabCase from '../../../utils/to-kebab-case';
+import FormView from '../form-view';
+import { FormFieldsetData } from '../../../types/dom-types/types';
+import FormComponent from '../../../components/form/form-component';
+import RoutedLink from '../../../components/routed-link';
+import { AppLink } from '../../router/router-types';
 
-export default class LoginView extends AppView {
-  private static FORM_TITLE = 'Login';
-
-  private form?: FormComponent;
-
-  public constructor(
-    router: AppRouter,
-    appName: string,
-    appDescription: string,
-    categories: GrouppedCategories,
-    validationCallbacks: Map<InputDataType, ValidationCallback>
-  ) {
-    super(router, appName, appDescription, categories);
-    this.form?.addValidation(validationCallbacks);
+export default class LoginView extends FormView {
+  protected get formTitle(): string {
+    return 'Login';
   }
 
-  protected createMain(): DOMComponent<HTMLElement> {
-    const main = new DOMComponent<HTMLElement>({
-      tag: Tags.Main,
-    });
+  protected override createForm(): FormComponent {
+    const form = super.createForm();
+    const registerLink = new RoutedLink(
+      {
+        textContent: "Don't have an account? Sign up",
+      },
+      AppLink.Register,
+      this.router
+    );
+    form.append(registerLink);
+    return form;
+  }
 
+  override createInputs(): (InputData | FormFieldsetData)[] {
     const inputs = loginInputs as InputData[];
     inputs.forEach((input) => {
       const currentInput = input;
       currentInput.name = toKebabCase(currentInput.label);
       currentInput.isRequired = true;
     });
-
-    this.form = new FormComponent({
-      inputs,
-      onSubmit: () => {},
-      title: LoginView.FORM_TITLE,
-    });
-
-    main.append(this.form);
-
-    return main;
+    return inputs;
   }
 }

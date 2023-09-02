@@ -18,12 +18,12 @@ export default class HomeSeasonSection extends DOMComponent<HTMLElement> {
     const titleSectionSeason = new DOMComponent<HTMLParagraphElement>({
       tag: Tags.Paragraph,
       classList: [SectionSeasonCssClasses.TitleSeason],
-      textContent: 'SPRING COLLECTION 2023',
+      textContent: 'AUTUMN COLLECTION 2023',
     });
     const btnSectionSeason = new DOMComponent<HTMLButtonElement>({
       tag: Tags.Button,
       classList: [SectionSeasonCssClasses.BtnSeason],
-      textContent: 'SHOW NOW',
+      textContent: 'SHOP NOW',
       attributes: {
         type: 'button',
       },
