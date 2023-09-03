@@ -168,7 +168,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       });
     }
     if (inputData.name) this.input.setAttribute('name', inputData.name);
-
     this.validationMessage = new DOMComponent<HTMLSpanElement>(FormInput.VALIDATION_MESSAGE_PARAMS);
     this.append(this.validationMessage);
 

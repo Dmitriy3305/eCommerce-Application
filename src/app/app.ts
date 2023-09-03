@@ -10,6 +10,7 @@ import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
 import RegistrationView from './view/Registration/registration-view';
 import ProfileView from './view/profile/profile-view';
+import UserRepository from './api/user';
 
 export type AppConfig = {
   appName: string;
@@ -133,8 +134,22 @@ export default class App {
         }
         case AppLink.Cart:
         case AppLink.Profile: {
-          const formParams = await this.getFormViewParameters(AppLink.Profile);
-          this.view = new ProfileView(this.router, this.appInfo, categories, this.authorizationParameters, formParams);
+          const customerData = localStorage.getItem('shoe-corner:auth-token');
+          if (customerData) {
+            const dataObject = JSON.parse(customerData);
+            const { customerId } = dataObject;
+            const user = new UserRepository();
+            const dataUser = await user.getDataUser(customerId);
+            const formParams = await this.getFormViewParameters(AppLink.Profile);
+            this.view = new ProfileView(
+              this.router,
+              this.appInfo,
+              categories,
+              this.authorizationParameters,
+              formParams,
+              dataUser
+            );
+          }
           break;
         }
         case AppLink.AboutUs:
