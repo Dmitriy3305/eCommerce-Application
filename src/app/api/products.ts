@@ -1,4 +1,4 @@
-import { Product } from '@commercetools/platform-sdk';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import Repository from './repository';
 
 export type GrouppedCategories = { [group: string]: string[] };
@@ -21,9 +21,24 @@ export default class ProductsRepository extends Repository {
     return result;
   }
 
-  public async getProducts(page?: number): Promise<Product[]> {
+  public async filterProducts(page?: number, category?: string): Promise<ProductProjection[]> {
     const offset = page ? (page - 1) * ProductsRepository.PRODUCTS_PER_PAGE : undefined;
-    const response = await this.apiRoot.products().get({ queryArgs: { offset } }).execute();
+
+    if (category) {
+      const categoryId = await this.getCategoryIdByKey(category);
+      const response = await this.apiRoot
+        .productProjections()
+        .search()
+        .get({ queryArgs: { offset, 'filter.query': `categories.id:"${categoryId}"` } })
+        .execute();
+      return response.body.results;
+    }
+    const response = await this.apiRoot.productProjections().get({ queryArgs: { offset } }).execute();
     return response.body.results;
+  }
+
+  private async getCategoryIdByKey(key: string): Promise<string> {
+    const response = await this.apiRoot.categories().withKey({ key }).get().execute();
+    return response.body.id;
   }
 }

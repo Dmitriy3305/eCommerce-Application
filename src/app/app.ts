@@ -136,7 +136,7 @@ export default class App {
               this.appInfo,
               categories,
               this.authorizationParameters,
-              this.controller.productsLoader
+              this.controller.productsLoader.bind(this.controller, queries)
             );
           }
           break;

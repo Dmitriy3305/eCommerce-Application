@@ -1,4 +1,4 @@
-import { Product } from '@commercetools/platform-sdk';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import DOMComponent, { ElementParameters } from '../../components/base-component';
 import RoutedLink from '../../components/routed-link';
 import AppRouter from '../router/router';
@@ -80,14 +80,13 @@ export default class ProductCard extends RoutedLink {
 
   private addToCartButton?: DOMComponent<HTMLButtonElement>;
 
-  public constructor(router: AppRouter, product: Product, withAdditionals = false) {
+  public constructor(router: AppRouter, product: ProductProjection, withAdditionals = false) {
     super(ProductCard.CARD_PARAMETERS, router.buildProductUrl(product), router);
 
     this.imageWrapper = new DOMComponent<HTMLDivElement>(ProductCard.IMAGE_WRAPPER_PARAMS);
     this.append(this.imageWrapper);
 
-    const productData = product.masterData.current;
-    const variant = productData.masterVariant;
+    const variant = product.masterVariant;
 
     this.image = new DOMComponent<HTMLImageElement>({
       ...ProductCard.IMAGE_PARAMETERS,
@@ -97,17 +96,15 @@ export default class ProductCard extends RoutedLink {
 
     this.name = new DOMComponent<HTMLSpanElement>({
       ...ProductCard.NAME_PARAMETERS,
-      textContent: productData.name['en-US'],
+      textContent: product.name['en-US'],
     });
     this.append(this.name);
 
     if (withAdditionals) {
       this.addClass(ProductCardCssClasses.CardFull);
 
-      const description = productData.description
-        ? `${productData.description['en-US']
-            .substring(0, ProductCard.DESCRIPTION_CHARS_LIMTIT)
-            .replace('&#x27;', "'")}...`
+      const description = product.description
+        ? `${product.description['en-US'].substring(0, ProductCard.DESCRIPTION_CHARS_LIMTIT).replace('&#x27;', "'")}...`
         : '';
 
       this.description = new DOMComponent<HTMLSpanElement>({

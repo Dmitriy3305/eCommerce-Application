@@ -59,7 +59,7 @@ export default class Slider extends DOMComponent<HTMLElement> {
 
   public showSlider(): void {
     const productsRepository = new ProductsRepository();
-    productsRepository.getProducts().then((response) => {
+    productsRepository.filterProducts().then((response) => {
       for (let i = 0; i < response.length; i += 1) {
         const card = new ProductCard(this.router, response[i]);
         card.addClass(SliderCssClasses.Slide);

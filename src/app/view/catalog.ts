@@ -1,4 +1,4 @@
-import { Product } from '@commercetools/platform-sdk';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import DOMComponent, { ElementParameters } from '../../components/base-component';
 import { AppInfo, AuthorizationParameters } from '../../types/app-parameters';
 import { GrouppedCategories } from '../api/products';
@@ -12,7 +12,7 @@ enum CatalogCssClasses {
   ProductsWrapper = 'catalog__products-wrapper',
 }
 
-type LoadProductsCallback = () => Promise<Product[]>;
+type LoadProductsCallback = () => Promise<ProductProjection[]>;
 
 export default class CatalogView extends AppView {
   private static PRODUCTS_WRAPPER_PARAMS: ElementParameters = {
@@ -33,6 +33,9 @@ export default class CatalogView extends AppView {
     super(router, appInfo, categories, authParams);
     this.loadCallback = loadProductsCallback;
     this.addProducts();
+
+    window.addEventListener('scroll', this.scrollHandler);
+    window.addEventListener('resize', this.scrollHandler);
   }
 
   protected override createMain(): DOMComponent<HTMLElement> {
@@ -40,9 +43,6 @@ export default class CatalogView extends AppView {
       tag: Tags.Main,
     });
     this.productsWrapper = new DOMComponent<HTMLElement>({ ...CatalogView.PRODUCTS_WRAPPER_PARAMS, parent: main });
-
-    window.addEventListener('scroll', this.scrollHandler);
-    window.addEventListener('resize', this.scrollHandler);
     return main;
   }
 

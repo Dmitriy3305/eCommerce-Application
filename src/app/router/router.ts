@@ -1,4 +1,4 @@
-import { Product, ProductVariant } from '@commercetools/platform-sdk';
+import { ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { Events } from '../../types/dom-types/enums';
 import { getEnumKey, isEnumValue } from '../../utils/enum-utils';
 import { AppLink, LinkQueries, RouteHandler } from './router-types';
@@ -42,7 +42,7 @@ export default class AppRouter {
     return `${AppLink.Catalog}?${LinkQueries.CategoryFilter}=${category.toLowerCase()}`;
   }
 
-  public buildProductUrl(product: Product, variant?: ProductVariant): string {
+  public buildProductUrl(product: ProductProjection, variant?: ProductVariant): string {
     if (!product.key) return '';
     if (variant && variant.key) {
       const [productName, variantName] = product.key.split('-');
