@@ -60,11 +60,13 @@ export default class Slider extends DOMComponent<HTMLElement> {
   public showSlider(): void {
     const productsRepository = new ProductsRepository();
     productsRepository.filterProducts().then((response) => {
-      for (let i = 0; i < response.length; i += 1) {
-        const card = new ProductCard(this.router, response[i]);
-        card.addClass(SliderCssClasses.Slide);
-        this.sliderWrapper.append(card);
-      }
+      this.sliderWrapper.append(
+        ...response.map((product) => {
+          const card = new ProductCard(this.router, product);
+          card.addClass(SliderCssClasses.Slide);
+          return card;
+        })
+      );
       const slider = new Swiper('.swiper-container', swiperHomePage);
       slider.init();
     });

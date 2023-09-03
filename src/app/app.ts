@@ -9,7 +9,7 @@ import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
 import RegistrationView from './view/registration/registration-view';
-import CatalogView from './view/catalog';
+import CatalogView from './view/catalog/catalog';
 
 export type AppConfig = {
   appName: string;

@@ -1,15 +1,17 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
-import DOMComponent, { ElementParameters } from '../../components/base-component';
-import { AppInfo, AuthorizationParameters } from '../../types/app-parameters';
-import { GrouppedCategories } from '../api/products';
-import AppRouter from '../router/router';
-import AppView from './view';
-import { Tags } from '../../types/dom-types/enums';
-import ProductCard from './product-card';
-import throttle from '../../utils/throttle';
+import DOMComponent, { ElementParameters } from '../../../components/base-component';
+import { AppInfo, AuthorizationParameters } from '../../../types/app-parameters';
+import { GrouppedCategories } from '../../api/products';
+import AppRouter from '../../router/router';
+import AppView from '../view';
+import { Tags } from '../../../types/dom-types/enums';
+import ProductCard from '../product-card';
+import throttle from '../../../utils/throttle';
+import SearchBar from '../../../components/inputs/searchbar';
 
 enum CatalogCssClasses {
   ProductsWrapper = 'catalog__products-wrapper',
+  Searchbar = 'catalog__searchbar',
 }
 
 type LoadProductsCallback = () => Promise<ProductProjection[]>;
@@ -42,7 +44,15 @@ export default class CatalogView extends AppView {
     const main = new DOMComponent<HTMLElement>({
       tag: Tags.Main,
     });
-    this.productsWrapper = new DOMComponent<HTMLElement>({ ...CatalogView.PRODUCTS_WRAPPER_PARAMS, parent: main });
+
+    const searchBar = new SearchBar(() => {});
+    searchBar.addClass(CatalogCssClasses.Searchbar);
+    main.append(searchBar);
+
+    this.productsWrapper = new DOMComponent<HTMLElement>({
+      ...CatalogView.PRODUCTS_WRAPPER_PARAMS,
+      parent: main,
+    });
     return main;
   }
 
@@ -63,8 +73,6 @@ export default class CatalogView extends AppView {
 
   private async addProducts(): Promise<void> {
     const products = await this.loadCallback();
-    products.forEach((product) => {
-      this.productsWrapper?.append(new ProductCard(this.router, product, true));
-    });
+    this.productsWrapper?.append(...products.map((product) => new ProductCard(this.router, product, true)));
   }
 }
