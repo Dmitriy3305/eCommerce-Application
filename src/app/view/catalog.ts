@@ -6,6 +6,7 @@ import AppRouter from '../router/router';
 import AppView from './view';
 import { Tags } from '../../types/dom-types/enums';
 import ProductCard from './product-card';
+import throttle from '../../utils/throttle';
 
 enum CatalogCssClasses {
   ProductsWrapper = 'catalog__products-wrapper',
@@ -39,7 +40,25 @@ export default class CatalogView extends AppView {
       tag: Tags.Main,
     });
     this.productsWrapper = new DOMComponent<HTMLElement>({ ...CatalogView.PRODUCTS_WRAPPER_PARAMS, parent: main });
+
+    window.addEventListener('scroll', this.scrollHandler);
+    window.addEventListener('resize', this.scrollHandler);
     return main;
+  }
+
+  private get scrollHandler(): () => void {
+    return throttle(() => {
+      const height = document.body.offsetHeight;
+      const screenHeight = window.innerHeight;
+      const scrolled = window.scrollY;
+      const threshold = height - screenHeight / 4;
+
+      const position = scrolled + screenHeight;
+
+      if (position >= threshold) {
+        this.addProducts();
+      }
+    }, 500);
   }
 
   private async addProducts(): Promise<void> {

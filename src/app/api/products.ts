@@ -4,6 +4,8 @@ import Repository from './repository';
 export type GrouppedCategories = { [group: string]: string[] };
 
 export default class ProductsRepository extends Repository {
+  private static PRODUCTS_PER_PAGE = 20;
+
   public async getCategoriesGroups(): Promise<GrouppedCategories> {
     const response = await this.apiRoot.categories().get().execute();
     const categories = response.body.results;
@@ -19,8 +21,9 @@ export default class ProductsRepository extends Repository {
     return result;
   }
 
-  public async getProducts(): Promise<Product[]> {
-    const response = await this.apiRoot.products().get().execute();
+  public async getProducts(page?: number): Promise<Product[]> {
+    const offset = page ? (page - 1) * ProductsRepository.PRODUCTS_PER_PAGE : undefined;
+    const response = await this.apiRoot.products().get({ queryArgs: { offset } }).execute();
     return response.body.results;
   }
 }

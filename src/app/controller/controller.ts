@@ -1,4 +1,4 @@
-import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft, Product } from '@commercetools/platform-sdk';
 import ProductsRepository, { GrouppedCategories } from '../api/products';
 import { InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
@@ -87,8 +87,13 @@ export default class AppController {
     return this.projectSettings.getCountries();
   }
 
-  public async loadProducts() {
-    return this.products.getProducts();
+  public get productsLoader(): (filterQueries?: { [query: string]: string }) => Promise<Product[]> {
+    let page = 1;
+    return async () => {
+      const products = await this.products.getProducts(page);
+      page += 1;
+      return products;
+    };
   }
 
   public logout(): void {

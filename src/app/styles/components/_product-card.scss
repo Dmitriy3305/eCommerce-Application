@@ -10,15 +10,17 @@ $border-radius: 30px;
   width: 300px;
   height: 450px;
 
-  transition: box-shadow $hover-transition, scale $active-transition;
+  transition:
+    box-shadow $hover-transition,
+    scale $active-transition;
 
   &:hover {
     @include shadow();
     color: $primary-dark;
     .product-card__image {
-        scale: 1.075;
+      scale: 1.075;
     }
-  } 
+  }
 }
 
 .product-card__image-wrapper {
@@ -86,7 +88,9 @@ $border-radius: 30px;
   color: $primary-light;
   font-weight: bold;
 
-  transition: background-color $hover-transition, color $hover-transition;
+  transition:
+    background-color $hover-transition,
+    color $hover-transition;
 
   i {
     margin-left: 1em;
