@@ -120,18 +120,9 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         type = InputTypes.Text;
         break;
     }
-
     const inputParams = { ...FormInput.INPUT_PARAMS, parent: this.label };
-
     if (inputData.dataType === InputDataType.Country) {
-      let attributes = {};
-
-      if (inputData.isRequired) {
-        attributes = { ...attributes, required: '' };
-      }
-      if (inputData.isDisabled) {
-        attributes = { ...attributes, disabled: '' };
-      }
+      const attributes = inputData.isRequired ? { required: '' } : undefined;
       this.input = new SelectDomComponent(
         {
           ...inputParams,
@@ -139,7 +130,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         },
         inputData.options || Object.values(Countries)
       );
-      if (inputData.isDisabled) this.input.setAttribute('diabled', '');
     } else if (inputData.dataType === InputDataType.Toggle) {
       this.input = new Checkbox(this);
     } else {
@@ -152,9 +142,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       if (inputData.dataType === InputDataType.Password) this.input = new PasswordInput({ ...inputParams, attributes });
       else this.input = new InputDomComponent({ ...inputParams, attributes });
     }
-    if (inputData.isEditable === false) {
-      this.editButton?.remove();
-    } else if (inputData.isEditable === true && this.dataType !== 'toggle') {
+    if (inputData.isEditable && this.dataType !== 'toggle') {
       this.wrapperButtons = new DOMComponent<HTMLDivElement>({
         ...FormInput.WRAPPER_BUTTONS_PARAMS,
         parent: this.label,
