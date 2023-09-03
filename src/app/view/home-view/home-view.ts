@@ -10,7 +10,7 @@ export default class HomeView extends AppView {
     const main = new DOMComponent<HTMLElement>({
       tag: Tags.Main,
     });
-    const sectionSeason = new HomeSeasonSection();
+    const sectionSeason = new HomeSeasonSection(this.router);
     const sectionSlider = new Slider(this.router);
     const sectionFeedback = new Feedback();
     main.append(sectionSeason, sectionSlider, sectionFeedback);

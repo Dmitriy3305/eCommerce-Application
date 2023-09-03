@@ -29,17 +29,25 @@
 }
 .btn__season {
   cursor: pointer;
+
   color: $primary-dark;
   font-size: 1rem;
+
   padding: 0.8rem 1.6rem;
   margin-top: 2rem;
+
+  background-color: $secondary-light;
   border-radius: 5px;
   border: $primary-light;
-  transition: scale $hover-transition;
+
+  transition: scale $hover-transition, color $hover-transition;
   font-weight: bold;
 
   &:hover {
     scale: 1.1;
+  }
+  &:active {
+    scale: 0.9;
   }
 }
 
