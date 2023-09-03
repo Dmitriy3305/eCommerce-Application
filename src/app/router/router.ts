@@ -1,6 +1,8 @@
+import { Product, ProductVariant } from '@commercetools/platform-sdk';
 import { Events } from '../../types/dom-types/enums';
 import { getEnumKey, isEnumValue } from '../../utils/enum-utils';
 import { AppLink, LinkQueries, RouteHandler } from './router-types';
+import toKebabCase from '../../utils/to-kebab-case';
 
 export default class AppRouter {
   private routeCallback: RouteHandler;
@@ -38,5 +40,14 @@ export default class AppRouter {
 
   public buildCategoryUrl(category: string): string {
     return `${AppLink.Catalog}?${LinkQueries.CategoryFilter}=${category.toLowerCase()}`;
+  }
+
+  public buildProductUrl(product: Product, variant?: ProductVariant): string {
+    if (!product.key) return '';
+    if (variant && variant.key) {
+      const [productName, variantName] = product.key.split('-');
+      return `${AppLink.Catalog}/${toKebabCase(productName.trim())}/${toKebabCase(variantName.trim())}`;
+    }
+    return `${AppLink.Catalog}/${toKebabCase(product.key)}`;
   }
 }

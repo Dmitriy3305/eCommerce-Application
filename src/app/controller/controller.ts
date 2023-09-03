@@ -87,6 +87,10 @@ export default class AppController {
     return this.projectSettings.getCountries();
   }
 
+  public async loadProducts() {
+    return this.products.getProducts();
+  }
+
   public logout(): void {
     this.authManager.logout();
   }

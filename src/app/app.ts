@@ -9,6 +9,7 @@ import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
 import RegistrationView from './view/registration/registration-view';
+import CatalogView from './view/catalog';
 
 export type AppConfig = {
   appName: string;
@@ -128,9 +129,19 @@ export default class App {
           }
           break;
         }
+        case AppLink.Catalog:
+          if (!resource) {
+            this.view = new CatalogView(
+              this.router,
+              this.appInfo,
+              categories,
+              this.authorizationParameters,
+              this.controller.loadProducts.bind(this.controller)
+            );
+          }
+          break;
         case AppLink.Cart:
         case AppLink.AboutUs:
-        case AppLink.Catalog:
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;

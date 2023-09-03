@@ -1,10 +1,10 @@
 import Swiper from 'swiper';
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
-import CardSlider from './cardSlider';
 import AppRouter from '../../router/router';
 import ProductsRepository from '../../api/products';
 import swiperHomePage from './param-slider';
+import ProductCard from '../product-card';
 
 enum SliderCssClasses {
   NameSection = 'section__slider',
@@ -13,6 +13,7 @@ enum SliderCssClasses {
   WrapperPhoto = 'swiper-wrapper',
   NameLeftBtn = 'swiper-button-prev',
   NameRightBtn = 'swiper-button-next',
+  Slide = 'swiper-slide',
 }
 
 export default class Slider extends DOMComponent<HTMLElement> {
@@ -57,21 +58,12 @@ export default class Slider extends DOMComponent<HTMLElement> {
   }
 
   public showSlider(): void {
-    const cards: string[] = [];
-    const names: string[] = [];
-    const cardsProduct = [];
     const productsRepository = new ProductsRepository();
     productsRepository.getProducts().then((response) => {
       for (let i = 0; i < response.length; i += 1) {
-        const { images } = response[i].masterData.current.masterVariant;
-        const { name } = response[i].masterData.current;
-        const urlImg = images ? images[0].url : '';
-        const nameProduct: string[] = Object.values(name);
-        cards.push(urlImg);
-        names.push(nameProduct[0]);
-        const cardSlider = new CardSlider(cards[i], names[i]);
-        cardsProduct.push(cardSlider);
-        this.sliderWrapper.append(cardSlider);
+        const card = new ProductCard(this.router, response[i]);
+        card.addClass(SliderCssClasses.Slide);
+        this.sliderWrapper.append(card);
       }
       const slider = new Swiper('.swiper-container', swiperHomePage);
       slider.init();
