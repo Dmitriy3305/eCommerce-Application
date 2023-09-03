@@ -78,8 +78,11 @@ export default class App {
       }
     };
 
-    const countries: string[] | undefined =
-      link === AppLink.Register ? await this.controller.loadCountries() : undefined;
+    let countries: string[] | undefined;
+
+    if (link === AppLink.Register || link === AppLink.Profile) {
+      countries = await this.controller.loadCountries();
+    }
 
     return {
       validationCallbacks: this.controller.getValidationCallbacks(),
