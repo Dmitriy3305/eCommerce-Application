@@ -27,18 +27,24 @@ export default class SearchBar extends DOMComponent<HTMLElement> {
     classList: [SearchBarCssClasses.Icon, FontAwesome.Regular, FontAwesome.Search],
   };
 
-  public constructor(onSearchCallback: (value: string) => void) {
+  private searchInput: InputDomComponent;
+
+  public constructor(onSearchCallback: () => void) {
     super(SearchBar.WRAPPER_PARAMS);
 
-    const searchbar = new InputDomComponent({ ...SearchBar.SEARCHBAR_PARAMS, parent: this });
+    this.searchInput = new InputDomComponent({ ...SearchBar.SEARCHBAR_PARAMS, parent: this });
     const searchIcon = new DOMComponent<HTMLElement>({ ...SearchBar.SEARCH_ICON_PARAMS, parent: this });
 
     const handler = () => {
-      onSearchCallback(searchbar.value);
+      onSearchCallback();
     };
-    searchbar.addEnterHanlder(handler);
+    this.searchInput.addEnterHanlder(handler);
     searchIcon.addEventListener(Events.Click, () => {
-      onSearchCallback(searchbar.value);
+      onSearchCallback();
     });
+  }
+
+  public get value(): string {
+    return this.searchInput.value;
   }
 }

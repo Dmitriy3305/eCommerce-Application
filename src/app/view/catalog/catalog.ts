@@ -1,4 +1,3 @@
-import { ProductProjection } from '@commercetools/platform-sdk';
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { AppInfo, AuthorizationParameters } from '../../../types/app-parameters';
 import { GrouppedCategories } from '../../api/products';
@@ -8,32 +7,33 @@ import { Tags } from '../../../types/dom-types/enums';
 import ProductCard from '../product-card';
 import throttle from '../../../utils/throttle';
 import SearchBar from '../../../components/inputs/searchbar';
+import { ProductFilterQueries, ProductLoader } from '../../../types/product-loads';
 
 enum CatalogCssClasses {
   ProductsWrapper = 'catalog__products-wrapper',
   Searchbar = 'catalog__searchbar',
 }
 
-type LoadProductsCallback = () => Promise<ProductProjection[]>;
-
 export default class CatalogView extends AppView {
   private static PRODUCTS_WRAPPER_PARAMS: ElementParameters = {
     classList: [CatalogCssClasses.ProductsWrapper],
   };
 
-  private loadCallback: LoadProductsCallback;
+  private productLoader: ProductLoader;
 
   private productsWrapper?: DOMComponent<HTMLElement>;
+
+  private searchbar?: SearchBar;
 
   public constructor(
     router: AppRouter,
     appInfo: AppInfo,
     categories: GrouppedCategories,
     authParams: AuthorizationParameters,
-    loadProductsCallback: LoadProductsCallback
+    loader: ProductLoader
   ) {
     super(router, appInfo, categories, authParams);
-    this.loadCallback = loadProductsCallback;
+    this.productLoader = loader;
     this.addProducts();
 
     window.addEventListener('scroll', this.scrollHandler);
@@ -45,9 +45,13 @@ export default class CatalogView extends AppView {
       tag: Tags.Main,
     });
 
-    const searchBar = new SearchBar(() => {});
-    searchBar.addClass(CatalogCssClasses.Searchbar);
-    main.append(searchBar);
+    this.searchbar = new SearchBar(() => {
+      this.productsWrapper?.clear();
+      this.productLoader.resetOffset();
+      this.addProducts();
+    });
+    this.searchbar.addClass(CatalogCssClasses.Searchbar);
+    main.append(this.searchbar);
 
     this.productsWrapper = new DOMComponent<HTMLElement>({
       ...CatalogView.PRODUCTS_WRAPPER_PARAMS,
@@ -72,7 +76,10 @@ export default class CatalogView extends AppView {
   }
 
   private async addProducts(): Promise<void> {
-    const products = await this.loadCallback();
+    const queries: ProductFilterQueries = {
+      searchName: this.searchbar?.value || undefined,
+    };
+    const products = await this.productLoader.load(queries);
     this.productsWrapper?.append(...products.map((product) => new ProductCard(this.router, product, true)));
   }
 }

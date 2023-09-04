@@ -2,7 +2,7 @@ $padding: 40px;
 
 .main {
   padding: calc($header-height + $padding) 0 $padding;
-  min-height: calc(100vh - $footer-height - 2 * $padding);
+  min-height: calc(100vh - $footer-height);
   width: 100%;
   margin: auto;
 

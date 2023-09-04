@@ -15,6 +15,7 @@ import { InputSubmitData } from '../../components/form/form-input-component';
 import createFromFieldset from '../../utils/create-client';
 import getCountryCode from '../../utils/country-code';
 import UserRepository from '../api/user';
+import { ProductFilterQueries, ProductLoader } from '../../types/product-loads';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -87,16 +88,26 @@ export default class AppController {
     return this.projectSettings.getCountries();
   }
 
-  public get productsLoader(): (
-    urlQueries?: URLSearchParams,
-    filterQueries?: { [query: string]: string }
-  ) => Promise<ProductProjection[]> {
+  public getProductsLoader(urlQueries?: URLSearchParams): ProductLoader {
     let page = 1;
-    return async (urlQueries?: URLSearchParams) => {
-      const category = urlQueries?.get('category') || undefined;
-      const products = await this.products.filterProducts(page, category);
-      page += 1;
-      return products;
+    return {
+      load: async (filterQueries?) => {
+        const queries: ProductFilterQueries = filterQueries || {};
+        queries.category = urlQueries?.get('category') || undefined;
+
+        let products: ProductProjection[] = [];
+        try {
+          products = await this.products.filterProducts(page, queries);
+        } catch {
+          products = await this.products.filterProducts(page);
+        } finally {
+          page += 1;
+        }
+        return products;
+      },
+      resetOffset: () => {
+        page = 1;
+      },
     };
   }
 

@@ -40,7 +40,9 @@
   border-radius: 5px;
   border: $primary-light;
 
-  transition: scale $hover-transition, color $hover-transition;
+  transition:
+    scale $hover-transition,
+    color $hover-transition;
   font-weight: bold;
 
   &:hover {

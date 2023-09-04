@@ -1,4 +1,4 @@
-export type RouteHandler = (link: AppLink, resource?: string, queries?: URLSearchParams) => void;
+export type RouteHandler = (link: AppLink, resources?: string[], queries?: URLSearchParams) => void;
 
 export enum AppLink {
   Main = 'index',
