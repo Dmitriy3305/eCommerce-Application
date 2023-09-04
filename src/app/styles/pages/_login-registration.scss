@@ -1,4 +1,5 @@
 .main:has(.form) {
   @include flex();
   margin-bottom: 50px;
+  flex-direction: column;
 }

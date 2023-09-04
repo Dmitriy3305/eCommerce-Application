@@ -14,9 +14,22 @@ export enum FormInputCssClasses {
   Input = 'form__input',
   InputNotValid = 'form__input_invalid',
   ValidationMessage = 'form__validation-message',
+  WrapperButtons = 'form__buttons-wrapper',
+  EditButton = 'form__edit-button',
+  SaveButton = 'form__save-button',
 }
 
 export type InputSubmitData = {
+  name: string;
+  value: string;
+};
+
+export type InputEditData = {
+  name: string;
+  value: string;
+};
+
+export type InputSaveData = {
   name: string;
   value: string;
 };
@@ -25,6 +38,11 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
   private static WRAPPER_PARAMS: ElementParameters = {
     tag: Tags.Div,
     classList: [FormInputCssClasses.Wrapper],
+  };
+
+  private static WRAPPER_BUTTONS_PARAMS: ElementParameters = {
+    tag: Tags.Div,
+    classList: [FormInputCssClasses.WrapperButtons],
   };
 
   private static LABEL_PARAMS: ElementParameters = {
@@ -42,6 +60,16 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
     classList: [FormInputCssClasses.ValidationMessage],
   };
 
+  private static EDIT_BUTTONS_PARAMS: ElementParameters = {
+    tag: Tags.Button,
+    classList: [FormInputCssClasses.EditButton],
+  };
+
+  private static SAVE_BUTTONS_PARAMS: ElementParameters = {
+    tag: Tags.Button,
+    classList: [FormInputCssClasses.SaveButton],
+  };
+
   private label: DOMComponent<HTMLLabelElement>;
 
   protected input: InputDomComponent | SelectDomComponent;
@@ -52,9 +80,14 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   private resourceName?: string;
 
+  public wrapperButtons?: DOMComponent<HTMLDivElement>;
+
+  public editButton?: DOMComponent<HTMLButtonElement>;
+
+  public saveButton?: DOMComponent<HTMLButtonElement>;
+
   public constructor(inputData: InputData) {
     super(FormInput.WRAPPER_PARAMS);
-
     this.label = new DOMComponent<HTMLLabelElement>({
       ...FormInput.LABEL_PARAMS,
       textContent: inputData.label,
@@ -87,7 +120,6 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
         type = InputTypes.Text;
         break;
     }
-
     const inputParams = { ...FormInput.INPUT_PARAMS, parent: this.label };
     if (inputData.dataType === InputDataType.Country) {
       const attributes = inputData.isRequired ? { required: '' } : undefined;
@@ -110,9 +142,32 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       if (inputData.dataType === InputDataType.Password) this.input = new PasswordInput({ ...inputParams, attributes });
       else this.input = new InputDomComponent({ ...inputParams, attributes });
     }
+    if (inputData.isEditable && this.dataType !== 'toggle') {
+      this.wrapperButtons = new DOMComponent<HTMLDivElement>({
+        ...FormInput.WRAPPER_BUTTONS_PARAMS,
+        parent: this.label,
+      });
 
+      this.editButton = new DOMComponent<HTMLButtonElement>({
+        ...FormInput.EDIT_BUTTONS_PARAMS,
+        parent: this.wrapperButtons,
+      });
+
+      this.saveButton = new DOMComponent<HTMLButtonElement>({
+        ...FormInput.SAVE_BUTTONS_PARAMS,
+        parent: this.wrapperButtons,
+      });
+      this.input.setAttribute('disabled', '');
+    }
+    this.editButton?.addEventListener(Events.Click, (event) => {
+      this.handleButtonClick(event, true);
+    });
+    if (this.saveButton) {
+      this.saveButton.addEventListener(Events.Click, (event) => {
+        this.handleButtonClick(event, false);
+      });
+    }
     if (inputData.name) this.input.setAttribute('name', inputData.name);
-
     this.validationMessage = new DOMComponent<HTMLSpanElement>(FormInput.VALIDATION_MESSAGE_PARAMS);
     this.append(this.validationMessage);
 
@@ -146,6 +201,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       },
       value
     );
+    this.input.setAttribute('disabled', '');
   }
 
   public get labelText(): string {
@@ -190,5 +246,18 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
 
   public emitInput(): void {
     this.input.emitEvent(Events.Input, true);
+  }
+
+  public handleButtonClick(event: Event, enable: boolean): void {
+    event.preventDefault();
+    const currentParent = (event.target as Element).parentNode?.parentNode;
+    const currentInput = currentParent?.childNodes[1] as HTMLInputElement | HTMLSelectElement;
+    if (currentInput) {
+      if (enable) {
+        currentInput.removeAttribute('disabled');
+      } else {
+        currentInput.setAttribute('disabled', '');
+      }
+    }
   }
 }
