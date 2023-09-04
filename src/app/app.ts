@@ -8,7 +8,7 @@ import LoginView from './view/login/login-view';
 import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
-import RegistrationView from './view/registration/registration-view';
+import RegistrationView from  './view/Registration/registration-view';
 
 export type AppConfig = {
   appName: string;

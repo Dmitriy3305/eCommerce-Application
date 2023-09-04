@@ -9,6 +9,7 @@ export enum AppLink {
   NotFound = 'not-found',
   AboutUs = 'about-us',
   Catalog = 'products',
+  ProductPage = 'product-page',
 }
 
 export enum LinkQueries {
