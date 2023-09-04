@@ -9,6 +9,20 @@ import toKebabCase from '../../../utils/to-kebab-case';
 import FormView from '../form-view';
 // import UserRepository from '../../api/user';
 
+enum UserField {
+  FirstName = 'First Name',
+  LastName = 'Last Name',
+  BirthDate = 'Birth Date',
+  Email = 'Email',
+  Password = 'Password',
+  Country = 'Country',
+  City = 'City',
+  Street = 'Street',
+  Building = 'Building',
+  Apartment = 'Apartment',
+  PostalCode = 'Postal Code',
+}
+
 export default class ProfileView extends FormView {
   protected get formTitle(): string {
     return 'Profile';
@@ -46,36 +60,30 @@ export default class ProfileView extends FormView {
 
     inputs.forEach((fieldset) =>
       fieldset.inputs.forEach((input) => {
+        console.log(fieldset.title);
         const currentInput = input;
         if (currentInput.label !== 'Apartment') currentInput.isRequired = true;
         currentInput.isDisabled = true;
         currentInput.isEditable = true;
-        switch (currentInput.label) {
-          case 'First Name': {
-            currentInput.value = this.dataUser?.firstName;
-            break;
-          }
-          case 'Last Name': {
-            currentInput.value = this.dataUser?.lastName;
-            break;
-          }
-          case 'Birth Date': {
-            currentInput.value = this.dataUser?.dateOfBirth;
-            break;
-          }
-          case 'Email': {
-            currentInput.value = this.dataUser?.email;
-            break;
-          }
-          case 'Password': {
-            currentInput.value = this.dataUser?.password;
-            break;
-          }
-          default:
-            currentInput.value = '';
-            break;
-        }
-        currentInput.name = toKebabCase(currentInput.label);
+        type LabelToValueMapType = {
+          [label: string]: () => string | undefined;
+        };
+        const labelToValueMap: LabelToValueMapType = {
+          [UserField.FirstName]: () => this.dataUser?.firstName,
+          [UserField.LastName]: () => this.dataUser?.lastName,
+          [UserField.BirthDate]: () => this.dataUser?.dateOfBirth,
+          [UserField.Email]: () => this.dataUser?.email,
+          [UserField.Password]: () => this.dataUser?.password,
+          [UserField.Country]: () => this.dataUser?.addresses[0].country,
+          [UserField.City]: () => this.dataUser?.addresses[0].city,
+          [UserField.Street]: () => this.dataUser?.addresses[0].streetName,
+          [UserField.Building]: () => this.dataUser?.addresses[0].building,
+          [UserField.Apartment]: () => this.dataUser?.addresses[0].apartment,
+          [UserField.PostalCode]: () => this.dataUser?.addresses[0].postalCode,
+        };
+
+        const matchFunc = labelToValueMap[currentInput.label];
+        currentInput.value = matchFunc ? matchFunc() : '';
       })
     );
     return inputs;

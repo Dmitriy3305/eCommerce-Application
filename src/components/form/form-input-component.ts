@@ -201,6 +201,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       },
       value
     );
+    this.input.setAttribute('disabled', '');
   }
 
   public get labelText(): string {
@@ -250,7 +251,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
   public handleButtonClick(event: Event, enable: boolean): void {
     event.preventDefault();
     const currentParent = (event.target as Element).parentNode?.parentNode;
-    const currentInput = currentParent?.childNodes[1] as HTMLInputElement;
+    const currentInput = currentParent?.childNodes[1] as HTMLInputElement | HTMLSelectElement;
     if (currentInput) {
       if (enable) {
         currentInput.removeAttribute('disabled');
