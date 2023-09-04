@@ -29,7 +29,6 @@
   }
 }
 
-=======
 .image-slider__image img {
   max-width: 100%;
   object-fit: cover;
@@ -65,6 +64,7 @@
     top: 65%;
   }
 }
+
 @media (max-width: $mobile-width) {
   .section__slider {
     padding: 0.5rem 0 0 0;
@@ -79,6 +79,7 @@
 
   .swiper-wrapper > * {
     scale: 0.8;
+  }
 
   .name__product {
     font-size: 1rem;

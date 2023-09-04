@@ -7,6 +7,9 @@ import Fieldset from '../../../components/form/fieldset-component';
 import FormInput from '../../../components/form/form-input-component';
 import toKebabCase from '../../../utils/to-kebab-case';
 import FormView from '../form-view';
+import { AppInfo, AuthorizationParameters, FormParameters } from '../../../types/app-parameters';
+import { GrouppedCategories } from '../../api/products';
+import AppRouter from '../../router/router';
 // import UserRepository from '../../api/user';
 
 enum UserField {
@@ -24,15 +27,23 @@ enum UserField {
 }
 
 export default class ProfileView extends FormView {
+  private dataUser: Customer | undefined;
+
+  public constructor(
+    router: AppRouter,
+    appInfo: AppInfo,
+    categories: GrouppedCategories,
+    authParams: AuthorizationParameters,
+    formParams: FormParameters,
+    dataUser: Customer
+  ) {
+    super(router, appInfo, categories, authParams, formParams);
+    this.dataUser = dataUser;
+  }
+
   protected get formTitle(): string {
     return 'Profile';
   }
-
-  public dataUser?: Customer | undefined;
-
-  private isEditable?: boolean;
-
-  private isDiasbled?: boolean;
 
   override createForm(): FormComponent {
     const form = super.createForm();

@@ -1,6 +1,6 @@
+import { Product } from '@commercetools/platform-sdk';
 import DOMComponent from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
-import ProductsRepository from '../../api/products';
 import Slider from './slider-product';
 
 enum InfoCssClasses {
@@ -35,8 +35,8 @@ class InfoProduct extends Slider {
 
   private containerAttributes: DOMComponent<HTMLElement>;
 
-  public constructor(/*productKey: string*/) {
-    super(/*productKey*/); 
+  public constructor(product: Product) {
+    super(product);
     const infoProduct = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [InfoCssClasses.InfoProduct],
@@ -75,7 +75,7 @@ class InfoProduct extends Slider {
       classList: [InfoCssClasses.attribute],
     });
     this.containerAttributes = new DOMComponent<HTMLDivElement>({
-      tag: Tags.Ul,
+      tag: Tags.UnorderedList,
       classList: [InfoCssClasses.ContainerForAttributes],
       textContent: 'product attributes',
     });
@@ -94,60 +94,52 @@ class InfoProduct extends Slider {
     infoProduct.append(mainInfoProduct, this.descriptionProduct);
     mainInfoProduct.append(this.nameProduct, priceContainer, attribute, this.containerAttributes, btnAddCart);
     attribute.append(this.containerAttributes);
-    this.addInfoProduct();
+    this.addInfoProduct(product);
   }
 
-  addInfoProduct(): void {
-    const productsRepository = new ProductsRepository();
-    const productData = productsRepository.getProductByKey(''); //this.productKey)
-    productData.then((response) => {
-      const dataProduct = response.masterData.current;
-      const name = Object.values(dataProduct.name);
-      this.nameProduct.addText(`${name[0]}`);
-      const prices = dataProduct.masterVariant.prices;
-      const discountNo = prices ? prices[0].discounted : '';
-      const priseValue = prices ? prices[0].value.centAmount : '';
-      if (discountNo === undefined) {
-        this.priceProduct.addText(`$${+priseValue * 0.01}`);
-        this.discountProduct.addClass('hidden');
-        this.discountValue.removeClass('discount-value_product');
-        this.discountValue.addClass('hidden');
-      } else {
-        const discountValue = discountNo ? discountNo.value.centAmount : '';
-        this.priceProduct.addText(` $${Math.round(+priseValue * 0.01).toFixed(2)}`);
-        this.priceProduct.addClass('price-not-discount');
-        this.discountProduct.addText(`$${Math.round(+discountValue * 0.01).toFixed(2)}`);
-        this.discountProduct.addClass('discount');
-        this.discountValue.addText(`- ${100 - (+discountValue * 100) / +priseValue}%`);
-      }
+  public addInfoProduct(product: Product): void {
+    const dataProduct = product.masterData.current;
+    const name = Object.values(dataProduct.name);
+    this.nameProduct.addText(`${name[0]}`);
+    const { prices } = dataProduct.masterVariant;
+    const discountNo = prices ? prices[0].discounted : '';
+    const priseValue = prices ? prices[0].value.centAmount : '';
+    if (discountNo === undefined) {
+      this.priceProduct.addText(`$${+priseValue * 0.01}`);
+      this.discountProduct.addClass('hidden');
+      this.discountValue.removeClass('discount-value_product');
+      this.discountValue.addClass('hidden');
+    } else {
+      const discountValue = discountNo ? discountNo.value.centAmount : '';
+      this.priceProduct.addText(` $${Math.round(+priseValue * 0.01).toFixed(2)}`);
+      this.priceProduct.addClass('price-not-discount');
+      this.discountProduct.addText(`$${Math.round(+discountValue * 0.01).toFixed(2)}`);
+      this.discountProduct.addClass('discount');
+      this.discountValue.addText(`- ${100 - (+discountValue * 100) / +priseValue}%`);
+    }
 
-      const desc = dataProduct.description;
-      let descProduct;
-      if (desc === undefined) {
-        descProduct = '';
-      } else {
-        descProduct = Object.values(desc);
-      }
-      const descriptionMod = `${descProduct[0]}`.replaceAll(`&#x27;`, `'`);
-      this.descriptionProduct.addText(descriptionMod);
+    const desc = dataProduct.description;
+    let descProduct;
+    if (desc === undefined) {
+      descProduct = '';
+    } else {
+      descProduct = Object.values(desc);
+    }
+    const descriptionMod = `${descProduct[0]}`.replaceAll(`&#x27;`, `'`);
+    this.descriptionProduct.addText(descriptionMod);
 
-      const attributes = dataProduct?.masterVariant?.attributes;
-      let attributesLength;
-      if (attributes === undefined) {
-        attributesLength = 0;
-      } else {
-        attributesLength = attributes.length;
-        for (let i = 0; i <= attributesLength; i += 1) {
-          const attribute = new DOMComponent<HTMLLIElement>({
-            tag: Tags.Li,
-            classList: [InfoCssClasses.AttributeProduct],
-          });
-          const contentAttribute = attributes[i].name;
-          attribute.addText(`${contentAttribute}`);
-          this.containerAttributes.append(attribute);
-        }
+    const attributes = dataProduct?.masterVariant?.attributes;
+    if (attributes) {
+      for (let i = 0; i < attributes.length; i += 1) {
+        const attribute = new DOMComponent<HTMLLIElement>({
+          tag: Tags.ListElement,
+          classList: [InfoCssClasses.AttributeProduct],
+        });
+        const contentAttribute = attributes[i].name;
+        attribute.addText(`${contentAttribute}`);
+        this.containerAttributes.append(attribute);
       }
-    });
+    }
   }
 }
 

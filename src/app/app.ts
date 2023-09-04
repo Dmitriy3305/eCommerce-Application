@@ -8,9 +8,10 @@ import LoginView from './view/login/login-view';
 import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
-import RegistrationView from './view/Registration/registration-view';
 import ProfileView from './view/profile/profile-view';
-import UserRepository from './api/user';
+import CatalogView from './view/catalog/catalog';
+import RegistrationView from './view/registration/registration-view';
+import ProductView from './view/product-page/product-view';
 
 export type AppConfig = {
   appName: string;
@@ -144,16 +145,17 @@ export default class App {
               this.authorizationParameters,
               this.controller.getProductsLoader(queries)
             );
+          } else {
+            const productKey = resources[0].split('-').join(' ');
+            this.controller.loadProduct(productKey).then((product) => {
+              this.view = new ProductView(this.router, this.appInfo, categories, this.authorizationParameters);
+              (this.view as ProductView).product = product;
+            });
           }
           break;
         case AppLink.Cart:
         case AppLink.Profile: {
-          const customerData = localStorage.getItem('shoe-corner:auth-token');
-          if (customerData) {
-            const dataObject = JSON.parse(customerData);
-            const { customerId } = dataObject;
-            const user = new UserRepository();
-            const dataUser = await user.getDataUser(customerId);
+          this.controller.user?.then(async (user) => {
             const formParams = await this.getFormViewParameters(AppLink.Profile);
             this.view = new ProfileView(
               this.router,
@@ -161,9 +163,9 @@ export default class App {
               categories,
               this.authorizationParameters,
               formParams,
-              dataUser
+              user
             );
-          }
+          });
           break;
         }
         case AppLink.AboutUs:

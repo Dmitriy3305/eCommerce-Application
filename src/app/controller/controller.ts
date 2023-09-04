@@ -88,6 +88,10 @@ export default class AppController {
     return this.projectSettings.getCountries();
   }
 
+  public loadProduct(key: string) {
+    return this.products.getProductByKey(key);
+  }
+
   public getProductsLoader(urlQueries?: URLSearchParams): ProductLoader {
     let page = 1;
     return {
@@ -109,6 +113,10 @@ export default class AppController {
         page = 1;
       },
     };
+  }
+
+  public get user() {
+    return this.authManager.user;
   }
 
   public logout(): void {
