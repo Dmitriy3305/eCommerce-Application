@@ -70,6 +70,7 @@
   @include flex($direction: column, $align-items: flex-start, $gap: 5px);
 }
 .form__buttons-wrapper {
+  order: 2;
   margin-left: -5px;
   width: 100%;
   @include flex($direction: row, $align-items: flex-start, $gap: 5px, $justify-content: space-between);
@@ -141,4 +142,8 @@
     border-color: $secondary-light;
     background-color: $secondary-grey;
   }
+}
+
+select {
+ order: 1;
 }
