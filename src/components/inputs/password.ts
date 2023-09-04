@@ -34,7 +34,6 @@ export default class PasswordInput extends InputDomComponent {
 
     this.toggleVisibilityButton = new DOMComponent<HTMLButtonElement>(PasswordInput.VISIBILITY_BUTTON_PARAMS);
     this.insert(InsertPositions.After, this.toggleVisibilityButton);
-
     const buttonImg = new DOMComponent<HTMLImageElement>({
       ...PasswordInput.BUTTON_IMAGE_PARAMS,
       parent: this.toggleVisibilityButton,

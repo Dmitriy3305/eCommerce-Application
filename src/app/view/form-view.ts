@@ -1,3 +1,4 @@
+import { Customer } from '@commercetools/platform-sdk';
 import DOMComponent from '../../components/base-component';
 import FormComponent from '../../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../../types/app-parameters';
@@ -18,12 +19,10 @@ export default abstract class FormView extends AppView {
     appInfo: AppInfo,
     categories: GrouppedCategories,
     authParams: AuthorizationParameters,
-    formParams: FormParameters
+    formParams: FormParameters,
+    dataUser?: Customer | undefined
   ) {
-    if (authParams.isAuthorized) {
-      throw Error('Already authorized');
-    }
-    super(router, appInfo, categories, authParams);
+    super(router, appInfo, categories, authParams, dataUser);
     if (formParams.countries) this.form?.addOptions(InputDataType.Country, formParams.countries);
     this.form?.addValidation(formParams.validationCallbacks);
     this.form?.addSubmitCallback(formParams.submitCallback);

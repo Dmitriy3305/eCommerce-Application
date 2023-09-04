@@ -53,6 +53,15 @@ export default class UserRepository extends Repository {
     }
   }
 
+  public async getDataUser(customerId: string) {
+    const response = await this.apiRoot
+      .customers()
+      .withId({ ID: `${customerId}` })
+      .get()
+      .execute();
+    return response.body;
+  }
+
   public async authorize(email: string, password: string) {
     try {
       const response = await this.apiRoot

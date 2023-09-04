@@ -40,6 +40,7 @@ export default class Slider extends DOMComponent<HTMLElement> {
       tag: Tags.Div,
       classList: [SliderCssClasses.NameContainer],
     });
+    container.addClass('swiper-home-page');
     this.sliderWrapper = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [SliderCssClasses.WrapperPhoto],
@@ -48,10 +49,12 @@ export default class Slider extends DOMComponent<HTMLElement> {
       tag: Tags.Div,
       classList: [SliderCssClasses.NameLeftBtn],
     });
+    leftBtn.addClass('home-button-prev');
     const rightBtn = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [SliderCssClasses.NameRightBtn],
     });
+    rightBtn.addClass('home-button-next');
     this.append(titleSlider, container);
     container.append(this.sliderWrapper, leftBtn, rightBtn);
     this.showSlider();

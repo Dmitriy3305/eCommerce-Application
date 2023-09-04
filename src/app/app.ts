@@ -8,8 +8,9 @@ import LoginView from './view/login/login-view';
 import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
-import RegistrationView from './view/registration/registration-view';
-import CatalogView from './view/catalog/catalog';
+import RegistrationView from './view/Registration/registration-view';
+import ProfileView from './view/profile/profile-view';
+import UserRepository from './api/user';
 
 export type AppConfig = {
   appName: string;
@@ -62,7 +63,9 @@ export default class App {
     };
   }
 
-  private async getFormViewParameters(link: AppLink.Login | AppLink.Register): Promise<FormParameters> {
+  private async getFormViewParameters(
+    link: AppLink.Login | AppLink.Register | AppLink.Profile
+  ): Promise<FormParameters> {
     const authCallback: FormSubmitCallback = async (data) => {
       try {
         if (link === AppLink.Login) await this.controller.authorize(data);
@@ -75,8 +78,11 @@ export default class App {
       }
     };
 
-    const countries: string[] | undefined =
-      link === AppLink.Register ? await this.controller.loadCountries() : undefined;
+    let countries: string[] | undefined;
+
+    if (link === AppLink.Register || link === AppLink.Profile) {
+      countries = await this.controller.loadCountries();
+    }
 
     return {
       validationCallbacks: this.controller.getValidationCallbacks(),
@@ -141,6 +147,25 @@ export default class App {
           }
           break;
         case AppLink.Cart:
+        case AppLink.Profile: {
+          const customerData = localStorage.getItem('shoe-corner:auth-token');
+          if (customerData) {
+            const dataObject = JSON.parse(customerData);
+            const { customerId } = dataObject;
+            const user = new UserRepository();
+            const dataUser = await user.getDataUser(customerId);
+            const formParams = await this.getFormViewParameters(AppLink.Profile);
+            this.view = new ProfileView(
+              this.router,
+              this.appInfo,
+              categories,
+              this.authorizationParameters,
+              formParams,
+              dataUser
+            );
+          }
+          break;
+        }
         case AppLink.AboutUs:
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);

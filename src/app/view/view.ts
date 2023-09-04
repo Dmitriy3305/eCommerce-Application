@@ -1,3 +1,4 @@
+import { Customer } from '@commercetools/platform-sdk';
 import DOMComponent from '../../components/base-component';
 import Footer from './footer/footer';
 import Header from './header/header';
@@ -23,13 +24,18 @@ export default abstract class AppView {
 
   protected router: AppRouter;
 
+  public dataUser?: Customer | undefined;
+
   public constructor(
     router: AppRouter,
     appInfo: AppInfo,
     categories: GrouppedCategories,
-    authParams: AuthorizationParameters
+    authParams: AuthorizationParameters,
+    dataUser?: Customer | undefined
   ) {
     this.router = router;
+
+    this.dataUser = dataUser;
 
     this.body = DOMComponent.FromElement(document.body);
 

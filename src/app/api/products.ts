@@ -46,4 +46,9 @@ export default class ProductsRepository extends Repository {
     const response = await this.apiRoot.categories().withKey({ key }).get().execute();
     return response.body.id;
   }
+  
+   public async getProductByKey(productKey: string) {
+    const response = await this.apiRoot.products().withKey({ key: productKey }).get().execute();
+    return response.body;
+  }
 }
