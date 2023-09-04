@@ -153,7 +153,6 @@ export default class App {
             });
           }
           break;
-        case AppLink.Cart:
         case AppLink.Profile: {
           this.controller.user?.then(async (user) => {
             const formParams = await this.getFormViewParameters(AppLink.Profile);
@@ -169,6 +168,7 @@ export default class App {
           break;
         }
         case AppLink.AboutUs:
+        case AppLink.Cart:
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;
