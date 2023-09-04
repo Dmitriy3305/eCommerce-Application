@@ -1,6 +1,8 @@
+import { ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { Events } from '../../types/dom-types/enums';
 import { getEnumKey, isEnumValue } from '../../utils/enum-utils';
 import { AppLink, LinkQueries, RouteHandler } from './router-types';
+import toKebabCase from '../../utils/to-kebab-case';
 
 export default class AppRouter {
   private routeCallback: RouteHandler;
@@ -24,8 +26,8 @@ export default class AppRouter {
 
     const path = urlParams[0] ? (urlParams[0] as AppLink) : AppLink.Main;
     if (isEnumValue(AppLink, path)) {
-      const resource = urlParams[1];
-      this.routeCallback(path, resource, queries);
+      const resources = urlParams.length > 1 ? urlParams.slice(1) : undefined;
+      this.routeCallback(path, resources, queries);
 
       let pageName = getEnumKey(AppLink, path);
       pageName = pageName === 'AboutUs' ? 'About Us' : pageName;
@@ -38,5 +40,14 @@ export default class AppRouter {
 
   public buildCategoryUrl(category: string): string {
     return `${AppLink.Catalog}?${LinkQueries.CategoryFilter}=${category.toLowerCase()}`;
+  }
+
+  public buildProductUrl(product: ProductProjection, variant?: ProductVariant): string {
+    if (!product.key) return '';
+    if (variant && variant.key) {
+      const [productName, variantName] = product.key.split('-');
+      return `${AppLink.Catalog}/${toKebabCase(productName.trim())}/${toKebabCase(variantName.trim())}`;
+    }
+    return `${AppLink.Catalog}/${toKebabCase(product.key)}`;
   }
 }

@@ -10,7 +10,7 @@ describe('Products repository', () => {
   const repository = new ProductsRepository();
 
   it('loads products', async () => {
-    const products = await repository.getProducts();
+    const products = await repository.filterProducts();
     expect(products).toBeTruthy();
   });
 

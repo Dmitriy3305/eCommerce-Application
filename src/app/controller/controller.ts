@@ -1,4 +1,4 @@
-import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft, ProductProjection } from '@commercetools/platform-sdk';
 import ProductsRepository, { GrouppedCategories } from '../api/products';
 import { InputDataType } from '../../types/input-datas';
 import ValidationCallback from '../../types/validation-callback';
@@ -15,6 +15,7 @@ import { InputSubmitData } from '../../components/form/form-input-component';
 import createFromFieldset from '../../utils/create-client';
 import getCountryCode from '../../utils/country-code';
 import UserRepository from '../api/user';
+import { ProductFilterQueries, ProductLoader } from '../../types/product-loads';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -85,6 +86,29 @@ export default class AppController {
 
   public loadCountries(): Promise<string[]> {
     return this.projectSettings.getCountries();
+  }
+
+  public getProductsLoader(urlQueries?: URLSearchParams): ProductLoader {
+    let page = 1;
+    return {
+      load: async (filterQueries?) => {
+        const queries: ProductFilterQueries = filterQueries || {};
+        queries.category = urlQueries?.get('category') || undefined;
+
+        let products: ProductProjection[] = [];
+        try {
+          products = await this.products.filterProducts(page, queries);
+        } catch {
+          products = await this.products.filterProducts(page);
+        } finally {
+          page += 1;
+        }
+        return products;
+      },
+      resetOffset: () => {
+        page = 1;
+      },
+    };
   }
 
   public logout(): void {

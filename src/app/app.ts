@@ -98,7 +98,7 @@ export default class App {
 
   private getDefaultRouteHandler(): RouteHandler {
     let accessFormsWhenAuthorized = false;
-    return async (link: AppLink, resource?: string, queries?: URLSearchParams) => {
+    return async (link: AppLink, resources?: string[], queries?: URLSearchParams) => {
       const categories = await this.controller.loadCategories();
       this.view?.clear();
       switch (link) {
@@ -135,6 +135,17 @@ export default class App {
           }
           break;
         }
+        case AppLink.Catalog:
+          if (!resources) {
+            this.view = new CatalogView(
+              this.router,
+              this.appInfo,
+              categories,
+              this.authorizationParameters,
+              this.controller.getProductsLoader(queries)
+            );
+          }
+          break;
         case AppLink.Cart:
         case AppLink.Profile: {
           const customerData = localStorage.getItem('shoe-corner:auth-token');
@@ -156,7 +167,6 @@ export default class App {
           break;
         }
         case AppLink.AboutUs:
-        case AppLink.Catalog:
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;

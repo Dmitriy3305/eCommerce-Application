@@ -1,0 +1,8 @@
+.main:has(.catalog__products-wrapper) {
+  padding-bottom: 60px;
+}
+
+.catalog__products-wrapper {
+  @include flex($gap: 20px 30px);
+  flex-wrap: wrap;
+}

@@ -1,5 +1,5 @@
 import DOMComponent, { ElementParameters } from '../base-component';
-import { Tags } from '../../types/dom-types/enums';
+import { Events, Tags } from '../../types/dom-types/enums';
 
 export default class InputDomComponent extends DOMComponent<HTMLInputElement> {
   public constructor(params: Omit<ElementParameters, 'tag'>) {
@@ -23,5 +23,12 @@ export default class InputDomComponent extends DOMComponent<HTMLInputElement> {
 
   public set required(value: boolean) {
     this.element.required = value;
+  }
+
+  public addEnterHanlder(handler: (value: string) => void): void {
+    this.addEventListener(Events.KeyDown, (event: Event) => {
+      const keyboardEvent = event as KeyboardEvent;
+      if (keyboardEvent.key === 'Enter') handler(this.value);
+    });
   }
 }

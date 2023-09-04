@@ -5,7 +5,6 @@
 
 .form {
   @include flex($direction: column, $gap: 1em);
-  padding-top: 30px;
 
   &:not(:has(fieldset)) {
     gap: 0;
