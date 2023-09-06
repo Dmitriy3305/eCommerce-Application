@@ -146,30 +146,33 @@ class Slider extends DOMComponent<HTMLElement> {
       this.swiperWrapper.append(cardSlider);
       this.swiperWrapper2.append(cardSliderMini);
     }
-    const swiperProduct = new Swiper(`.mySwiper`, {
-      loop: true,
-      slidesPerView: 5,
-      direction: 'vertical',
-      spaceBetween: 10,
-      freeMode: true,
-      watchSlidesProgress: true,
-    });
-    const swiper2 = new Swiper(`.mySwiper2`, {
-      modules: [Navigation, Thumbs],
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      loop: true,
-      spaceBetween: 10,
-      thumbs: {
-        swiper: swiperProduct,
-      },
-    });
-    swiper2.init();
+
+    setTimeout((): void => {
+      const swiperProduct = new Swiper('.mySwiper', {
+        loop: true,
+        slidesPerView: 5,
+        direction: 'vertical',
+        spaceBetween: 10,
+        freeMode: true,
+        watchSlidesProgress: true,
+      });
+      const swiper2 = new Swiper('.mySwiper2', {
+        modules: [Navigation, Thumbs],
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        loop: true,
+        spaceBetween: 10,
+        thumbs: {
+          swiper: swiperProduct,
+        },
+      });
+      swiper2.init();
+    }, 0);
   }
 
-  public openModal() {
+  public openModal(): void {
     this.modalProduct.removeClass('modal_hidden');
     this.modalProduct.addClass('modal_active');
   }
