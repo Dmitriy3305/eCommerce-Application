@@ -201,7 +201,7 @@ export default class FormInput extends DOMComponent<HTMLDivElement> {
       },
       value
     );
-    this.input.setAttribute('disabled', '');
+    if (this.editButton) this.input.setAttribute('disabled', '');
   }
 
   public get labelText(): string {
