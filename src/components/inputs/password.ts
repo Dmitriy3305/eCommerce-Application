@@ -38,7 +38,11 @@ export default class PasswordInput extends InputDomComponent {
       ...PasswordInput.BUTTON_IMAGE_PARAMS,
       parent: this.toggleVisibilityButton,
     });
-
+    if (globalThis.location.pathname.includes('profile')) {
+      this.toggleVisibilityButton.addClass('profile');
+    } else {
+      this.toggleVisibilityButton.removeClass('profile');
+    }
     this.toggleVisibilityButton.addEventListener(Events.Click, () => {
       const currentType = this.getAttribute('type') as InputTypes;
       if (currentType === InputTypes.Text) {
