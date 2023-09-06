@@ -136,7 +136,12 @@ class InfoProduct extends Slider {
           classList: [InfoCssClasses.AttributeProduct],
         });
         const contentAttribute = attributes[i].name;
-        attribute.addText(`${contentAttribute}`);
+        const attributeMod = contentAttribute.replaceAll(`-`, ` `);
+        const words = attributeMod
+          .split(' ')
+          .map((word) => `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}`)
+          .join(' ');
+        attribute.addText(`${words}`);
         this.containerAttributes.append(attribute);
       }
     }
