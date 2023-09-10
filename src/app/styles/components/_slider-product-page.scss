@@ -31,7 +31,6 @@
 }
 .mySwiper2 .swiper-wrapper .swiper-slide img {
   height: 100%;
-  width: auto;
   max-width: 100%;
   object-fit: contain;
 }
@@ -51,6 +50,10 @@
 
 .mySwiper2 {
   width: 100%;
+
+  img {
+    cursor: pointer;
+  }
 }
 
 .mySwiper {
@@ -65,22 +68,34 @@
 .mySwiper .mini-swiper-slide {
   height: 100%;
   opacity: 0.4;
+  transition: opacity $hover-transition;
+
+  cursor: pointer;
+
+  &:hover {
+    scale: 1;
+    opacity: 1;
+  }
 }
 
 .mySwiper .swiper-slide-thumb-active {
   opacity: 1;
+
+  img {
+    scale: 1.05;
+  }
 }
 
 .mini-swiper-slide img {
-  display: block;
-  width: 100%;
   height: 100%;
-  object-fit: cover;
+  transition: scale $hover-transition;
 }
+
 .my-swiper-container {
   display: flex;
   flex-direction: column;
 }
+
 #left,
 #right {
   position: relative;
@@ -89,6 +104,7 @@
   margin: 0 auto;
   top: 1%;
 }
+
 @media (max-width: $desktop-width) {
   .wrapper__product {
     display: flex;

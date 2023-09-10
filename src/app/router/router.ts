@@ -50,4 +50,8 @@ export default class AppRouter {
     }
     return `${AppLink.Catalog}/${toKebabCase(product.key)}`;
   }
+
+  public getAbsoluteLink(link: string): string {
+    return `${window.location.origin}/${link}`;
+  }
 }

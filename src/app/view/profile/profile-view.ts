@@ -10,7 +10,6 @@ import FormView from '../form-view';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../../../types/app-parameters';
 import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
-// import UserRepository from '../../api/user';
 
 enum UserField {
   FirstName = 'First Name',
@@ -71,14 +70,15 @@ export default class ProfileView extends FormView {
 
     inputs.forEach((fieldset) =>
       fieldset.inputs.forEach((input) => {
-        console.log(fieldset.title);
         const currentInput = input;
         if (currentInput.label !== 'Apartment') currentInput.isRequired = true;
         currentInput.isDisabled = true;
         currentInput.isEditable = true;
+
         type LabelToValueMapType = {
           [label: string]: () => string | undefined;
         };
+
         const labelToValueMap: LabelToValueMapType = {
           [UserField.FirstName]: () => this.dataUser?.firstName,
           [UserField.LastName]: () => this.dataUser?.lastName,

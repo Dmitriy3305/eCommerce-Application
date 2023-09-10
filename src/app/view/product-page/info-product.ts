@@ -82,7 +82,7 @@ class InfoProduct extends Slider {
     const btnAddCart = new DOMComponent<HTMLButtonElement>({
       tag: Tags.Button,
       classList: [InfoCssClasses.BtnAddCart],
-      textContent: 'add to card',
+      textContent: 'add to cart',
     });
     this.descriptionProduct = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,

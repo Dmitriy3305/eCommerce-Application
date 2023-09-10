@@ -10,7 +10,7 @@ import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
 import ProfileView from './view/profile/profile-view';
 import CatalogView from './view/catalog/catalog';
-import RegistrationView from './view/Registration/registration-view';
+import RegistrationView from './view/registration/registration-view';
 import ProductView from './view/product-page/product-view';
 
 export type AppConfig = {
@@ -146,11 +146,16 @@ export default class App {
               this.controller.getProductsLoader(queries)
             );
           } else {
-            const productKey = resources[0].split('-').join(' ');
-            this.controller.loadProduct(productKey).then((product) => {
-              this.view = new ProductView(this.router, this.appInfo, categories, this.authorizationParameters);
-              (this.view as ProductView).product = product;
-            });
+            const productKey = resources[0].replaceAll('-', ' ');
+            this.controller
+              .loadProduct(productKey)
+              .then((product) => {
+                this.view = new ProductView(this.router, this.appInfo, categories, this.authorizationParameters);
+                (this.view as ProductView).product = product;
+              })
+              .catch(() => {
+                this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
+              });
           }
           break;
         case AppLink.Profile: {

@@ -152,7 +152,7 @@ class Slider extends DOMComponent<HTMLElement> {
         loop: true,
         slidesPerView: 5,
         direction: 'vertical',
-        spaceBetween: 10,
+        spaceBetween: 20,
         freeMode: true,
         watchSlidesProgress: true,
       });
