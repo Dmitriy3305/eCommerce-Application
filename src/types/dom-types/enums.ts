@@ -24,6 +24,8 @@ export enum Tags {
   Legend = 'legend',
   Select = 'select',
   Option = 'option',
+  UnorderedList = 'ul',
+  ListElement = 'li',
 }
 
 export enum Events {

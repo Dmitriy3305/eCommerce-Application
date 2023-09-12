@@ -33,6 +33,7 @@ export default class Fieldset extends DOMComponent<HTMLFieldSetElement> {
     }
 
     this.inputs = inputs.map((input) => new FormInput(input));
+
     this.append(...this.inputs);
   }
 

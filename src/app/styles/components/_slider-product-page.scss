@@ -1,0 +1,142 @@
+.wrapper__product {
+  display: grid;
+  column-gap: 4rem;
+  grid-template-columns: 50% calc(45% - 2rem);
+  padding: 1rem;
+}
+
+.slider-info__product {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.mini-swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mini-swiper-slide img {
+  display: block;
+}
+.mySwiper2 .swiper-wrapper .swiper-slide img {
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.mySwiper,
+.mySwiper2 {
+  width: 100%;
+  height: 25rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mini-swiper-slide {
+  background-size: cover;
+  background-position: center;
+}
+
+.mySwiper2 {
+  width: 100%;
+
+  img {
+    cursor: pointer;
+  }
+}
+
+.mySwiper {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  width: 7rem;
+  box-sizing: border-box;
+  margin: 2rem 1rem;
+}
+
+.mySwiper .mini-swiper-slide {
+  height: 100%;
+  opacity: 0.4;
+  transition: opacity $hover-transition;
+
+  cursor: pointer;
+
+  &:hover {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+.mySwiper .swiper-slide-thumb-active {
+  opacity: 1;
+
+  img {
+    scale: 1.05;
+  }
+}
+
+.mini-swiper-slide img {
+  height: 100%;
+  transition: scale $hover-transition;
+}
+
+.my-swiper-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#left,
+#right {
+  position: relative;
+  color: $primary-dark;
+  transform: rotate(90deg);
+  margin: 0 auto;
+  top: 1%;
+}
+
+@media (max-width: $desktop-width) {
+  .wrapper__product {
+    display: flex;
+    flex-direction: column;
+  }
+  .info__product {
+    order: 1;
+  }
+  .slider__product {
+    order: 2;
+  }
+  .info__product {
+    display: flex;
+    flex-direction: row;
+  }
+  .main-info-product {
+    text-align: center;
+  }
+}
+
+@media (min-width: $mobile-width) and (max-width: $tablet-width) {
+  #left,
+  #right {
+    display: none;
+  }
+}
+@media (max-width: $mobile-width) {
+  .mySwiper {
+    display: none;
+  }
+  #left,
+  #right {
+    display: none;
+  }
+}

@@ -1,8 +1,7 @@
 .section__slider {
   position: relative;
   background-color: $primary-light;
-  padding: 3rem 5rem;
-
+  padding: 1rem 5rem 0;
   .title__slider {
     color: $primary-dark;
     font-size: 2.5rem;
@@ -17,55 +16,56 @@
   border-right: solid $primary-light 3rem;
   border-left: solid $primary-light 3rem;
   overflow: hidden;
+  padding: 2rem 0;
 }
 .swiper-slide {
   text-align: center;
 }
+
 .swiper-slide:hover {
   text-align: center;
+  overflow: hidden;
   img {
     scale: 1.05;
   }
 }
+
 .image-slider__image img {
-  max-width: 90%;
+  max-width: 100%;
   object-fit: cover;
   transition: scale $hover-transition;
 }
 
 .name__product {
-  margin-top: 10px;
-  font-size: 1.3rem;
+  font-size: 1.7rem;
   white-space: normal;
   text-align: center;
   color: $primary-dark;
 }
 
-.swiper-button-next,
-.swiper-button-prev {
+.home-button-prev,
+.home-button-next {
   color: $primary-dark;
   top: 55%;
 }
 
-.swiper-button-prev {
+.home-button-prev {
   left: 2.5rem;
 }
-.swiper-button-next {
+.home-button-next {
   right: 2.5rem;
 }
 
 @media (min-width: $mobile-width) and (max-width: $tablet-width) {
-  .name__product {
-    font-size: 1rem;
-  }
   .title__slider {
     font-size: 1.5rem;
   }
-  .swiper-button-next,
-  .swiper-button-prev {
+  .home-button-next,
+  .home-button-prev {
     top: 65%;
   }
 }
+
 @media (max-width: $mobile-width) {
   .section__slider {
     padding: 0.5rem 0 0 0;
@@ -73,30 +73,31 @@
   .title__slider {
     font-size: 0.4rem;
   }
-  .image-slider__image img {
-    max-width: 60%;
-  }
   .swiper-container {
     border-right: none;
     border-left: none;
   }
 
+  .swiper-wrapper > * {
+    scale: 0.8;
+  }
+
   .name__product {
     font-size: 1rem;
   }
-  .swiper-button-prev {
+  .home-button-prev {
     left: 1rem;
   }
-  .swiper-button-next {
+  .home-button-next {
     right: 1rem;
   }
-  .swiper-button-next,
-  .swiper-button-prev {
+  .home-button-next,
+  .home-button-prev {
     width: 20px;
     height: 20px;
   }
-  .swiper-button-next,
-  .swiper-button-prev {
+  .home-button-next,
+  .home-button-prev {
     top: 76%;
   }
 }

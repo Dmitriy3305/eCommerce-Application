@@ -20,9 +20,6 @@ export default abstract class FormView extends AppView {
     authParams: AuthorizationParameters,
     formParams: FormParameters
   ) {
-    if (authParams.isAuthorized) {
-      throw Error('Already authorized');
-    }
     super(router, appInfo, categories, authParams);
     if (formParams.countries) this.form?.addOptions(InputDataType.Country, formParams.countries);
     this.form?.addValidation(formParams.validationCallbacks);

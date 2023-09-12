@@ -8,7 +8,10 @@ import LoginView from './view/login/login-view';
 import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
+import ProfileView from './view/profile/profile-view';
+import CatalogView from './view/catalog/catalog';
 import RegistrationView from './view/registration/registration-view';
+import ProductView from './view/product-page/product-view';
 
 export type AppConfig = {
   appName: string;
@@ -61,7 +64,9 @@ export default class App {
     };
   }
 
-  private async getFormViewParameters(link: AppLink.Login | AppLink.Register): Promise<FormParameters> {
+  private async getFormViewParameters(
+    link: AppLink.Login | AppLink.Register | AppLink.Profile
+  ): Promise<FormParameters> {
     const authCallback: FormSubmitCallback = async (data) => {
       try {
         if (link === AppLink.Login) await this.controller.authorize(data);
@@ -74,8 +79,11 @@ export default class App {
       }
     };
 
-    const countries: string[] | undefined =
-      link === AppLink.Register ? await this.controller.loadCountries() : undefined;
+    let countries: string[] | undefined;
+
+    if (link === AppLink.Register || link === AppLink.Profile) {
+      countries = await this.controller.loadCountries();
+    }
 
     return {
       validationCallbacks: this.controller.getValidationCallbacks(),
@@ -91,7 +99,7 @@ export default class App {
 
   private getDefaultRouteHandler(): RouteHandler {
     let accessFormsWhenAuthorized = false;
-    return async (link: AppLink, resource?: string, queries?: URLSearchParams) => {
+    return async (link: AppLink, resources?: string[], queries?: URLSearchParams) => {
       const categories = await this.controller.loadCategories();
       this.view?.clear();
       switch (link) {
@@ -128,9 +136,44 @@ export default class App {
           }
           break;
         }
-        case AppLink.Cart:
-        case AppLink.AboutUs:
         case AppLink.Catalog:
+          if (!resources) {
+            this.view = new CatalogView(
+              this.router,
+              this.appInfo,
+              categories,
+              this.authorizationParameters,
+              this.controller.getProductsLoader(queries)
+            );
+          } else {
+            const productKey = resources[0].replaceAll('-', ' ');
+            this.controller
+              .loadProduct(productKey)
+              .then((product) => {
+                this.view = new ProductView(this.router, this.appInfo, categories, this.authorizationParameters);
+                (this.view as ProductView).product = product;
+              })
+              .catch(() => {
+                this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
+              });
+          }
+          break;
+        case AppLink.Profile: {
+          this.controller.user?.then(async (user) => {
+            const formParams = await this.getFormViewParameters(AppLink.Profile);
+            this.view = new ProfileView(
+              this.router,
+              this.appInfo,
+              categories,
+              this.authorizationParameters,
+              formParams,
+              user
+            );
+          });
+          break;
+        }
+        case AppLink.AboutUs:
+        case AppLink.Cart:
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;

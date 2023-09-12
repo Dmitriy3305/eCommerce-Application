@@ -34,12 +34,15 @@ export default class PasswordInput extends InputDomComponent {
 
     this.toggleVisibilityButton = new DOMComponent<HTMLButtonElement>(PasswordInput.VISIBILITY_BUTTON_PARAMS);
     this.insert(InsertPositions.After, this.toggleVisibilityButton);
-
     const buttonImg = new DOMComponent<HTMLImageElement>({
       ...PasswordInput.BUTTON_IMAGE_PARAMS,
       parent: this.toggleVisibilityButton,
     });
-
+    if (globalThis.location.pathname.includes('profile')) {
+      this.toggleVisibilityButton.addClass('profile');
+    } else {
+      this.toggleVisibilityButton.removeClass('profile');
+    }
     this.toggleVisibilityButton.addEventListener(Events.Click, () => {
       const currentType = this.getAttribute('type') as InputTypes;
       if (currentType === InputTypes.Text) {

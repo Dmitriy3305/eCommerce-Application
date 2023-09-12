@@ -1,4 +1,4 @@
-export type RouteHandler = (link: AppLink, resource?: string, queries?: URLSearchParams) => void;
+export type RouteHandler = (link: AppLink, resources?: string[], queries?: URLSearchParams) => void;
 
 export enum AppLink {
   Main = 'index',
@@ -9,6 +9,7 @@ export enum AppLink {
   NotFound = 'not-found',
   AboutUs = 'about-us',
   Catalog = 'products',
+  ProductPage = 'product-page',
 }
 
 export enum LinkQueries {

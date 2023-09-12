@@ -9,6 +9,8 @@ enum FontAwesome {
   Bars = 'fa-bars',
   ChevronDown = 'fa-chevron-down',
   SignOut = 'fa-sign-out-alt',
+  Plus = 'fa-plus',
+  Search = 'fa-search',
 }
 
 export default FontAwesome;
