@@ -12,6 +12,7 @@ import ProfileView from './view/profile/profile-view';
 import CatalogView from './view/catalog/catalog';
 import RegistrationView from './view/registration/registration-view';
 import ProductView from './view/product-page/product-view';
+import AboutUsView from './view/about_as/about_us-view';
 
 export type AppConfig = {
   appName: string;
@@ -173,6 +174,8 @@ export default class App {
           break;
         }
         case AppLink.AboutUs:
+          this.view = new AboutUsView(this.router, this.appInfo, categories, this.authorizationParameters);
+          break;
         case AppLink.Cart:
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
