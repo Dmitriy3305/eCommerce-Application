@@ -1,0 +1,21 @@
+
+[
+  {
+    "name": "Alexandr",
+    "role": "chief expert on project architecture and code organization, as well as on design patterns and semantics",
+    "aboutMe": "Alexandr, 20 y.o. - I study to become a professional software engineer both at the university and the RSSchool. I love to learn something new and try to reach as high as possible!",
+    "github": "https://github.com/QuaqvaGit"
+  },
+  {
+    "name": "Veronika",
+    "role": "specialist in content generation and use of auxiliary libraries, chief expert on slider integration",
+    "aboutMe": "Veronika. 30 years old - engineer in the field of energy in railway transport with 5 years of experience, now I am on leave to care for a child. My motto is that parental leave is a time of opportunity. I'm trying to learn a new profession to work for fun",
+    "github": "https://github.com/VeronikaPavlova1993"
+  },
+  {
+    "name": "Dmitriy",
+    "role": "initiator of the creation of the 'JSCracers' development team, chief for coordination and selection of priority tasks",
+    "aboutMe": "Dmitry, 30 years old - I am engaged in startup projects and the introduction of innovations in railway transport. I dream of becoming a web developer and plan to study React and Angular in the near future",
+    "github": "https://github.com/Dmitriy3305/"
+  }
+]
