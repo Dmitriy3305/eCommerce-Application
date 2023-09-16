@@ -8,9 +8,9 @@ import LoginView from './view/login/login-view';
 import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
+import RegistrationView from './view/registration/registration-view';
 import ProfileView from './view/profile/profile-view';
 import CatalogView from './view/catalog/catalog';
-import RegistrationView from './view/registration/registration-view';
 import ProductView from './view/product-page/product-view';
 import AboutUsView from './view/about_as/about_us-view';
 
@@ -138,7 +138,7 @@ export default class App {
           break;
         }
         case AppLink.Catalog:
-          if (!resources) {
+          if (!resources || !resources[0]) {
             this.view = new CatalogView(
               this.router,
               this.appInfo,

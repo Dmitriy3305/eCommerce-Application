@@ -5,8 +5,9 @@ import './styles.scss';
 enum DropdownMenuCssClasses {
   Menu = 'dropdown-menu',
   OpenButton = 'dropdown-menu__open',
+  ExpandWrapper = 'dropdown-menu__expand-wrapper',
+  ExpandWrapperExpanded = 'dropdown-menu__expand-wrapper_expanded',
   ContentBody = 'dropdown-menu__content',
-  ContentBodyExpanded = 'dropdown-menu__content_expanded',
 }
 
 export default class DropdownMenu extends DOMComponent<HTMLDivElement> {
@@ -23,37 +24,76 @@ export default class DropdownMenu extends DOMComponent<HTMLDivElement> {
 
   protected openButton: DOMComponent<HTMLButtonElement>;
 
+  private expandWrapper: DOMComponent<HTMLElement>;
+
   protected contentBody: DOMComponent<HTMLElement>;
 
-  public constructor(title: string, fullHeight: number, content: DOMComponent<HTMLElement>[]) {
+  public constructor(
+    title: string | DOMComponent<HTMLElement>,
+    fullHeight: number,
+    content: DOMComponent<HTMLElement>[],
+    onHover = false
+  ) {
     super({
       classList: [DropdownMenuCssClasses.Menu],
     });
 
     this.openButton = new DOMComponent<HTMLButtonElement>({
       ...DropdownMenu.OPEN_BUTTON_PARAMS,
-      textContent: title,
       parent: this,
     });
-    this.openButton.addEventListener(Events.Click, () => {
-      if (this.contentBody.checkSelectorMatch(`.${DropdownMenuCssClasses.ContentBodyExpanded}`)) this.close();
-      else this.open();
+    if (typeof title === 'string') this.openButton.textContent = title;
+    else this.openButton.append(title);
+
+    this.expandWrapper = new DOMComponent<HTMLElement>({
+      classList: [DropdownMenuCssClasses.ExpandWrapper],
+      parent: this,
     });
+    this.expandWrapper.setCSSProperty(DropdownMenu.OPEN_TRANSITION_CSS_PROPERTY, DropdownMenu.OPEN_TRANSITION_PARAMS);
+    this.expandWrapper.setCSSProperty(DropdownMenu.FULL_HEIGHT_CSS_PROPERTY, `${fullHeight}px`);
 
     this.contentBody = new DOMComponent<HTMLElement>({
       classList: [DropdownMenuCssClasses.ContentBody],
-      parent: this,
+      parent: this.expandWrapper,
     });
-    this.contentBody.setCSSProperty(DropdownMenu.OPEN_TRANSITION_CSS_PROPERTY, DropdownMenu.OPEN_TRANSITION_PARAMS);
     this.contentBody.append(...content);
     this.contentBody.setCSSProperty(DropdownMenu.FULL_HEIGHT_CSS_PROPERTY, `${fullHeight}px`);
+
+    if (onHover) this.addHoverHandlers();
+    else this.addClickHandlers();
   }
 
   public open(): void {
-    this.contentBody.addClass(DropdownMenuCssClasses.ContentBodyExpanded);
+    this.expandWrapper.addClass(DropdownMenuCssClasses.ExpandWrapperExpanded);
   }
 
   public close(): void {
-    this.contentBody.removeClass(DropdownMenuCssClasses.ContentBodyExpanded);
+    this.expandWrapper.removeClass(DropdownMenuCssClasses.ExpandWrapperExpanded);
+  }
+
+  private addClickHandlers(): void {
+    this.openButton.addEventListener(Events.Click, () => {
+      if (this.expandWrapper.checkSelectorMatch(`.${DropdownMenuCssClasses.ExpandWrapperExpanded}`)) this.close();
+      else this.open();
+    });
+  }
+
+  private addHoverHandlers(): void {
+    this.openButton.addEventListener(Events.MouseOver, () => {
+      this.open();
+    });
+
+    const mouseLeaveHandler = (event: Event) => {
+      const mouseEvent = event as MouseEvent;
+      const target = DOMComponent.FromElement(mouseEvent.relatedTarget as HTMLElement);
+      if (
+        !target.checkSelectorMatch(`.${DropdownMenuCssClasses.ExpandWrapper} *`) &&
+        !target.checkSelectorMatch(`.${DropdownMenuCssClasses.ExpandWrapper}`)
+      )
+        this.close();
+    };
+
+    this.openButton.addEventListener(Events.MouseOut, mouseLeaveHandler);
+    this.expandWrapper.addEventListener(Events.MouseOut, mouseLeaveHandler);
   }
 }
