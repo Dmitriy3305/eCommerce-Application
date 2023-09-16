@@ -66,7 +66,7 @@ export default class CatalogView extends AppView {
       this.filterMenu?.setCSSProperty('top', `${this.searchbar?.pageY}px`);
       this.sortMenu?.setCSSProperty('top', `${this.searchbar?.pageY}px`);
       if (this.searchbar) {
-        this.filterMenu?.setCSSProperty('left', `${this.searchbar.pageX - 60}px`);
+        this.filterMenu?.setCSSProperty('left', `${this.searchbar.pageX - 50}px`);
         this.sortMenu?.setCSSProperty('left', `${this.searchbar.pageX + this.searchbar.width}px`);
       }
     };

@@ -7,7 +7,18 @@
 }
 
 .sort-menu .dropdown-menu__open {
-  height: 40px;
+  width: 40px;
+  aspect-ratio: 1/1;
+  margin-left: 10px;
+
+  img {
+    height: 100%;
+  }
+
+  transition: scale $hover-transition;
+  &:hover {
+    scale: 1.1;
+  }
 }
 
 .sort-menu .dropdown-menu__expand-wrapper {

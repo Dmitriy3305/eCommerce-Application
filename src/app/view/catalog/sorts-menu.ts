@@ -2,6 +2,7 @@ import DOMComponent from '../../../components/base-component';
 import DropdownMenu from '../../../components/dropdown-menu/dropdown-menu';
 import { Events, Tags } from '../../../types/dom-types/enums';
 import FontAwesome from '../../../types/font-awesome';
+import sortIconPath from '../../../assets/images/sort-icon.svg';
 
 enum SortMenuCssClasses {
   Menu = 'sort-menu',
@@ -18,6 +19,12 @@ export default class SortMenu extends DropdownMenu {
   private selectedButton?: DOMComponent<HTMLElement>;
 
   public constructor(onSelect: () => void) {
+    const openIcon = new DOMComponent<HTMLImageElement>({
+      tag: Tags.Image,
+      attributes: {
+        src: sortIconPath,
+      },
+    });
     const options = ['Name', 'Name', 'Price', 'Price'].map((option, index) => {
       const button = new DOMComponent<HTMLButtonElement>({
         tag: Tags.Button,
@@ -33,7 +40,7 @@ export default class SortMenu extends DropdownMenu {
       if (!index) button.setAttribute('disabled', '');
       return button;
     });
-    super('Sort', SortMenu.HEIGHT, options, document.documentElement.offsetWidth > 500);
+    super(openIcon, SortMenu.HEIGHT, options, document.documentElement.offsetWidth > 500);
     this.addClass(SortMenuCssClasses.Menu);
 
     this.buttons = options;
