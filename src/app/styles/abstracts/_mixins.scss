@@ -60,13 +60,15 @@
   transform: translateY(-50%);
 }
 
-@mixin button($bg-color,
-$font-color,
-$border-color: $font-color,
-$border-radius: inherit,
-$bg-hover-color: $font-color,
-$font-hover-color: $bg-color,
-$border-hover-color: $font-hover-color) {
+@mixin button(
+  $bg-color,
+  $font-color,
+  $border-color: $font-color,
+  $border-radius: inherit,
+  $bg-hover-color: $font-color,
+  $font-hover-color: $bg-color,
+  $border-hover-color: $font-hover-color
+) {
   cursor: pointer;
 
   background-color: $bg-color;
@@ -76,7 +78,8 @@ $border-hover-color: $font-hover-color) {
   border: 2px solid $border-color;
   border-radius: $border-radius;
 
-  transition: background-color $hover-transition,
+  transition:
+    background-color $hover-transition,
     color $hover-transition,
     border-color $hover-transition,
     scale $active-transition;
