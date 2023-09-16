@@ -27,7 +27,13 @@ export default abstract class BreadcrumbedView extends AppView {
       return new RoutedLink({ classList: [BreadcrumbCssClasses.BreadcrumbLink], textContent: part }, link, this.router);
     });
     links[0].textContent = 'Home';
-    links.at(-1)?.setAttribute('disabled', '');
+
+    const lastLink = links.at(-1);
+    if (lastLink) {
+      lastLink.setAttribute('disabled', '');
+      lastLink.textContent = lastLink.textContent.replaceAll('-', ' ');
+    }
+
     breadcrumbNavigation.append(...links);
     return main;
   }
