@@ -5,7 +5,7 @@ import cardInfo from './card-info.json';
 import imgAlexandr from '../../../assets/images/Alexandr.jpg';
 import imgDmitriy from '../../../assets/images/Dmitriy.jpg';
 import imgVeronika from '../../../assets/images/Veronika.jpg';
-import imgGithub from '../../../assets/images/github_logo_icon_168170.png';
+import imgGithub from '../../../assets/images/github_logo_icon_168170.svg';
 
 enum CardsCssClasses {
   Section = 'section__cards',
@@ -40,6 +40,7 @@ export default class Cards extends DOMComponent<HTMLElement> {
           alt: 'photo',
         },
       });
+
       switch (item.name) {
         case Developers.Alexandr:
           img.setAttribute('src', imgAlexandr);
@@ -71,6 +72,7 @@ export default class Cards extends DOMComponent<HTMLElement> {
         classList: [CardsCssClasses.AboutMe],
         textContent: item.aboutMe,
       });
+
       const githubLink = new DOMComponent<HTMLAnchorElement>({
         tag: Tags.Anchor,
         attributes: {
@@ -92,7 +94,8 @@ export default class Cards extends DOMComponent<HTMLElement> {
       });
 
       githubLink.append(githubImg);
-      card.append(img, name, role, aboutMe, githubLink);
+      name.append(githubLink);
+      card.append(img, name, role, aboutMe);
       this.append(card);
     });
   }
