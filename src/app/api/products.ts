@@ -25,17 +25,27 @@ export default class ProductsRepository extends Repository {
   public async filterProducts(page?: number, queries?: ProductFilterQueries): Promise<ProductProjection[]> {
     const offset = page ? (page - 1) * ProductsRepository.PRODUCTS_PER_PAGE : undefined;
 
-    const queryArgs: { offset?: number; 'filter.query'?: string; 'text.en-US'?: string } = {
+    const queryArgs: { offset?: number; 'filter.query'?: string[]; 'text.en-US'?: string; sort?: string } = {
       offset,
     };
 
+    queryArgs['filter.query'] = [];
+
     if (queries?.category) {
       const categoryId = await this.getCategoryIdByKey(queries.category);
-      queryArgs[`filter.query`] = `categories.id:"${categoryId}"`;
+      queryArgs['filter.query'].push(`categories.id:"${categoryId}"`);
     }
 
-    if (queries?.searchName) {
-      queryArgs['text.en-US'] = queries.searchName;
+    if (queries?.searchName) queryArgs['text.en-US'] = queries.searchName;
+
+    if (queries?.sortBy) queryArgs.sort = `${queries.sortBy} ${queries.sortOrder}`;
+
+    if (queries?.priceFrom || queries?.priceTo) {
+      const priceFrom = queries.priceFrom ? queries.priceFrom * 100 : '*';
+      const priceTo = queries.priceTo ? queries.priceTo * 100 : '*';
+
+      const priceFilterQuery = `variants.price.centAmount:range (${priceFrom} to ${priceTo})`;
+      queryArgs['filter.query'].push(priceFilterQuery);
     }
 
     const response = await this.apiRoot.productProjections().search().get({ queryArgs }).execute();

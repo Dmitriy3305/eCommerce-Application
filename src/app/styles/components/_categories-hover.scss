@@ -53,7 +53,7 @@
   }
 }
 
-.dropdown-menu:has(.dropdown-menu__content_expanded) {
+.dropdown-menu:has(.dropdown-menu__expand-wrapper_expanded) {
   .dropdown-menu__open i {
     transform: rotate(180deg);
   }
