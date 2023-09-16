@@ -61,6 +61,7 @@ export enum InputTypes {
   Date = 'date',
   Select = 'select',
   Option = 'option',
+  Number = 'number',
 }
 
 export enum NodeTypes {

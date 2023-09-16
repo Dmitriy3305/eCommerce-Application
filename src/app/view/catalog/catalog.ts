@@ -8,6 +8,8 @@ import ProductCard from '../product-card';
 import throttle from '../../../utils/throttle';
 import SearchBar from '../../../components/inputs/searchbar';
 import { ProductFilterQueries, ProductLoader } from '../../../types/product-loads';
+import ProductFiltersMenu from './filters-menu';
+import SortMenu from './sorts-menu';
 
 enum CatalogCssClasses {
   ProductsWrapper = 'catalog__products-wrapper',
@@ -24,6 +26,10 @@ export default class CatalogView extends AppView {
   private productsWrapper?: DOMComponent<HTMLElement>;
 
   private searchbar?: SearchBar;
+
+  private filterMenu?: ProductFiltersMenu;
+
+  private sortMenu?: SortMenu;
 
   public constructor(
     router: AppRouter,
@@ -45,13 +51,28 @@ export default class CatalogView extends AppView {
       tag: Tags.Main,
     });
 
-    this.searchbar = new SearchBar(() => {
+    const searchHandler = () => {
       this.productsWrapper?.clear();
       this.productLoader.resetOffset();
       this.addProducts();
-    });
+    };
+    this.searchbar = new SearchBar(searchHandler);
     this.searchbar.addClass(CatalogCssClasses.Searchbar);
-    main.append(this.searchbar);
+
+    this.filterMenu = new ProductFiltersMenu(searchHandler);
+    this.sortMenu = new SortMenu(searchHandler);
+    main.append(this.searchbar, this.filterMenu, this.sortMenu);
+
+    const positionHandler = () => {
+      this.filterMenu?.setCSSProperty('top', `${this.searchbar?.pageY}px`);
+      this.sortMenu?.setCSSProperty('top', `${this.searchbar?.pageY}px`);
+      if (this.searchbar) {
+        this.filterMenu?.setCSSProperty('left', `${this.searchbar.pageX - 60}px`);
+        this.sortMenu?.setCSSProperty('left', `${this.searchbar.pageX + this.searchbar.width}px`);
+      }
+    };
+    window.addEventListener('resize', positionHandler);
+    setTimeout(positionHandler);
 
     this.productsWrapper = new DOMComponent<HTMLElement>({
       ...CatalogView.PRODUCTS_WRAPPER_PARAMS,

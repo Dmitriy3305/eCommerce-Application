@@ -8,9 +8,9 @@ import LoginView from './view/login/login-view';
 import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
+import RegistrationView from './view/registration/registration-view';
 import ProfileView from './view/profile/profile-view';
 import CatalogView from './view/catalog/catalog';
-import RegistrationView from './view/registration/registration-view';
 import ProductView from './view/product-page/product-view';
 
 export type AppConfig = {
@@ -172,8 +172,8 @@ export default class App {
           });
           break;
         }
-        case AppLink.AboutUs:
         case AppLink.Cart:
+        case AppLink.AboutUs:
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;
