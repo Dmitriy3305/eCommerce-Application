@@ -1,5 +1,5 @@
 import { FormSubmitCallback } from '../components/form/form-component';
-import { InputDataType } from './input-datas';
+import { InputDataType, InputValues } from './input-datas';
 import ValidationCallback from './validation-callback';
 
 export type AppInfo = {
@@ -16,4 +16,5 @@ export type FormParameters = {
   validationCallbacks: Map<InputDataType, ValidationCallback>;
   submitCallback: FormSubmitCallback;
   countries?: string[];
+  inputValues?: InputValues;
 };

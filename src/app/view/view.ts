@@ -17,7 +17,7 @@ export default abstract class AppView {
 
   private static FOOTER: Footer | null = null;
 
-  private static MAIN: DOMComponent<HTMLElement> | null = null;
+  protected static MAIN: DOMComponent<HTMLElement> | null = null;
 
   protected body: DOMComponent<HTMLElement>;
 
