@@ -2,7 +2,7 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { Tags } from '../../../types/dom-types/enums';
 
 enum TitleCssClasses {
-  Section = 'sections__title',
+  Section = 'section__title',
   Title = 'title',
 }
 

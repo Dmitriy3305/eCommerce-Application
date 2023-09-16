@@ -5,15 +5,17 @@ import cardInfo from './card-info.json';
 import imgAlexandr from '../../../assets/images/Alexandr.jpg';
 import imgDmitriy from '../../../assets/images/Dmitriy.jpg';
 import imgVeronika from '../../../assets/images/Veronika.jpg';
+import imgGithub from '../../../assets/images/github_logo_icon_168170.png';
 
 enum CardsCssClasses {
-  Section = 'sections__cards',
+  Section = 'section__cards',
   Card = 'card',
   Img = 'card__img',
   Name = 'card__name',
   Role = 'card__role',
   AboutMe = 'card__about-me',
   GithubLink = 'card__githubLink',
+  GitgubImg = 'card__githubImg',
 }
 
 enum Developers {
@@ -69,13 +71,18 @@ export default class Cards extends DOMComponent<HTMLElement> {
         classList: [CardsCssClasses.AboutMe],
         textContent: item.aboutMe,
       });
-
       const githubLink = new DOMComponent<HTMLAnchorElement>({
         tag: Tags.Anchor,
-        classList: [CardsCssClasses.GithubLink],
-        textContent: 'link my github',
         attributes: {
           href: item.github,
+        },
+      });
+
+      const githubImg = new DOMComponent<HTMLImageElement>({
+        classList: [CardsCssClasses.GitgubImg],
+        tag: Tags.Image,
+        attributes: {
+          src: imgGithub,
         },
       });
 
@@ -83,6 +90,8 @@ export default class Cards extends DOMComponent<HTMLElement> {
         tag: Tags.Div,
         classList: [CardsCssClasses.Card],
       });
+
+      githubLink.append(githubImg);
       card.append(img, name, role, aboutMe, githubLink);
       this.append(card);
     });
