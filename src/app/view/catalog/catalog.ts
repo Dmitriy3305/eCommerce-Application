@@ -14,6 +14,7 @@ import SortMenu from './sorts-menu';
 enum CatalogCssClasses {
   ProductsWrapper = 'catalog__products-wrapper',
   Searchbar = 'catalog__searchbar',
+  NoResultsLabel = 'catalog__no-results',
 }
 
 export default class CatalogView extends AppView {
@@ -31,6 +32,8 @@ export default class CatalogView extends AppView {
 
   private sortMenu?: SortMenu;
 
+  private noResultsLabel: DOMComponent<HTMLSpanElement>;
+
   public constructor(
     router: AppRouter,
     appInfo: AppInfo,
@@ -41,6 +44,12 @@ export default class CatalogView extends AppView {
     super(router, appInfo, categories, authParams);
     this.productLoader = loader;
     this.addProducts(false);
+
+    this.noResultsLabel = new DOMComponent<HTMLSpanElement>({
+      tag: Tags.Span,
+      classList: [CatalogCssClasses.NoResultsLabel],
+      textContent: 'No results avaliable',
+    });
 
     window.addEventListener('scroll', this.scrollHandler);
     window.addEventListener('resize', this.scrollHandler);
@@ -105,6 +114,11 @@ export default class CatalogView extends AppView {
 
     const products = await this.productLoader.load(queries);
     if (withClear) this.productsWrapper?.clear();
-    this.productsWrapper?.append(...products.map((product) => new ProductCard(this.router, product, true)));
+    if (products.length) {
+      this.noResultsLabel.remove();
+      this.productsWrapper?.append(...products.map((product) => new ProductCard(this.router, product, true)));
+    } else if (withClear) {
+      this.productsWrapper?.append(this.noResultsLabel);
+    }
   }
 }
