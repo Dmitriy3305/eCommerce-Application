@@ -60,6 +60,8 @@ export default class Header extends RoutedComponent {
 
   private authParams: AuthorizationParameters;
 
+  private categories: GrouppedCategories;
+
   public constructor(
     router: AppRouter,
     appName: string,
@@ -67,6 +69,7 @@ export default class Header extends RoutedComponent {
     authParams: AuthorizationParameters
   ) {
     super(Header.HEADER_PARAMS);
+    this.categories = categories;
     this.router = router;
     this.links = new Map();
     this.authParams = authParams;
@@ -91,6 +94,10 @@ export default class Header extends RoutedComponent {
     this.categoriesDropdown = new CategoriesDropdown(router, categories, this.linkCallback);
     this.updateNavigation();
     this.burgerMenu = this.createBurgerMenu();
+  }
+
+  public get categoryGroups(): GrouppedCategories {
+    return this.categories;
   }
 
   public override switchActiveLink(url: string): void {

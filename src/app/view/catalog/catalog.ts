@@ -2,7 +2,6 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { AppInfo, AuthorizationParameters } from '../../../types/app-parameters';
 import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
-import AppView from '../view';
 import { Tags } from '../../../types/dom-types/enums';
 import ProductCard from '../product-card';
 import throttle from '../../../utils/throttle';
@@ -10,6 +9,7 @@ import SearchBar from '../../../components/inputs/searchbar';
 import { ProductLoader } from '../../../types/product-loads';
 import ProductFiltersMenu from './filters-menu';
 import SortMenu from './sorts-menu';
+import BreadcrumbedView from '../breadcrumbed-view';
 
 enum CatalogCssClasses {
   ProductsWrapper = 'catalog__products-wrapper',
@@ -17,7 +17,7 @@ enum CatalogCssClasses {
   NoResultsLabel = 'catalog__no-results',
 }
 
-export default class CatalogView extends AppView {
+export default class CatalogView extends BreadcrumbedView {
   private static PRODUCTS_WRAPPER_PARAMS: ElementParameters = {
     classList: [CatalogCssClasses.ProductsWrapper],
   };
@@ -56,9 +56,7 @@ export default class CatalogView extends AppView {
   }
 
   protected override createMain(): DOMComponent<HTMLElement> {
-    const main = new DOMComponent<HTMLElement>({
-      tag: Tags.Main,
-    });
+    const main = super.createMain();
 
     const searchHandler = () => {
       this.productLoader.resetOffset();

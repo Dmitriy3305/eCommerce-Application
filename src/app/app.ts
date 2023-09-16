@@ -137,7 +137,7 @@ export default class App {
           break;
         }
         case AppLink.Catalog:
-          if (!resources) {
+          if (!resources || !resources[0]) {
             this.view = new CatalogView(
               this.router,
               this.appInfo,
