@@ -1,33 +1,33 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
-import ItemBasket from './create-item-basket';
+import BasketItem from './create-item-basket';
 import InputDomComponent from '../../../components/inputs/input-component';
 
 enum BasketfulCssClasses {
-  WrapperBasketful = 'wrapper__basket',
-  Basketful = 'basketful',
-  TitleBasketful = 'title__basketful',
-  FormBasket = 'content__basket',
-  TableItems = 'table_basket',
-  TableHeaderProduct = 'header-product__basket',
-  TableHeaderDetails = 'header-details__basket',
-  TableHeaderQuantity = 'header-quantity__basket',
-  TableHeaderTotal = 'header-total__basket',
-  TitleTable = 'title-table__basket',
-  FooterBasket = 'footer-basket',
-  PromoBlock = 'promo__basket',
-  NamePromo = 'promo__name',
-  Board = 'board__basket',
-  BoardPromo = 'board__promo',
-  ButtonSubmitPromo = 'submit-promo',
-  PriceBlock = 'price__basket',
-  PriceNotDiscount = 'price-not-discount__basket',
-  PriceDiscount = 'price-discount__basket',
-  PriceTitle = 'price-title__basket',
-  PriceValue = 'price-value__basket',
-  PriceTitleDiscount = 'price-title-discount__basket',
-  PriceValueDiscount = 'price-value-discount__basket',
-  ButtonCheckOut = 'check-out__basket',
+  WrapperBasketful = 'basket__wrapper',
+  Basketful = 'basket__basketful',
+  TitleBasketful = 'basket__title_basketful',
+  FormBasket = 'basket__content',
+  TableItems = 'basket__table',
+  TableHeaderProduct = 'basket__header-product',
+  TableHeaderDetails = 'basket__header_details',
+  TableHeaderQuantity = 'basket__header-quantity',
+  TableHeaderTotal = 'basket__header_total',
+  TitleTable = 'basket__title_table',
+  FooterBasket = 'basket__footer',
+  PromoBlock = 'basket__promo',
+  NamePromo = 'basket__promo__name',
+  Board = 'basket__board',
+  BoardPromo = 'basket__board_promo',
+  ButtonSubmitPromo = 'basket__submit_promo',
+  PriceBlock = 'basket__price',
+  PriceNotDiscount = 'basket__price-not-discount',
+  PriceDiscount = 'basket__price-discount',
+  PriceTitle = 'basket__price-title',
+  PriceValue = 'basket__price-value',
+  PriceTitleDiscount = 'basket__price-title-discount',
+  PriceValueDiscount = 'basket__price-value-discount',
+  ButtonCheckOut = 'basket__check-out',
 }
 
 class Basketful extends DOMComponent<HTMLElement> {
@@ -57,36 +57,36 @@ class Basketful extends DOMComponent<HTMLElement> {
       tag: Tags.Form,
       classList: [BasketfulCssClasses.FormBasket],
     });
-    const tableItems = new DOMComponent<HTMLElement>({
+    const tableItems = new DOMComponent<HTMLTableElement>({
       tag: Tags.Table,
       classList: [BasketfulCssClasses.TableItems],
     });
-    const tableHead = new DOMComponent<HTMLElement>({
+    const tableHead = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableHead,
     });
-    const tableRowHead = new DOMComponent<HTMLElement>({
+    const tableRowHead = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableRow,
     });
-    const tableHeaderProduct = new DOMComponent<HTMLElement>({
+    const tableHeaderProduct = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableHeader,
       classList: [BasketfulCssClasses.TableHeaderProduct],
       textContent: 'PRODUCT',
     });
-    const tableHeaderDetails = new DOMComponent<HTMLElement>({
+    const tableHeaderDetails = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableHeader,
       classList: [BasketfulCssClasses.TableHeaderDetails],
     });
-    const tableHeaderQuantity = new DOMComponent<HTMLElement>({
+    const tableHeaderQuantity = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableHeader,
       classList: [BasketfulCssClasses.TableHeaderQuantity],
       textContent: 'QUANTITY',
     });
-    const tableHeaderTotal = new DOMComponent<HTMLElement>({
+    const tableHeaderTotal = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableHeader,
       classList: [BasketfulCssClasses.TableHeaderTotal],
       textContent: 'TOTAL',
     });
-    this.tableBody = new DOMComponent<HTMLElement>({
+    this.tableBody = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableBody,
     });
     const footerBasket = new DOMComponent<HTMLDivElement>({
@@ -169,7 +169,7 @@ class Basketful extends DOMComponent<HTMLElement> {
   }
 
   public addingNewProduct() {
-    const itemProduct = new ItemBasket();
+    const itemProduct = new BasketItem();
     this.tableBody.append(itemProduct);
   }
 }

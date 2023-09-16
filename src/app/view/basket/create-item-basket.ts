@@ -3,26 +3,26 @@ import { Events, Tags } from '../../../types/dom-types/enums';
 import ProductsRepository from '../../api/products';
 import InputDomComponent from '../../../components/inputs/input-component';
 
-enum ItemBasketCssClasses {
-  ItemBasket = 'item__basket',
-  ItemBasketImg = 'item-img__basket',
-  ImgProductBasket = 'img-product__basket',
-  ItemBasketDetails = 'item-details__basket',
-  ItemBasketName = 'item-name__basket',
-  ItemBasketQuantity = 'item-quantity__basket',
-  BlokQuantity = 'quantity__basket',
-  QuantityProduct = 'quantity-product__basket',
-  PlusProduct = 'plus-product',
-  SumProduct = 'sum-product',
-  MinusProduct = 'minus-product',
-  ItemBasketPrice = 'item-price__basket',
-  PriceProduct = 'price-product__basket',
+enum BasketItemCssClasses {
+  ItemBasket = 'basket__item',
+  ItemBasketImg = 'basket__item_img',
+  ImgProductBasket = 'basket__img_product',
+  ItemBasketDetails = 'basket__item_details',
+  ItemBasketName = 'basket__item_name',
+  ItemBasketQuantity = 'basket__item_quantity',
+  BlokQuantity = 'basket__quantity',
+  QuantityProduct = 'basket__quantity_product',
+  PlusProduct = 'basket__plus_product',
+  SumProduct = 'basket__sum_product',
+  MinusProduct = 'basket__minus_product',
+  ItemBasketPrice = 'basket__item_price',
+  PriceProduct = 'basket__price_product',
 }
 
-export default class ItemBasket extends DOMComponent<HTMLElement> {
+export default class BasketItem extends DOMComponent<HTMLElement> {
   private static ITEM_BASKET: ElementParameters = {
     tag: Tags.TableRow,
-    classList: [ItemBasketCssClasses.ItemBasket],
+    classList: [BasketItemCssClasses.ItemBasket],
   };
 
   private imgProductBasket: DOMComponent<HTMLImageElement>;
@@ -38,57 +38,57 @@ export default class ItemBasket extends DOMComponent<HTMLElement> {
   private priceProduct: InputDomComponent;
 
   constructor() {
-    super(ItemBasket.ITEM_BASKET);
+    super(BasketItem.ITEM_BASKET);
     const itemBasketImg = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableDataCell,
-      classList: [ItemBasketCssClasses.ItemBasketImg],
+      classList: [BasketItemCssClasses.ItemBasketImg],
     });
     this.imgProductBasket = new DOMComponent<HTMLImageElement>({
       tag: Tags.Image,
-      classList: [ItemBasketCssClasses.ImgProductBasket],
+      classList: [BasketItemCssClasses.ImgProductBasket],
     });
     const itemBasketDetails = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableDataCell,
-      classList: [ItemBasketCssClasses.ItemBasketDetails],
+      classList: [BasketItemCssClasses.ItemBasketDetails],
     });
     this.itemBasketName = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
-      classList: [ItemBasketCssClasses.ItemBasketName],
+      classList: [BasketItemCssClasses.ItemBasketName],
     });
     const itemBasketQuantity = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableDataCell,
-      classList: [ItemBasketCssClasses.ItemBasketQuantity],
+      classList: [BasketItemCssClasses.ItemBasketQuantity],
     });
     const quantity = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
-      classList: [ItemBasketCssClasses.BlokQuantity],
+      classList: [BasketItemCssClasses.BlokQuantity],
     });
 
     const quantityProduct = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
-      classList: [ItemBasketCssClasses.QuantityProduct],
+      classList: [BasketItemCssClasses.QuantityProduct],
     });
     this.plus = new DOMComponent<HTMLSpanElement>({
       tag: Tags.Span,
-      classList: [ItemBasketCssClasses.PlusProduct],
+      classList: [BasketItemCssClasses.PlusProduct],
       textContent: '+',
     });
     this.sum = new InputDomComponent({
-      classList: [ItemBasketCssClasses.SumProduct],
+      classList: [BasketItemCssClasses.SumProduct],
     });
     this.sum.value = `1`;
     this.minus = new DOMComponent<HTMLSpanElement>({
       tag: Tags.Span,
-      classList: [ItemBasketCssClasses.MinusProduct],
+      classList: [BasketItemCssClasses.MinusProduct],
       textContent: '-',
     });
     const itemBasketPrice = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableDataCell,
-      classList: [ItemBasketCssClasses.ItemBasketPrice],
+      classList: [BasketItemCssClasses.ItemBasketPrice],
     });
     itemBasketPrice.setAttribute('id', 'price-one-product__basket');
     this.priceProduct = new InputDomComponent({
-      classList: [ItemBasketCssClasses.PriceProduct],
+      classList: [BasketItemCssClasses.PriceProduct],
       attributes: {
         readonly: '',
       },
@@ -110,12 +110,7 @@ export default class ItemBasket extends DOMComponent<HTMLElement> {
     const shoesProduct = shoes.getProductByKey("timberland 6' premium boot");
     shoesProduct.then((result) => {
       const { images } = result.masterData.current.masterVariant;
-      let urlImage;
-      if (images === undefined) {
-        urlImage = '';
-      } else {
-        urlImage = images ? images[0].url : '';
-      }
+      let urlImage = images ? images[0].url : '';
       this.imgProductBasket.setAttribute('src', `${urlImage}`);
       this.imgProductBasket.setAttribute('alt', 'product');
       const nameArr = result.masterData.current.name;
@@ -136,18 +131,15 @@ export default class ItemBasket extends DOMComponent<HTMLElement> {
   public changeQuantity(): void {
     this.plus.addEventListener(Events.Click, () => {
       const count = +this.sum.value;
-      const price = +this.priceProduct.value.substring(1) / count;
       this.sum.value = `${count + 1}`;
-      this.priceProduct.value = `$${Math.round(+price * (+count + 1)).toFixed(2)}`;
     });
     this.minus.addEventListener(Events.Click, () => {
       const count = +this.sum.value;
       if (this.sum.value === '1') {
         this.clear();
       } else {
-        const price = +this.priceProduct.value.substring(1) / count;
         this.sum.value = `${count - 1}`;
-        this.priceProduct.value = `$${Math.round(+price * (+count - 1)).toFixed(2)}`;
+        this.priceProduct.value = ``;
       }
     });
   }

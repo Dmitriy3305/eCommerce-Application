@@ -6,9 +6,9 @@ import AppView from '../view';
 
 enum BasketCssClasses {
   Basket = 'basket',
-  EmptyBasket = 'empty__basket',
-  TitleBasket = 'title__basket',
-  ButtonCatalog = 'button__catalog',
+  EmptyBasket = 'basket__empty',
+  TitleBasket = 'basket__title',
+  ButtonCatalog = 'basket__button_catalog',
 }
 class BasketEmpty extends AppView {
   private static BASKET_PARAMS: ElementParameters = {

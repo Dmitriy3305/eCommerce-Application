@@ -23,7 +23,7 @@ export default class BasketView extends AppView {
       tag: Tags.Main,
     });
     this.main = main;
-    const basketful = new Basketful("timberland 6' premium boot");
+    const basketful = new Basketful();
     this.main?.append(basketful);
     return main;
   }
