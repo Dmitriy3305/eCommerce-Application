@@ -43,15 +43,18 @@ export default class SortMenu extends DropdownMenu {
     this.contentBody.addEventListener(Events.Click, (event: Event) => {
       const clicked = DOMComponent.FromElement(event.target as HTMLElement);
       if (clicked.checkSelectorMatch('button')) {
-        this.selectHandler();
         if (this.selectedButton) this.selectedButton.removeAttribute('disabled');
         this.selectedButton = clicked;
         this.selectedButton.setAttribute('disabled', '');
+        this.selectHandler();
       }
     });
   }
 
-  public get data(): string {
-    return this.selectedButton?.textContent || '';
+  public get data() {
+    return {
+      criteria: this.selectedButton?.textContent || '',
+      isDescending: this.selectedButton?.checkSelectorMatch(`:has(.${FontAwesome.SortDown})`),
+    };
   }
 }

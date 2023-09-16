@@ -7,7 +7,7 @@ import { Tags } from '../../../types/dom-types/enums';
 import ProductCard from '../product-card';
 import throttle from '../../../utils/throttle';
 import SearchBar from '../../../components/inputs/searchbar';
-import { ProductFilterQueries, ProductLoader } from '../../../types/product-loads';
+import { ProductLoader } from '../../../types/product-loads';
 import ProductFiltersMenu from './filters-menu';
 import SortMenu from './sorts-menu';
 
@@ -40,7 +40,7 @@ export default class CatalogView extends AppView {
   ) {
     super(router, appInfo, categories, authParams);
     this.productLoader = loader;
-    this.addProducts();
+    this.addProducts(false);
 
     window.addEventListener('scroll', this.scrollHandler);
     window.addEventListener('resize', this.scrollHandler);
@@ -52,9 +52,8 @@ export default class CatalogView extends AppView {
     });
 
     const searchHandler = () => {
-      this.productsWrapper?.clear();
       this.productLoader.resetOffset();
-      this.addProducts();
+      this.addProducts(true);
     };
     this.searchbar = new SearchBar(searchHandler);
     this.searchbar.addClass(CatalogCssClasses.Searchbar);
@@ -91,16 +90,21 @@ export default class CatalogView extends AppView {
       const position = scrolled + screenHeight;
 
       if (position >= threshold) {
-        this.addProducts();
+        this.addProducts(false);
       }
     }, 500);
   }
 
-  private async addProducts(): Promise<void> {
-    const queries: ProductFilterQueries = {
-      searchName: this.searchbar?.value || undefined,
-    };
+  private async addProducts(withClear: boolean): Promise<void> {
+    const queries = this.filterMenu?.data || {};
+    queries.searchName = this.searchbar?.value || undefined;
+
+    const sortQueries = this.sortMenu?.data;
+    queries.sortBy = sortQueries?.criteria === 'Name' ? 'name.en-US' : sortQueries?.criteria.toLowerCase();
+    queries.sortOrder = sortQueries?.isDescending ? 'desc' : 'asc';
+
     const products = await this.productLoader.load(queries);
+    if (withClear) this.productsWrapper?.clear();
     this.productsWrapper?.append(...products.map((product) => new ProductCard(this.router, product, true)));
   }
 }
