@@ -1,5 +1,10 @@
+.wrapper__basket {
+  margin: 0 4rem;
+}
+
 .basket {
   padding: 4rem 0 1rem;
+  text-align: center;
 }
 
 .title__basket {
@@ -11,7 +16,8 @@
   text-align: center;
   flex-direction: column;
 }
-.button__catalog {
+.button__catalog,
+.check-out__basket {
   border: none;
   color: $primary-light;
   background: rgb(26, 26, 26);
@@ -34,6 +40,154 @@
   position: relative;
   overflow: hidden;
 }
-.button__catalog:hover {
+
+.button__catalog:hover,
+.check-out__basket:hover {
   opacity: 1;
+}
+.submit-promo {
+  background-color: $secondary-green;
+  color: $primary-light;
+  width: 6rem;
+  height: 3rem;
+  font-size: 1.1rem;
+}
+
+.submit-promo:hover {
+  cursor: pointer;
+  background-color: $primary-dark;
+}
+.header-details__basket {
+  width: 30vw;
+}
+
+.header-product__basket {
+  width: 10vw;
+  text-align: start;
+  padding-left: 1rem;
+}
+.header-quantity__basket {
+  width: 35vw;
+  text-align: center;
+}
+.header-total__basket {
+  width: 25vw;
+  text-align: end;
+  padding-right: 1rem;
+}
+
+.header-product__basket,
+.header-details__basket,
+.header-quantity__basket,
+.header-total__basket {
+  font-size: 1rem;
+  border-bottom: 0.1rem solid $primary-dark;
+  padding-bottom: 0.5rem;
+}
+
+.img-product__basket {
+  width: 8rem;
+  height: 8rem;
+}
+.quantity__basket {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+
+.quantity-product__basket {
+  border: 0.1rem solid $primary-dark;
+  padding: 0.6rem;
+}
+
+.quantity-product__basket > span {
+  padding: 1rem;
+  font-size: 1.3rem;
+}
+
+.delete-product {
+  margin: auto 1rem;
+}
+.item__basket {
+  margin: 0.5rem 0;
+}
+.item__basket > td {
+  text-align: center;
+}
+.item-name__basket {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.price-product__basket {
+  border: none;
+  font-size: 1.3rem;
+  color: $primary-dark;
+  text-align: end;
+}
+#price-one-product__basket {
+  text-align: end;
+  padding-right: 1rem;
+}
+.minus-product:hover,
+.plus-product:hover {
+  cursor: pointer;
+}
+.sum-product {
+  text-align: center;
+  color: $primary-dark;
+  font-size: 1.3rem;
+  border: none;
+  width: 3.5rem;
+}
+
+.footer-basket {
+  display: flex;
+  border-top: 4px solid rgb(18, 48, 38);
+  padding-top: 2rem;
+}
+
+.promo__basket {
+  width: 65%;
+  text-align: start;
+  padding-left: 1rem;
+}
+.board__promo {
+  font-size: 1.5rem;
+  width: 20rem;
+  height: 3rem;
+  text-align: center;
+  padding: 0.2rem;
+  resize: none;
+}
+.board__promo::placeholder {
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.price__basket {
+  width: 35%;
+  text-align: center;
+}
+
+.price-not-discount__basket {
+  margin-bottom: 1.5rem;
+}
+.price-title__basket {
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-right: 1.5rem;
+}
+
+.price-title-discount__basket {
+  font-size: 1.4rem;
+  margin-right: 1.5rem;
+}
+
+.check-out__basket {
+  margin-top: 1rem;
+}
+.board__basket {
+  margin-top: 1rem;
+  display: flex;
 }

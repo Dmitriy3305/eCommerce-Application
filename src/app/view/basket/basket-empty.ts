@@ -1,8 +1,8 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
-import AppRouter from '../../router/router';
 import RoutedLink from '../../../components/routed-link';
 import { AppLink } from '../../router/router-types';
+import AppView from '../view';
 
 enum BasketCssClasses {
   Basket = 'basket',
@@ -10,17 +10,14 @@ enum BasketCssClasses {
   TitleBasket = 'title__basket',
   ButtonCatalog = 'button__catalog',
 }
-class BasketEmpty extends DOMComponent<HTMLElement> {
+class BasketEmpty extends AppView {
   private static BASKET_PARAMS: ElementParameters = {
-    tag: Tags.Section,
-    classList: [BasketCssClasses.Basket],
+    tag: Tags.Main,
   };
 
-  private basketEmpty: DOMComponent<HTMLDivElement>;
-
-  public constructor(router: AppRouter) {
-    super(BasketEmpty.BASKET_PARAMS);
-    this.basketEmpty = new DOMComponent<HTMLDivElement>({
+  protected override createMain(): DOMComponent<HTMLElement> {
+    const main = new DOMComponent<HTMLElement>(BasketEmpty.BASKET_PARAMS);
+    const basketEmpty = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [BasketCssClasses.EmptyBasket],
     });
@@ -38,11 +35,12 @@ class BasketEmpty extends DOMComponent<HTMLElement> {
         },
       },
       AppLink.Catalog,
-      router
+      this.router
     );
 
-    this.append(this.basketEmpty);
-    this.basketEmpty.append(titleBasket, buttonCatalog);
+    main.append(basketEmpty);
+    basketEmpty.append(titleBasket, buttonCatalog);
+    return main;
   }
 }
 

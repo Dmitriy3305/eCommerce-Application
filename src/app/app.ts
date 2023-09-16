@@ -175,6 +175,7 @@ export default class App {
         }
         case AppLink.AboutUs:
         case AppLink.Cart:
+          // this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters);
           this.view = new BasketView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;
         default:
