@@ -11,8 +11,9 @@ import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-p
 import ProfileView from './view/profile/profile-view';
 import CatalogView from './view/catalog/catalog';
 import RegistrationView from './view/Registration/registration-view';
-import ProductView from './view/product-page/product-view';
 import BasketView from './view/basket/basket-view';
+import ProductView from './view/product-page/product-view';
+
 
 export type AppConfig = {
   appName: string;
@@ -175,9 +176,9 @@ export default class App {
         }
         case AppLink.AboutUs:
         case AppLink.Cart:
-          // this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters);
-          this.view = new BasketView(this.router, this.appInfo, categories, this.authorizationParameters);
-          break;
+         // this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters);
+         this.view = new BasketView(this.router, this.appInfo, categories, this.authorizationParameters);
+         break;
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
       }
