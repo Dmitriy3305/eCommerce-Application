@@ -18,6 +18,7 @@ enum HeaderCssClasses {
   Logo = 'header__logo',
   CategoriesButton = 'header__categories-show',
   CategoriesMenu = 'header__categories-nav',
+  AboutUsLink = 'header__about-us-show',
   UserNav = 'header__user-nav',
   BurgerMenuOpen = 'header__open-burger-menu',
 }
@@ -34,6 +35,12 @@ export default class Header extends RoutedComponent {
     textContent: 'Catalog',
   };
 
+  private static ABOUTUS_LINK_PARAMS: ElementParameters = {
+    tag: Tags.Button,
+    classList: [HeaderCssClasses.AboutUsLink],
+    textContent: 'About Us',
+  };
+
   private static NOT_AUTH_LINKS = [AppLink.Main, AppLink.Catalog, AppLink.Register, AppLink.Login, AppLink.Cart];
 
   private static AUTH_LINKS = [AppLink.Main, AppLink.Catalog, AppLink.Profile, AppLink.Cart];
@@ -43,6 +50,8 @@ export default class Header extends RoutedComponent {
   private logo: HeaderLogo;
 
   private categoriesButton: DOMComponent<HTMLButtonElement>;
+
+  private aboutUsLink: DOMComponent<HTMLAnchorElement>;
 
   private hoverMenu: HoverMenu;
 
@@ -85,6 +94,16 @@ export default class Header extends RoutedComponent {
 
     this.categoriesButton = this.hoverMenu.generateHoverButton({
       ...Header.CATEGORIES_BUTTON_PARAMS,
+      parent: this,
+    });
+
+    this.aboutUsLink = new DOMComponent<HTMLAnchorElement>({
+      tag: Tags.Anchor,
+      classList: [HeaderCssClasses.AboutUsLink],
+      attributes: {
+        href: AppLink.AboutUs,
+      },
+      textContent: 'About Us',
       parent: this,
     });
 
