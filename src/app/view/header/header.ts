@@ -12,13 +12,14 @@ import HoverMenu from '../../../components/hover-menu/hover-menu';
 import { GrouppedCategories } from '../../api/products';
 import FontAwesome from '../../../types/font-awesome';
 import { AuthorizationParameters } from '../../../types/app-parameters';
+import RoutedLink from '../../../components/routed-link';
 
 enum HeaderCssClasses {
   Header = 'header',
   Logo = 'header__logo',
   CategoriesButton = 'header__categories-show',
   CategoriesMenu = 'header__categories-nav',
-  AboutUsLink = 'header__about-us-show',
+  AboutUsLink = 'header__about-us',
   UserNav = 'header__user-nav',
   BurgerMenuOpen = 'header__open-burger-menu',
 }
@@ -35,15 +36,21 @@ export default class Header extends RoutedComponent {
     textContent: 'Catalog',
   };
 
-  private static ABOUTUS_LINK_PARAMS: ElementParameters = {
-    tag: Tags.Button,
+  private static ABOUT_US_LINK_PARAMS: ElementParameters = {
     classList: [HeaderCssClasses.AboutUsLink],
     textContent: 'About Us',
   };
 
-  private static NOT_AUTH_LINKS = [AppLink.Main, AppLink.Catalog, AppLink.Register, AppLink.Login, AppLink.Cart];
+  private static NOT_AUTH_LINKS = [
+    AppLink.Main,
+    AppLink.Catalog,
+    AppLink.AboutUs,
+    AppLink.Register,
+    AppLink.Login,
+    AppLink.Cart,
+  ];
 
-  private static AUTH_LINKS = [AppLink.Main, AppLink.Catalog, AppLink.Profile, AppLink.Cart];
+  private static AUTH_LINKS = [AppLink.Main, AppLink.Catalog, AppLink.AboutUs, AppLink.Profile, AppLink.Cart];
 
   public static NAVIGATION_LINKS = Header.NOT_AUTH_LINKS.concat(Header.AUTH_LINKS);
 
@@ -97,15 +104,15 @@ export default class Header extends RoutedComponent {
       parent: this,
     });
 
-    this.aboutUsLink = new DOMComponent<HTMLAnchorElement>({
-      tag: Tags.Anchor,
-      classList: [HeaderCssClasses.AboutUsLink],
-      attributes: {
-        href: AppLink.AboutUs,
+    this.aboutUsLink = new RoutedLink(
+      {
+        ...Header.ABOUT_US_LINK_PARAMS,
+        parent: this,
       },
-      textContent: 'About Us',
-      parent: this,
-    });
+      AppLink.AboutUs,
+      this.router
+    );
+    this.links.set(AppLink.AboutUs, this.aboutUsLink);
 
     this.linkCallback = (url: string, link: DOMComponent<HTMLElement>) => {
       this.links.set(url, link);
@@ -121,7 +128,6 @@ export default class Header extends RoutedComponent {
 
   public override switchActiveLink(url: string): void {
     super.switchActiveLink(url);
-
     if (this.burgerMenu?.isShown) this.burgerMenu.hide();
   }
 
@@ -136,7 +142,9 @@ export default class Header extends RoutedComponent {
         body.append(openButton);
 
         if (this.userNavigation) {
-          this.userNavigation?.removeClass(HeaderCssClasses.UserNav);
+          this.userNavigation.removeClass(HeaderCssClasses.UserNav);
+          this.aboutUsLink.removeClass(HeaderCssClasses.AboutUsLink);
+          this.userNavigation.prepend(this.aboutUsLink);
           burgerMenu.userNavigation = this.userNavigation;
         }
 
@@ -148,7 +156,8 @@ export default class Header extends RoutedComponent {
 
         if (this.userNavigation) {
           this.userNavigation.addClass(HeaderCssClasses.UserNav);
-          this.append(this.userNavigation);
+          this.aboutUsLink.addClass(HeaderCssClasses.AboutUsLink);
+          this.append(this.aboutUsLink, this.userNavigation);
         }
 
         this.hoverMenu.append(this.categoriesDropdown);
@@ -166,7 +175,7 @@ export default class Header extends RoutedComponent {
   }
 
   private updateNavigation(): void {
-    const links = this.authParams.isAuthorized ? Header.AUTH_LINKS.slice(2) : Header.NOT_AUTH_LINKS.slice(2);
+    const links = this.authParams.isAuthorized ? Header.AUTH_LINKS.slice(3) : Header.NOT_AUTH_LINKS.slice(3);
 
     const addNavigation = () => {
       this.userNavigation = new UserNavigation(this.router, links, this.linkCallback);

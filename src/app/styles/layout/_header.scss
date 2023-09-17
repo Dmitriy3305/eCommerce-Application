@@ -9,9 +9,7 @@
   width: 100%;
   height: $header-height;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include flex($justify-content: space-between);
 
   background-color: $primary-light;
 
@@ -25,20 +23,19 @@
 }
 
 .header__logo {
-  width: max(30%, 250px);
+  width: max(30%, 200px);
   height: 100%;
 
   @include app-logo();
 
   @media (max-width: $desktop-width) {
     .logo__icon {
-      max-height: 75%;
+      max-height: 60%;
     }
   }
 }
 
-.header__categories-show,
-.header__about-us-show {
+.header__categories-show {
   border: none;
   outline: none;
   background-color: transparent;
@@ -48,19 +45,19 @@
   color: darken($secondary-light, 20);
   font-size: 1.5em;
 
-  border-bottom: 2px solid transparent;
-  transition:
-    color $hover-transition,
-    border-color $hover-transition;
-
+  transition: color $hover-transition;
   &:hover {
     color: $primary-dark;
-    border-color: $primary-dark;
   }
 
   @media (max-width: $mobile-width) {
     display: none;
   }
+}
+
+.header__about-us {
+  color: darken($secondary-light, 20);
+  font-size: 1.5em;
 }
 
 .header__user-nav {

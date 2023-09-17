@@ -136,6 +136,7 @@ export default class AppController {
       let validator: Validator;
 
       switch (type) {
+        case InputDataType.Country:
         case InputDataType.Street:
         case InputDataType.Apartment:
           validator = new NonSpecialCharactersValidator();
@@ -155,7 +156,6 @@ export default class AppController {
           break;
         case InputDataType.City:
         case InputDataType.Name:
-        case InputDataType.Country:
         default:
           validator = new OnlyLettersValidator();
           break;
