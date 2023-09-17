@@ -16,6 +16,7 @@ import createFromFieldset from '../../utils/create-client';
 import getCountryCode from '../../utils/country-code';
 import UserRepository from '../api/user';
 import { ProductFilterQueries, ProductLoader } from '../../types/product-loads';
+import CartManager from '../api/cart';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -24,10 +25,13 @@ export default class AppController {
 
   private projectSettings: ProjectSettingsRepository;
 
+  private cartManager: CartManager;
+
   public constructor() {
     this.products = new ProductsRepository();
     this.projectSettings = new ProjectSettingsRepository();
     this.authManager = new UserRepository();
+    this.cartManager = new CartManager(this.authManager);
   }
 
   public authorizeSavedUser(): void {
@@ -77,6 +81,7 @@ export default class AppController {
       Object.defineProperty(customer, 'defaultBillingAddress', { value: 0 });
     }
     await this.authManager.register(customer);
+    await this.cartManager.bindAnonymousCartToUser();
   }
 
   public async loadCategories(): Promise<GrouppedCategories> {
