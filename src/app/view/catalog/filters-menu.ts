@@ -1,4 +1,4 @@
-import filterIcon from '../../../assets/images/filter-icon.svg';
+import filterIcon from '../../../assets/images/Catalog/filter-icon.svg';
 import DropdownMenu from '../../../components/dropdown-menu/dropdown-menu';
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import InputDomComponent from '../../../components/inputs/input-component';

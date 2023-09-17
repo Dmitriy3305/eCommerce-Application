@@ -1,5 +1,5 @@
 import * as StartToastifyInstance from 'toastify-js';
-import icon from '../assets/images/info-icon.svg';
+import icon from '../assets/images/not-found/info-icon.svg';
 import 'toastify-js/src/toastify.css';
 
 enum ToastifyCssClasses {

@@ -2,10 +2,10 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { Tags } from '../../../types/dom-types/enums';
 import { AboutUsInfo } from '../../../types/dom-types/types';
 import cardInfo from './card-info.json';
-import imgAlexandr from '../../../assets/images/Alexandr.jpg';
-import imgDmitriy from '../../../assets/images/Dmitriy.jpg';
-import imgVeronika from '../../../assets/images/Veronika.jpg';
-import imgGithub from '../../../assets/images/github_logo_icon_168170.svg';
+import imgAlexandr from '../../../assets/images/about-us/Alexandr.jpg';
+import imgDmitriy from '../../../assets/images/about-us/Dmitriy.jpg';
+import imgVeronika from '../../../assets/images/about-us/Veronika.jpg';
+import imgGithub from '../../../assets/images/about-us/github_logo_icon_168170.svg';
 
 enum CardsCssClasses {
   Section = 'section__cards',

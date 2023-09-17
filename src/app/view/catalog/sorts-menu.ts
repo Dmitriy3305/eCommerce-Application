@@ -2,7 +2,7 @@ import DOMComponent from '../../../components/base-component';
 import DropdownMenu from '../../../components/dropdown-menu/dropdown-menu';
 import { Events, Tags } from '../../../types/dom-types/enums';
 import FontAwesome from '../../../types/font-awesome';
-import sortIconPath from '../../../assets/images/sort-icon.svg';
+import sortIconPath from '../../../assets/images/Catalog/sort-icon.svg';
 
 enum SortMenuCssClasses {
   Menu = 'sort-menu',
