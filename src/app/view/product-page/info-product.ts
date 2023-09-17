@@ -1,7 +1,7 @@
 import { Product } from '@commercetools/platform-sdk';
 import DOMComponent from '../../../components/base-component';
-import { Tags } from '../../../types/dom-types/enums';
 import Slider from './slider-product';
+import { Tags } from '../../../types/dom-types/enums';
 
 enum InfoCssClasses {
   InfoProduct = 'info__product',
@@ -34,6 +34,8 @@ class InfoProduct extends Slider {
   private descriptionProduct: DOMComponent<HTMLDivElement>;
 
   private containerAttributes: DOMComponent<HTMLElement>;
+
+  private btnAddCart: DOMComponent<HTMLButtonElement>;
 
   public constructor(product: Product) {
     super(product);
@@ -79,7 +81,7 @@ class InfoProduct extends Slider {
       classList: [InfoCssClasses.ContainerForAttributes],
       textContent: 'product attributes',
     });
-    const btnAddCart = new DOMComponent<HTMLButtonElement>({
+    this.btnAddCart = new DOMComponent<HTMLButtonElement>({
       tag: Tags.Button,
       classList: [InfoCssClasses.BtnAddCart],
       textContent: 'add to cart',
@@ -92,9 +94,10 @@ class InfoProduct extends Slider {
     priceContainer.append(this.containerOldPrice, this.discountProduct);
     this.containerOldPrice.append(this.priceProduct, this.discountValue);
     infoProduct.append(mainInfoProduct, this.descriptionProduct);
-    mainInfoProduct.append(this.nameProduct, priceContainer, attribute, this.containerAttributes, btnAddCart);
+    mainInfoProduct.append(this.nameProduct, priceContainer, attribute, this.containerAttributes, this.btnAddCart);
     attribute.append(this.containerAttributes);
     this.addInfoProduct(product);
+    // this.addInBasket(product);
   }
 
   public addInfoProduct(product: Product): void {
@@ -146,6 +149,14 @@ class InfoProduct extends Slider {
       }
     }
   }
+  // public addInBasket(product: Product){
+  // this.btnAddCart.addEventListener(Events.Click, () => {
+  // const addBasket = new Basketful(product);
+  // addBasket.addingNewProduct(product);
+  // console.log(product);
+  // console.log(`add basket`);
+  // })
+  // }
 }
 
 export default InfoProduct;

@@ -8,9 +8,10 @@ import LoginView from './view/login/login-view';
 import { Events } from '../types/dom-types/enums';
 import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
-import RegistrationView from './view/registration/registration-view';
 import ProfileView from './view/profile/profile-view';
 import CatalogView from './view/catalog/catalog';
+import RegistrationView from './view/Registration/registration-view';
+import BasketView from './view/basket/basket-view';
 import ProductView from './view/product-page/product-view';
 import AboutUsView from './view/about_as/about_us-view';
 
@@ -177,9 +178,11 @@ export default class App {
           this.view = new AboutUsView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;
         case AppLink.Cart:
+          // this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters);
+          this.view = new BasketView(this.router, this.appInfo, categories, this.authorizationParameters);
+          break;
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
-          break;
       }
       this.view?.switchActiveLink(link, queries);
     };
