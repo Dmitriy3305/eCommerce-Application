@@ -2,7 +2,7 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { Events, Tags } from '../../../types/dom-types/enums';
 import ProductsRepository from '../../api/products';
 import InputDomComponent from '../../../components/inputs/input-component';
-import DeleteIcon from '../../../assets/images/delete-icon.svg';
+import DeleteIcon from '../../../assets/images/basket/delete-icon.svg';
 
 enum BasketItemCssClasses {
   ItemBasket = 'basket__item',
