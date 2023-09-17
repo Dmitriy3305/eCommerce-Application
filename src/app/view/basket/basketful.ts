@@ -6,13 +6,16 @@ import InputDomComponent from '../../../components/inputs/input-component';
 enum BasketfulCssClasses {
   WrapperBasketful = 'basket__wrapper',
   Basketful = 'basket__basketful',
+  TitleBlock = 'basket__title_block',
   TitleBasketful = 'basket__title_basketful',
+  ClearCart = 'basket__clear_cart',
   FormBasket = 'basket__content',
   TableItems = 'basket__table',
   TableHeaderProduct = 'basket__header-product',
   TableHeaderDetails = 'basket__header_details',
   TableHeaderQuantity = 'basket__header-quantity',
   TableHeaderTotal = 'basket__header_total',
+  TableHeaderDelete = 'basket__header_delete',
   TitleTable = 'basket__title_table',
   FooterBasket = 'basket__footer',
   PromoBlock = 'basket__promo',
@@ -42,16 +45,27 @@ class Basketful extends DOMComponent<HTMLElement> {
 
   private valuePriceDiscount: DOMComponent<HTMLDivElement>;
 
+  private clearCart: DOMComponent<HTMLButtonElement>;
+
   constructor() {
     super(Basketful.BASKET_PARAMS);
     const wrapper = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [BasketfulCssClasses.WrapperBasketful],
     });
+    const titleBlock = new DOMComponent<HTMLDivElement>({
+      tag: Tags.Div,
+      classList: [BasketfulCssClasses.TitleBlock],
+    });
     const titleBasketful = new DOMComponent<HTMLHeadingElement>({
       tag: Tags.Heading1,
       classList: [BasketfulCssClasses.TitleBasketful],
       textContent: 'Your cart',
+    });
+    this.clearCart = new DOMComponent<HTMLButtonElement>({
+      tag: Tags.Button,
+      classList: [BasketfulCssClasses.ClearCart],
+      textContent: 'Clear cart',
     });
     const formBasket = new DOMComponent<HTMLFormElement>({
       tag: Tags.Form,
@@ -85,6 +99,10 @@ class Basketful extends DOMComponent<HTMLElement> {
       tag: Tags.TableHeader,
       classList: [BasketfulCssClasses.TableHeaderTotal],
       textContent: 'TOTAL',
+    });
+    const tableHeaderDelete = new DOMComponent<HTMLTableElement>({
+      tag: Tags.TableHeader,
+      classList: [BasketfulCssClasses.TableHeaderDelete],
     });
     this.tableBody = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableBody,
@@ -154,11 +172,18 @@ class Basketful extends DOMComponent<HTMLElement> {
     });
 
     this.append(wrapper);
-    wrapper.append(titleBasketful, formBasket, footerBasket);
+    wrapper.append(titleBlock, formBasket, footerBasket);
+    titleBlock.append(titleBasketful, this.clearCart);
     formBasket.append(tableItems);
     tableItems.append(tableHead, this.tableBody);
     tableHead.append(tableRowHead);
-    tableRowHead.append(tableHeaderProduct, tableHeaderDetails, tableHeaderQuantity, tableHeaderTotal);
+    tableRowHead.append(
+      tableHeaderProduct,
+      tableHeaderDetails,
+      tableHeaderQuantity,
+      tableHeaderTotal,
+      tableHeaderDelete
+    );
     footerBasket.append(blokPromo, blokPrice);
     blokPromo.append(namePromo, board);
     board.append(boardPromo, buttonSubmitPromo);

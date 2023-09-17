@@ -2,6 +2,7 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { Events, Tags } from '../../../types/dom-types/enums';
 import ProductsRepository from '../../api/products';
 import InputDomComponent from '../../../components/inputs/input-component';
+import DeleteIcon from '../../../assets/images/delete-icon.svg';
 
 enum BasketItemCssClasses {
   ItemBasket = 'basket__item',
@@ -17,6 +18,7 @@ enum BasketItemCssClasses {
   MinusProduct = 'basket__minus_product',
   ItemBasketPrice = 'basket__item_price',
   PriceProduct = 'basket__price_product',
+  DeleteProduct = 'basket__delete_product',
 }
 
 export default class BasketItem extends DOMComponent<HTMLElement> {
@@ -36,6 +38,8 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
   private minus: DOMComponent<HTMLSpanElement>;
 
   private priceProduct: InputDomComponent;
+
+  private deleteProduct: DOMComponent<HTMLDivElement>;
 
   constructor() {
     super(BasketItem.ITEM_BASKET);
@@ -93,16 +97,29 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
         readonly: '',
       },
     });
+    this.deleteProduct = new DOMComponent<HTMLTableElement>({
+      tag: Tags.TableDataCell,
+      classList: [BasketItemCssClasses.DeleteProduct],
+    });
+    const deleteIcon = new DOMComponent<HTMLImageElement>({
+      tag: Tags.Image,
+      attributes: {
+        src: `${DeleteIcon}`,
+        alt: 'delete',
+      },
+    });
 
-    this.append(itemBasketImg, itemBasketDetails, itemBasketQuantity, itemBasketPrice);
+    this.append(itemBasketImg, itemBasketDetails, itemBasketQuantity, itemBasketPrice, this.deleteProduct);
     itemBasketImg.append(this.imgProductBasket);
     itemBasketDetails.append(this.itemBasketName);
     itemBasketQuantity.append(quantity);
     quantity.append(quantityProduct);
     quantityProduct.append(this.minus, this.sum, this.plus);
     itemBasketPrice.append(this.priceProduct);
+    this.deleteProduct.append(deleteIcon);
     this.addInfoProduct();
     this.changeQuantity();
+    this.deleteOneProduct();
   }
 
   public addInfoProduct() {
@@ -110,7 +127,7 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
     const shoesProduct = shoes.getProductByKey("timberland 6' premium boot");
     shoesProduct.then((result) => {
       const { images } = result.masterData.current.masterVariant;
-      let urlImage = images ? images[0].url : '';
+      const urlImage = images ? images[0].url : '';
       this.imgProductBasket.setAttribute('src', `${urlImage}`);
       this.imgProductBasket.setAttribute('alt', 'product');
       const nameArr = result.masterData.current.name;
@@ -136,11 +153,17 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
     this.minus.addEventListener(Events.Click, () => {
       const count = +this.sum.value;
       if (this.sum.value === '1') {
-        this.clear();
+        this.deleteOneProduct();
       } else {
         this.sum.value = `${count - 1}`;
         this.priceProduct.value = ``;
       }
+    });
+  }
+
+  public deleteOneProduct(): void {
+    this.deleteProduct.addEventListener(Events.Click, () => {
+      this.clear();
     });
   }
 }
