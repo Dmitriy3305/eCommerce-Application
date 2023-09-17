@@ -11,6 +11,8 @@ enum FontAwesome {
   SignOut = 'fa-sign-out-alt',
   Plus = 'fa-plus',
   Search = 'fa-search',
+  SortUp = 'fa-sort-amount-up',
+  SortDown = 'fa-sort-amount-down',
 }
 
 export default FontAwesome;

@@ -2,19 +2,22 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { AppInfo, AuthorizationParameters } from '../../../types/app-parameters';
 import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
-import AppView from '../view';
 import { Tags } from '../../../types/dom-types/enums';
 import ProductCard from '../product-card';
 import throttle from '../../../utils/throttle';
 import SearchBar from '../../../components/inputs/searchbar';
-import { ProductFilterQueries, ProductLoader } from '../../../types/product-loads';
+import { ProductLoader } from '../../../types/product-loads';
+import ProductFiltersMenu from './filters-menu';
+import SortMenu from './sorts-menu';
+import BreadcrumbedView from '../breadcrumbed-view';
 
 enum CatalogCssClasses {
   ProductsWrapper = 'catalog__products-wrapper',
   Searchbar = 'catalog__searchbar',
+  NoResultsLabel = 'catalog__no-results',
 }
 
-export default class CatalogView extends AppView {
+export default class CatalogView extends BreadcrumbedView {
   private static PRODUCTS_WRAPPER_PARAMS: ElementParameters = {
     classList: [CatalogCssClasses.ProductsWrapper],
   };
@@ -25,6 +28,12 @@ export default class CatalogView extends AppView {
 
   private searchbar?: SearchBar;
 
+  private filterMenu?: ProductFiltersMenu;
+
+  private sortMenu?: SortMenu;
+
+  private noResultsLabel: DOMComponent<HTMLSpanElement>;
+
   public constructor(
     router: AppRouter,
     appInfo: AppInfo,
@@ -34,24 +43,42 @@ export default class CatalogView extends AppView {
   ) {
     super(router, appInfo, categories, authParams);
     this.productLoader = loader;
-    this.addProducts();
+    this.addProducts(false);
+
+    this.noResultsLabel = new DOMComponent<HTMLSpanElement>({
+      tag: Tags.Span,
+      classList: [CatalogCssClasses.NoResultsLabel],
+      textContent: 'No results avaliable',
+    });
 
     window.addEventListener('scroll', this.scrollHandler);
     window.addEventListener('resize', this.scrollHandler);
   }
 
   protected override createMain(): DOMComponent<HTMLElement> {
-    const main = new DOMComponent<HTMLElement>({
-      tag: Tags.Main,
-    });
+    const main = super.createMain();
 
-    this.searchbar = new SearchBar(() => {
-      this.productsWrapper?.clear();
+    const searchHandler = () => {
       this.productLoader.resetOffset();
-      this.addProducts();
-    });
+      this.addProducts(true);
+    };
+    this.searchbar = new SearchBar(searchHandler);
     this.searchbar.addClass(CatalogCssClasses.Searchbar);
-    main.append(this.searchbar);
+
+    this.filterMenu = new ProductFiltersMenu(searchHandler);
+    this.sortMenu = new SortMenu(searchHandler);
+    main.append(this.searchbar, this.filterMenu, this.sortMenu);
+
+    const positionHandler = () => {
+      this.filterMenu?.setCSSProperty('top', `${this.searchbar?.pageY}px`);
+      this.sortMenu?.setCSSProperty('top', `${this.searchbar?.pageY}px`);
+      if (this.searchbar) {
+        this.filterMenu?.setCSSProperty('left', `${this.searchbar.pageX - 50}px`);
+        this.sortMenu?.setCSSProperty('left', `${this.searchbar.pageX + this.searchbar.width}px`);
+      }
+    };
+    window.addEventListener('resize', positionHandler);
+    setTimeout(positionHandler);
 
     this.productsWrapper = new DOMComponent<HTMLElement>({
       ...CatalogView.PRODUCTS_WRAPPER_PARAMS,
@@ -70,16 +97,26 @@ export default class CatalogView extends AppView {
       const position = scrolled + screenHeight;
 
       if (position >= threshold) {
-        this.addProducts();
+        this.addProducts(false);
       }
     }, 500);
   }
 
-  private async addProducts(): Promise<void> {
-    const queries: ProductFilterQueries = {
-      searchName: this.searchbar?.value || undefined,
-    };
+  private async addProducts(withClear: boolean): Promise<void> {
+    const queries = this.filterMenu?.data || {};
+    queries.searchName = this.searchbar?.value || undefined;
+
+    const sortQueries = this.sortMenu?.data;
+    queries.sortBy = sortQueries?.criteria === 'Name' ? 'name.en-US' : sortQueries?.criteria.toLowerCase();
+    queries.sortOrder = sortQueries?.isDescending ? 'desc' : 'asc';
+
     const products = await this.productLoader.load(queries);
-    this.productsWrapper?.append(...products.map((product) => new ProductCard(this.router, product, true)));
+    if (withClear) this.productsWrapper?.clear();
+    if (products.length) {
+      this.noResultsLabel.remove();
+      this.productsWrapper?.append(...products.map((product) => new ProductCard(this.router, product, true)));
+    } else if (withClear) {
+      this.productsWrapper?.append(this.noResultsLabel);
+    }
   }
 }

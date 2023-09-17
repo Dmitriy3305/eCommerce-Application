@@ -20,7 +20,7 @@ export default class AppRouter {
   }
 
   public navigate(url: PopStateEvent | string): void {
-    if (typeof url === 'string') window.history.pushState(null, '', url);
+    if (typeof url === 'string') window.history.pushState({ prevUrl: window.location.href }, '', url);
     const urlParams = window.location.pathname.split('/').slice(1);
     const queries = new URL(window.location.href).searchParams;
 
@@ -53,5 +53,21 @@ export default class AppRouter {
 
   public getAbsoluteLink(link: string): string {
     return `${window.location.origin}/${link}`;
+  }
+
+  public get locationHistory(): string[] {
+    const queries = new URL(window.location.href).searchParams;
+
+    const parts = [AppLink.Main, ...window.location.pathname.split('/')];
+    if (window.location.href.includes('products/') && !window.location.href.endsWith('products/')) {
+      const { prevUrl } = window.history.state;
+      const prevCategory = new URL(prevUrl).searchParams;
+
+      const lastPart = parts.pop();
+      parts.push(prevCategory.get('category') || '', lastPart || '');
+    } else {
+      parts.push(queries.get('category') || '');
+    }
+    return parts.filter((link) => link);
   }
 }

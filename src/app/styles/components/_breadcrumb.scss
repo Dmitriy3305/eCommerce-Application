@@ -1,0 +1,24 @@
+$links-gap: 0.5em;
+
+.breadcrumb-navigation {
+  width: max(40vw, 200px);
+  @include flex($justify-content: flex-start, $gap: $links-gap);
+
+  margin-left: 75px;
+}
+
+.breadcrumb-navigation__link {
+  text-transform: capitalize;
+
+  &:not(:last-of-type)::after {
+    content: '>';
+    position: relative;
+    margin: 0 $links-gap;
+
+    color: $primary-dark !important;
+  }
+
+  &:hover::after {
+    scale: calc(11 / 9);
+  }
+}

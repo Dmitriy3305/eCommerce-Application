@@ -13,6 +13,7 @@ import CatalogView from './view/catalog/catalog';
 import RegistrationView from './view/Registration/registration-view';
 import BasketView from './view/basket/basket-view';
 import ProductView from './view/product-page/product-view';
+import AboutUsView from './view/about_as/about_us-view';
 
 export type AppConfig = {
   appName: string;
@@ -138,7 +139,7 @@ export default class App {
           break;
         }
         case AppLink.Catalog:
-          if (!resources) {
+          if (!resources || !resources[0]) {
             this.view = new CatalogView(
               this.router,
               this.appInfo,
@@ -174,6 +175,8 @@ export default class App {
           break;
         }
         case AppLink.AboutUs:
+          this.view = new AboutUsView(this.router, this.appInfo, categories, this.authorizationParameters);
+          break;
         case AppLink.Cart:
           // this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters);
           this.view = new BasketView(this.router, this.appInfo, categories, this.authorizationParameters);

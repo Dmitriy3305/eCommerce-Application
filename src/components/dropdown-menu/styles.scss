@@ -1,4 +1,4 @@
-.dropdown-menu__content {
+.dropdown-menu__expand-wrapper {
   height: 0;
   overflow: hidden;
   transition: height var(--open-transition);
@@ -6,4 +6,8 @@
   &_expanded {
     height: var(--full-height);
   }
+}
+
+.dropdown-menu__content {
+  height: var(--full-height);
 }
