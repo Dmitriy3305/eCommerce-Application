@@ -14,6 +14,7 @@ import RegistrationView from './view/registration/registration-view';
 import BasketView from './view/basket/basket-view';
 import ProductView from './view/product-page/product-view';
 import AboutUsView from './view/about_as/about_us-view';
+import BasketEmpty from './view/basket/basket-empty';
 
 export type AppConfig = {
   appName: string;
@@ -145,7 +146,8 @@ export default class App {
               this.appInfo,
               categories,
               this.authorizationParameters,
-              this.controller.getProductsLoader(queries)
+              await this.controller.getProductsLoader(queries),
+              this.controller.cartParameters
             );
           } else {
             const productKey = resources[0].replaceAll('-', ' ');
@@ -177,10 +179,19 @@ export default class App {
         case AppLink.AboutUs:
           this.view = new AboutUsView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;
-        case AppLink.Cart:
-          // this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters);
-          this.view = new BasketView(this.router, this.appInfo, categories, this.authorizationParameters);
+        case AppLink.Cart: {
+          const cartItems = await this.controller.cartItems;
+          this.view = cartItems.length
+            ? new BasketView(
+                this.router,
+                this.appInfo,
+                categories,
+                this.authorizationParameters,
+                this.controller.cartParameters
+              )
+            : (this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters));
           break;
+        }
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
       }

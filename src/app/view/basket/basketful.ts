@@ -2,6 +2,7 @@ import DOMComponent, { ElementParameters } from '../../../components/base-compon
 import { Tags } from '../../../types/dom-types/enums';
 import BasketItem from './create-item-basket';
 import InputDomComponent from '../../../components/inputs/input-component';
+import { CartParameters } from '../../../types/app-parameters';
 
 enum BasketfulCssClasses {
   WrapperBasketful = 'basket__wrapper',
@@ -47,7 +48,7 @@ class Basketful extends DOMComponent<HTMLElement> {
 
   private clearCart: DOMComponent<HTMLButtonElement>;
 
-  constructor() {
+  constructor(cartParameters: CartParameters) {
     super(Basketful.BASKET_PARAMS);
     const wrapper = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
@@ -190,12 +191,10 @@ class Basketful extends DOMComponent<HTMLElement> {
     blokPrice.append(priceNotDiscount, priceDiscount, buttonCheckOut);
     priceNotDiscount.append(priceTitle, this.valuePrice);
     priceDiscount.append(priceTitleDiscount, this.valuePriceDiscount);
-    this.addingNewProduct();
-  }
 
-  public addingNewProduct() {
-    const itemProduct = new BasketItem();
-    this.tableBody.append(itemProduct);
+    cartParameters.productsGetter().then((products) => {
+      products.forEach((product) => this.tableBody.append(new BasketItem(product, cartParameters)));
+    });
   }
 }
 

@@ -1,0 +1,42 @@
+.quantity-input {
+  width: 100%;
+  @include flex();
+  border-radius: inherit;
+  overflow: hidden;
+
+  & > * {
+    flex-grow: 1;
+    height: 100%;
+  }
+}
+
+.quantity-input__input {
+  text-align: center;
+
+  outline: none;
+  border: none;
+  border-top: 2px solid $primary-dark;
+  border-bottom: 2px solid $primary-dark;
+}
+
+.quantity-input__change {
+  @include button(
+    $bg-color: $primary-dark,
+    $font-color: $primary-light,
+    $border-color: $primary-dark,
+    $border-radius: 0px,
+    $border-hover-color: $primary-dark
+  );
+
+  width: 35%;
+
+  &:first-of-type {
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+  }
+
+  &:last-of-type {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+}

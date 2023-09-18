@@ -1,8 +1,10 @@
+import { ProductProjection } from '@commercetools/platform-sdk';
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Events, Tags } from '../../../types/dom-types/enums';
-import ProductsRepository from '../../api/products';
 import InputDomComponent from '../../../components/inputs/input-component';
 import DeleteIcon from '../../../assets/images/basket/delete-icon.svg';
+import { CartProduct } from '../../../types/cart-product';
+import { CartParameters } from '../../../types/app-parameters';
 
 enum BasketItemCssClasses {
   ItemBasket = 'basket__item',
@@ -27,6 +29,10 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
     classList: [BasketItemCssClasses.ItemBasket],
   };
 
+  private productId: string;
+
+  private cartParams: CartParameters;
+
   private imgProductBasket: DOMComponent<HTMLImageElement>;
 
   private itemBasketName: DOMComponent<HTMLDivElement>;
@@ -41,7 +47,7 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
 
   private deleteProduct: DOMComponent<HTMLDivElement>;
 
-  constructor() {
+  constructor(product: CartProduct, cartParameters: CartParameters) {
     super(BasketItem.ITEM_BASKET);
     const itemBasketImg = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableDataCell,
@@ -80,7 +86,7 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
     this.sum = new InputDomComponent({
       classList: [BasketItemCssClasses.SumProduct],
     });
-    this.sum.value = `1`;
+    this.sum.value = product.quantity.toString();
     this.minus = new DOMComponent<HTMLSpanElement>({
       tag: Tags.Span,
       classList: [BasketItemCssClasses.MinusProduct],
@@ -117,53 +123,58 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
     quantityProduct.append(this.minus, this.sum, this.plus);
     itemBasketPrice.append(this.priceProduct);
     this.deleteProduct.append(deleteIcon);
-    this.addInfoProduct();
-    this.changeQuantity();
-    this.deleteOneProduct();
-  }
+    this.addInfoProduct(product.product);
 
-  public addInfoProduct() {
-    const shoes = new ProductsRepository();
-    const shoesProduct = shoes.getProductByKey("timberland 6' premium boot");
-    shoesProduct.then((result) => {
-      const { images } = result.masterData.current.masterVariant;
-      const urlImage = images ? images[0].url : '';
-      this.imgProductBasket.setAttribute('src', `${urlImage}`);
-      this.imgProductBasket.setAttribute('alt', 'product');
-      const nameArr = result.masterData.current.name;
-      const name = Object.values(nameArr);
-      this.itemBasketName.addText(name[0]);
-      const { prices } = result.masterData.current.masterVariant;
-      const discountNo = prices ? prices[0].discounted : '';
-      const priceValue = prices ? prices[0].value.centAmount : '';
-      if (discountNo === undefined) {
-        this.priceProduct.value = `$${+priceValue * 0.01}`;
-      } else {
-        const discountValue = discountNo ? discountNo.value.centAmount : '';
-        this.priceProduct.value = `$${Math.round(+discountValue * 0.01).toFixed(2)}`;
-      }
+    this.productId = product.product.id;
+    this.cartParams = cartParameters;
+
+    this.addQuantityChangeHandlers();
+
+    this.deleteProduct.addEventListener(Events.Click, async () => {
+      this.delete();
     });
   }
 
-  public changeQuantity(): void {
+  public addInfoProduct(product: ProductProjection) {
+    const { images, prices } = product.masterVariant;
+    const urlImage = images ? images[0].url : '';
+    this.imgProductBasket.setAttribute('src', `${urlImage}`);
+    this.imgProductBasket.setAttribute('alt', 'product');
+    const nameArr = product.name;
+    const name = Object.values(nameArr);
+    this.itemBasketName.addText(name[0]);
+    const discountNo = prices ? prices[0].discounted : '';
+    const priceValue = prices ? prices[0].value.centAmount : '';
+    if (discountNo === undefined) {
+      this.priceProduct.value = `$${+priceValue * 0.01}`;
+    } else {
+      const discountValue = discountNo ? discountNo.value.centAmount : '';
+      this.priceProduct.value = `$${Math.round(+discountValue * 0.01).toFixed(2)}`;
+    }
+  }
+
+  public addQuantityChangeHandlers(): void {
     this.plus.addEventListener(Events.Click, () => {
       const count = +this.sum.value;
-      this.sum.value = `${count + 1}`;
+      this.cartParams.productUpdater(this.productId, count + 1).then(() => {
+        this.sum.value = `${count + 1}`;
+      });
     });
     this.minus.addEventListener(Events.Click, () => {
       const count = +this.sum.value;
       if (this.sum.value === '1') {
-        this.deleteOneProduct();
+        this.delete();
       } else {
-        this.sum.value = `${count - 1}`;
-        this.priceProduct.value = ``;
+        this.cartParams.productUpdater(this.productId, count - 1).then(() => {
+          this.sum.value = `${count - 1}`;
+          this.priceProduct.value = ``;
+        });
       }
     });
   }
 
-  public deleteOneProduct(): void {
-    this.deleteProduct.addEventListener(Events.Click, () => {
-      this.clear();
-    });
+  private async delete() {
+    await this.cartParams.productDeleter(this.productId);
+    this.remove();
   }
 }

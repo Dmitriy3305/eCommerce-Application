@@ -27,7 +27,8 @@ export default abstract class AppView {
     router: AppRouter,
     appInfo: AppInfo,
     categories: GrouppedCategories,
-    authParams: AuthorizationParameters
+    authParams: AuthorizationParameters,
+    additionalData?: unknown
   ) {
     this.router = router;
 
@@ -38,7 +39,7 @@ export default abstract class AppView {
       this.body.append(AppView.HEADER);
     }
 
-    const newMain = this.createMain();
+    const newMain = this.createMain(additionalData);
     newMain.addClass(ViewCssClasses.Main);
     if (!AppView.MAIN) {
       AppView.MAIN = newMain;
@@ -53,7 +54,7 @@ export default abstract class AppView {
     }
   }
 
-  protected abstract createMain(): DOMComponent<HTMLElement>;
+  protected abstract createMain(additionalData?: unknown): DOMComponent<HTMLElement>;
 
   public clear(): void {
     AppView.MAIN?.clear();

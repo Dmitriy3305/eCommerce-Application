@@ -1,4 +1,4 @@
-import { Cart, LineItem, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, LineItem, ProductVariant } from '@commercetools/platform-sdk';
 import Repository from './repository';
 import UserRepository from './user';
 
@@ -14,13 +14,14 @@ export default class CartManager extends Repository {
       this.createCart().then((id) => {
         this.anonymousCartId = id;
       });
+    else if (!this.userCart) this.createCart();
   }
 
   public get cart(): Promise<Cart> {
-    return this.userRepo.user ? this.userCart : this.anonymousCart;
+    return this.userRepo.userExists ? this.userCart : this.anonymousCart;
   }
 
-  public async addProduct(product: ProductProjection) {
+  public async addProduct(product: ProductVariant) {
     const cart = await this.cart;
     await this.apiRoot
       .carts()
@@ -31,8 +32,7 @@ export default class CartManager extends Repository {
           actions: [
             {
               action: 'addLineItem',
-              productId: product.id,
-              variantId: product.masterVariant.id,
+              sku: product.sku,
             },
           ],
         },
@@ -40,9 +40,9 @@ export default class CartManager extends Repository {
       .execute();
   }
 
-  public async changeProductQuantity(product: ProductProjection, quantity: number) {
+  public async changeProductQuantity(productId: string, quantity: number) {
     const cart = await this.cart;
-    const lineItem = await this.findLineItem(product);
+    const lineItem = await this.findLineItem(productId, cart);
 
     if (!lineItem) throw Error('No such product in cart');
 
@@ -64,9 +64,9 @@ export default class CartManager extends Repository {
       .execute();
   }
 
-  public async removeProduct(product: ProductProjection) {
+  public async removeProduct(productId: string) {
     const cart = await this.cart;
-    const lineItem = await this.findLineItem(product);
+    const lineItem = await this.findLineItem(productId, cart);
 
     if (!lineItem) throw Error('No such product in cart');
 
@@ -87,12 +87,14 @@ export default class CartManager extends Repository {
       .execute();
   }
 
-  public async checkPresence(product: ProductProjection): Promise<boolean> {
-    return Boolean(await this.findLineItem(product));
+  public async checkPresence(productId: string): Promise<boolean> {
+    return Boolean(await this.findLineItem(productId));
   }
 
   public async bindAnonymousCartToUser() {
     const cart = await this.anonymousCart;
+    if (!cart.lineItems.length) return;
+
     const user = await this.userRepo.user;
     const discountCodes = await Promise.all(
       cart.discountCodes
@@ -118,15 +120,38 @@ export default class CartManager extends Repository {
         },
       })
       .execute();
+    this.clearCart(await this.anonymousCart);
   }
 
-  public async clearCart() {
+  public async applyDiscount(promocode: string) {
     const cart = await this.cart;
     await this.apiRoot
       .carts()
       .withId({ ID: cart.id })
+      .post({
+        body: {
+          version: cart.version,
+          actions: [
+            {
+              action: 'addDiscountCode',
+              code: promocode,
+            },
+          ],
+        },
+      })
+      .execute();
+  }
+
+  public async clearCart(clearedCart?: Cart) {
+    const cart = clearedCart || (await this.cart);
+    await this.apiRoot
+      .carts()
+      .withId({ ID: cart?.id })
       .delete({ queryArgs: { version: cart.version } });
-    await this.createCart();
+    if (!clearedCart) {
+      const newCartId = await this.createCart();
+      if (!this.userRepo.user) this.anonymousCartId = newCartId;
+    }
   }
 
   private async createCart(): Promise<string> {
@@ -143,9 +168,9 @@ export default class CartManager extends Repository {
     return response.body.id;
   }
 
-  private async findLineItem(product: ProductProjection): Promise<LineItem | undefined> {
-    const cart = await this.cart;
-    return cart.lineItems.find((item) => item.productId === product.id);
+  private async findLineItem(productId: string, cart?: Cart): Promise<LineItem | undefined> {
+    const searchedCart = cart || (await this.cart);
+    return searchedCart.lineItems.find((item) => item.productId === productId);
   }
 
   private get userCart(): Promise<Cart> {
@@ -156,11 +181,17 @@ export default class CartManager extends Repository {
         .withCustomerId({ customerId: user.id })
         .get()
         .execute()
-        .then((response) => response.body);
+        .then((response) => response.body)
+        .catch(() => this.createCart().then(() => this.userCart));
     });
   }
 
   private get anonymousCart(): Promise<Cart> {
+    if (!this.anonymousCartId)
+      return this.createCart().then((id) => {
+        this.anonymousCartId = id;
+        return this.anonymousCart;
+      });
     return this.apiRoot
       .carts()
       .withId({ ID: this.anonymousCartId || '' })
