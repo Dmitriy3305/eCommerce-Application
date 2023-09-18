@@ -10,7 +10,7 @@ import { FormSubmitCallback } from '../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../types/app-parameters';
 import ProfileView from './view/profile/profile-view';
 import CatalogView from './view/catalog/catalog';
-import RegistrationView from './view/Registration/registration-view';
+import RegistrationView from './view/registration/registration-view';
 import BasketView from './view/basket/basket-view';
 import ProductView from './view/product-page/product-view';
 import AboutUsView from './view/about_as/about_us-view';
