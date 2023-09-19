@@ -1,5 +1,12 @@
-.quantity-input {
-  width: 100%;
+.add-to-cart-button {
+  @include button($bg-color: $primary-dark, $font-color: $primary-light);
+
+  i {
+    margin-left: 1em;
+  }
+}
+
+.add-to-cart-button__quantity-regulation {
   @include flex();
   border-radius: inherit;
   overflow: hidden;
@@ -10,7 +17,7 @@
   }
 }
 
-.quantity-input__input {
+.add-to-cart-button__quantity-regulation .quantity-input__input {
   text-align: center;
 
   outline: none;
@@ -19,7 +26,7 @@
   border-bottom: 2px solid $primary-dark;
 }
 
-.quantity-input__change {
+.add-to-cart-button__quantity-regulation .quantity-input__change {
   @include button(
     $bg-color: $primary-dark,
     $font-color: $primary-light,

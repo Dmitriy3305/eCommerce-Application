@@ -63,6 +63,8 @@ export default class App {
         this.controller.logout();
         this.view?.switchNavigationLinks();
         this.view?.showMessage('Successfully logged out');
+
+        if (this.router.currentLink === AppLink.Cart) this.router.navigate(AppLink.Cart);
       },
     };
   }
@@ -147,15 +149,21 @@ export default class App {
               categories,
               this.authorizationParameters,
               await this.controller.getProductsLoader(queries),
-              this.controller.cartParameters
+              this.controller.getCartParameters(this.router)
             );
           } else {
             const productKey = resources[0].replaceAll('-', ' ');
             this.controller
               .loadProduct(productKey)
               .then((product) => {
-                this.view = new ProductView(this.router, this.appInfo, categories, this.authorizationParameters);
-                (this.view as ProductView).product = product;
+                this.view = new ProductView(
+                  this.router,
+                  this.appInfo,
+                  categories,
+                  this.authorizationParameters,
+                  this.controller.getCartParameters(this.router),
+                  product
+                );
               })
               .catch(() => {
                 this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
@@ -187,7 +195,7 @@ export default class App {
                 this.appInfo,
                 categories,
                 this.authorizationParameters,
-                this.controller.cartParameters
+                this.controller.getCartParameters(this.router)
               )
             : (this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters));
           break;

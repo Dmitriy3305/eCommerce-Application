@@ -21,6 +21,8 @@ import CartManager from '../api/cart';
 import { CartParameters } from '../../types/app-parameters';
 import convertProjectionToCartProduct from '../../utils/product-projection-to-cart-product';
 import { CartProduct } from '../../types/cart-product';
+import AppRouter from '../router/router';
+import { AppLink } from '../router/router-types';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -98,8 +100,14 @@ export default class AppController {
     return this.projectSettings.getCountries();
   }
 
-  public loadProduct(key: string) {
-    return this.products.getProductByKey(key);
+  public async loadProduct(key: string) {
+    const product = await this.products.getProductProjectionByKey(key);
+    const cartItems = await this.cartItems;
+    try {
+      return convertProjectionToCartProduct(cartItems, product);
+    } catch {
+      return product;
+    }
   }
 
   public async getProductsLoader(urlQueries?: URLSearchParams): Promise<ProductLoader> {
@@ -140,7 +148,7 @@ export default class AppController {
     this.authManager.logout();
   }
 
-  public get cartParameters(): CartParameters {
+  public getCartParameters(router: AppRouter): CartParameters {
     if (!this.cartManager) throw Error();
     return {
       productAdder: (variant) => this.cartManager!.addProduct(variant),
@@ -153,7 +161,10 @@ export default class AppController {
         );
         return products.map((product) => convertProjectionToCartProduct(cartItems, product));
       },
-      cartClearer: () => this.cartManager!.clearCart(),
+      cartClearer: async () => {
+        await this.cartManager!.clearCart();
+        if (router.currentLink === AppLink.Cart) router.navigate(router.currentLink);
+      },
       totalPriceGetter: async () => {
         const cart = await this.cartManager!.cart;
         return cart.totalPrice.centAmount;

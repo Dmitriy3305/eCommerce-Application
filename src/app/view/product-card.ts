@@ -2,11 +2,10 @@ import { ProductProjection } from '@commercetools/platform-sdk';
 import DOMComponent, { ElementParameters } from '../../components/base-component';
 import RoutedLink from '../../components/routed-link';
 import AppRouter from '../router/router';
-import { Events, Tags } from '../../types/dom-types/enums';
-import getLinkIcon from '../../utils/get-link-icon';
+import { Tags } from '../../types/dom-types/enums';
 import { CartParameters } from '../../types/app-parameters';
-import QuantityInput from '../../components/inputs/quantity-input';
 import { CartProduct } from '../../types/cart-product';
+import AddToCartButton from './add-to-cart-btn';
 
 enum ProductCardCssClasses {
   Link = 'product-card',
@@ -62,12 +61,6 @@ export default class ProductCard extends RoutedLink {
     classList: [ProductCardCssClasses.Discount],
   };
 
-  private static CARD_BUTTON_PARAMETERS: ElementParameters = {
-    tag: Tags.Button,
-    classList: [ProductCardCssClasses.AddToCart],
-    textContent: 'Add to cart',
-  };
-
   private imageWrapper: DOMComponent<HTMLDivElement>;
 
   private image: DOMComponent<HTMLImageElement>;
@@ -82,7 +75,7 @@ export default class ProductCard extends RoutedLink {
 
   private discount?: DOMComponent<HTMLSpanElement>;
 
-  private addToCartButton?: DOMComponent<HTMLButtonElement>;
+  private addToCartButton?: AddToCartButton;
 
   public constructor(router: AppRouter, productData: ProductProjection | CartProduct, cartParameters?: CartParameters) {
     const isCartProduct = Object.prototype.hasOwnProperty.call(productData, 'quantity');
@@ -150,60 +143,8 @@ export default class ProductCard extends RoutedLink {
       this.priceWrapper.append(this.price, this.discount);
     }
 
-    cartParameters.includeChecker(product.id).then((isInCart) => {
-      if (isInCart) this.switchCartButton(cartParameters, isCartProduct, productData);
-      else {
-        this.addToCartButton = this.createAddToCartButton(cartParameters, isCartProduct, productData);
-        this.append(this.addToCartButton);
-      }
-    });
-  }
-
-  private switchCartButton(
-    cartParameters: CartParameters,
-    isCartProduct: boolean,
-    productData: CartProduct | ProductProjection
-  ) {
-    const regulation = new QuantityInput(
-      (quantity) => {
-        const id = isCartProduct ? (productData as CartProduct).product.id : (productData as ProductProjection).id;
-        console.log('Quantity:', quantity);
-        if (quantity) cartParameters.productUpdater(id, quantity);
-        else {
-          cartParameters.productDeleter(id);
-          regulation.remove();
-          if (!this.addToCartButton)
-            this.addToCartButton = this.createAddToCartButton(cartParameters, isCartProduct, productData);
-          this.append(this.addToCartButton);
-        }
-      },
-      isCartProduct ? (productData as CartProduct).quantity : 1
-    );
-    regulation.addClass(ProductCardCssClasses.CartRegulation);
-    regulation.addEventListener(Events.Click, (event: Event) => {
-      event.preventDefault();
-      event.stopPropagation();
-    });
-    this.addToCartButton?.remove();
-    this.append(regulation);
-  }
-
-  private createAddToCartButton(
-    cartParameters: CartParameters,
-    isCartProduct: boolean,
-    productData: ProductProjection | CartProduct
-  ): DOMComponent<HTMLButtonElement> {
-    const addToCartButton = new DOMComponent<HTMLButtonElement>(ProductCard.CARD_BUTTON_PARAMETERS);
-    addToCartButton.append(getLinkIcon('Catalog'));
-
-    const product = isCartProduct ? (productData as CartProduct).product : (productData as ProductProjection);
-    addToCartButton.addEventListener(Events.Click, (event: Event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      cartParameters.productAdder(product.masterVariant).then(() => {
-        this.switchCartButton(cartParameters, isCartProduct, productData);
-      });
-    });
-    return addToCartButton;
+    this.addToCartButton = new AddToCartButton(productData, cartParameters);
+    this.append(this.addToCartButton);
+    this.addToCartButton.checkCartPresence();
   }
 }

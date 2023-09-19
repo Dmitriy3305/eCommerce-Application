@@ -19,6 +19,11 @@ export default class AppRouter {
     });
   }
 
+  public get currentLink(): AppLink {
+    const urlParams = window.location.pathname.split('/').slice(1);
+    return urlParams[0] ? (urlParams[0] as AppLink) : AppLink.Main;
+  }
+
   public navigate(url: PopStateEvent | string): void {
     if (typeof url === 'string') window.history.pushState({ prevUrl: window.location.href }, '', url);
     const urlParams = window.location.pathname.split('/').slice(1);

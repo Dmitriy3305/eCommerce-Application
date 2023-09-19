@@ -1,9 +1,10 @@
-import { Product } from '@commercetools/platform-sdk';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import Swiper from 'swiper';
 import { Thumbs, Navigation, Pagination } from 'swiper/modules';
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Events, Tags } from '../../../types/dom-types/enums';
 import Slide from './createSlide';
+import { CartProduct } from '../../../types/cart-product';
 
 enum SliderCssClasses {
   wrapper = 'wrapper__product',
@@ -40,7 +41,7 @@ class Slider extends DOMComponent<HTMLElement> {
 
   private btnClose: DOMComponent<HTMLButtonElement>;
 
-  public constructor(product: Product) {
+  public constructor(productData: ProductProjection | CartProduct) {
     super(Slider.PRODUCT_WRAPPER);
     const sliderContainer = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
@@ -121,15 +122,19 @@ class Slider extends DOMComponent<HTMLElement> {
     mySwiperContainer.append(productButtonPrev, thumbsSlider, productButtonNext);
     this.sliderProduct.append(this.swiperWrapper);
     thumbsSlider.append(this.swiperWrapper2);
+
+    const isCartProduct = Object.prototype.hasOwnProperty.call(productData, 'quantity');
+    const product = isCartProduct ? (productData as CartProduct).product : (productData as ProductProjection);
+
     this.showProductSlider(product);
     this.hiddenModal();
     this.showModal(product);
   }
 
-  public showProductSlider(product: Product): void {
+  public showProductSlider(product: ProductProjection): void {
     const cards: string[] = [];
     const cardsProduct = [];
-    const { images } = product.masterData.current.masterVariant;
+    const { images } = product.masterVariant;
     let countImages;
     if (images?.length === undefined) {
       countImages = 0;
@@ -177,10 +182,10 @@ class Slider extends DOMComponent<HTMLElement> {
     this.modalProduct.addClass('modal_active');
   }
 
-  public showModal(product: Product): void {
+  public showModal(product: ProductProjection): void {
     const cards: string[] = [];
     const cardsProduct = [];
-    const variantsProduct = product.masterData.current.masterVariant.images;
+    const variantsProduct = product.masterVariant.images;
     let countVariant;
     if (variantsProduct?.length === undefined) {
       countVariant = 0;
