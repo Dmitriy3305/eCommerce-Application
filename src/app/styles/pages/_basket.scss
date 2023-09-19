@@ -16,6 +16,15 @@
   text-align: center;
   flex-direction: column;
 }
+
+.basket__title_basketful {
+  margin: 0;
+}
+
+.basket__table {
+  margin-top: 10px;
+}
+
 .basket__button_catalog,
 .basket__check-out {
   border: none;
@@ -45,18 +54,19 @@
 .basket__check-out:hover {
   opacity: 1;
 }
+
 .basket__submit_promo {
-  background-color: $secondary-green;
-  color: $primary-light;
   width: 6rem;
   height: 3rem;
   font-size: 1.1rem;
+
+  @include button(
+    $bg-color: $primary-dark,
+    $font-color: $primary-light,
+    $border-color: $primary-dark
+  );
 }
 
-.basket__submit_promo:hover {
-  cursor: pointer;
-  background-color: $primary-dark;
-}
 .basket__header_details {
   width: 30vw;
 }
@@ -214,21 +224,19 @@
   display: flex;
   justify-content: space-between;
 }
-.basket__clear_cart {
-  font-size: 1.2rem;
-  margin: auto 0;
-  height: 2.8rem;
-  padding: 0.7rem;
-  background-color: $not-valid-color;
-  color: $primary-light;
-  border-radius: 30px;
+
+.basket__clear-cart {
+  height: 40px;
+  align-self: flex-end;
+  padding: 0 5px;
+
+  @include button(
+    $bg-color: $not-valid-color,
+    $font-color: $primary-light,
+    $border-color: $not-valid-color
+  );
 }
 
-.basket__clear_cart:hover {
-  cursor: pointer;
-  background-color: $secondary-green;
-  transform: scale(1.1);
-}
 @media (min-width: $tablet-width) and (max-width: $desktop-width) {
   .basket__title {
     font-size: 1.8rem;
@@ -377,7 +385,7 @@
   .basket__header_total {
     font-size: 0.7rem;
   }
-  .basket__clear_cart {
+  .basket__clear-cart {
     font-size: 0.9rem;
     height: 2.4rem;
   }

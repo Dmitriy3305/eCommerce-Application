@@ -66,10 +66,10 @@
   text-transform: uppercase;
   text-align: center;
   padding-top: 0.5rem;
-  color: $secondary-green;
+  color: lighten($primary-dark, 10);
 }
 .container-attributes > li::marker {
-  color: $secondary-green;
+  color: lighten($primary-dark, 10);
   font-size: 2rem;
 }
 .container-attributes > li {

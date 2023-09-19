@@ -167,7 +167,7 @@ export default class AppController {
       },
       totalPriceGetter: async () => {
         const cart = await this.cartManager!.cart;
-        return cart.totalPrice.centAmount;
+        return cart.totalPrice.centAmount / 100;
       },
       discountApplyer: (promocode: string) => this.cartManager!.applyDiscount(promocode),
       includeChecker: (id: string) => this.cartManager!.checkPresence(id),

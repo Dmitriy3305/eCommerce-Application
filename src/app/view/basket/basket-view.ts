@@ -7,8 +7,6 @@ import AppRouter from '../../router/router';
 import Basketful from './basketful';
 
 export default class BasketView extends AppView {
-  private main?: DOMComponent<HTMLElement>;
-
   public constructor(
     router: AppRouter,
     appInfo: AppInfo,
@@ -23,9 +21,8 @@ export default class BasketView extends AppView {
     const main = new DOMComponent<HTMLElement>({
       tag: Tags.Main,
     });
-    this.main = main;
-    const basketful = new Basketful(cartParameters as CartParameters);
-    this.main?.append(basketful);
+    const basketful = new Basketful(cartParameters as CartParameters, this.router);
+    main.append(basketful);
     return main;
   }
 }

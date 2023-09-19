@@ -1,15 +1,17 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import { Tags } from '../../../types/dom-types/enums';
+import { Events, Tags } from '../../../types/dom-types/enums';
 import BasketItem from './create-item-basket';
 import InputDomComponent from '../../../components/inputs/input-component';
 import { CartParameters } from '../../../types/app-parameters';
+import AppRouter from '../../router/router';
+import { showErrorToastify } from '../../../utils/toastify';
 
 enum BasketfulCssClasses {
   WrapperBasketful = 'basket__wrapper',
   Basketful = 'basket__basketful',
   TitleBlock = 'basket__title_block',
   TitleBasketful = 'basket__title_basketful',
-  ClearCart = 'basket__clear_cart',
+  ClearCart = 'basket__clear-cart',
   FormBasket = 'basket__content',
   TableItems = 'basket__table',
   TableHeaderProduct = 'basket__header-product',
@@ -48,7 +50,7 @@ class Basketful extends DOMComponent<HTMLElement> {
 
   private clearCart: DOMComponent<HTMLButtonElement>;
 
-  constructor(cartParameters: CartParameters) {
+  constructor(cartParameters: CartParameters, router: AppRouter) {
     super(Basketful.BASKET_PARAMS);
     const wrapper = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
@@ -192,8 +194,25 @@ class Basketful extends DOMComponent<HTMLElement> {
     priceNotDiscount.append(priceTitle, this.valuePrice);
     priceDiscount.append(priceTitleDiscount, this.valuePriceDiscount);
 
+    this.clearCart.addEventListener(Events.Click, async () => {
+      await cartParameters.cartClearer();
+      router.reload();
+    });
+
     cartParameters.productsGetter().then((products) => {
-      products.forEach((product) => this.tableBody.append(new BasketItem(product, cartParameters)));
+      products.forEach((product) => this.tableBody.append(new BasketItem(product, router, cartParameters)));
+    });
+
+    cartParameters.totalPriceGetter().then((price) => {
+      this.valuePrice.textContent = `${price}$`;
+    });
+
+    buttonSubmitPromo.addEventListener(Events.Click, async () => {
+      try {
+        await cartParameters.discountApplyer(boardPromo.value);
+      } catch {
+        showErrorToastify('Your promocode is not valid');
+      }
     });
   }
 }

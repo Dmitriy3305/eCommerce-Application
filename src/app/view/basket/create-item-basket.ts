@@ -5,6 +5,7 @@ import InputDomComponent from '../../../components/inputs/input-component';
 import DeleteIcon from '../../../assets/images/basket/delete-icon.svg';
 import { CartProduct } from '../../../types/cart-product';
 import { CartParameters } from '../../../types/app-parameters';
+import AppRouter from '../../router/router';
 
 enum BasketItemCssClasses {
   ItemBasket = 'basket__item',
@@ -43,12 +44,16 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
 
   private minus: DOMComponent<HTMLSpanElement>;
 
-  private priceProduct: InputDomComponent;
+  private priceProduct: DOMComponent<HTMLSpanElement>;
 
   private deleteProduct: DOMComponent<HTMLDivElement>;
 
-  constructor(product: CartProduct, cartParameters: CartParameters) {
+  private cartParameters: CartParameters;
+
+  constructor(product: CartProduct, router: AppRouter, cartParameters: CartParameters) {
     super(BasketItem.ITEM_BASKET);
+    this.cartParameters = cartParameters;
+
     const itemBasketImg = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableDataCell,
       classList: [BasketItemCssClasses.ItemBasketImg],
@@ -87,22 +92,26 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
       classList: [BasketItemCssClasses.SumProduct],
     });
     this.sum.value = product.quantity.toString();
+
     this.minus = new DOMComponent<HTMLSpanElement>({
       tag: Tags.Span,
       classList: [BasketItemCssClasses.MinusProduct],
       textContent: '-',
     });
+
     const itemBasketPrice = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableDataCell,
       classList: [BasketItemCssClasses.ItemBasketPrice],
-    });
-    itemBasketPrice.setAttribute('id', 'price-one-product__basket');
-    this.priceProduct = new InputDomComponent({
-      classList: [BasketItemCssClasses.PriceProduct],
       attributes: {
-        readonly: '',
+        id: 'price-one-product__basket',
       },
     });
+    this.priceProduct = new DOMComponent<HTMLSpanElement>({
+      tag: Tags.Span,
+      classList: [BasketItemCssClasses.PriceProduct],
+      textContent: `${product.price * product.quantity}$`,
+    });
+
     this.deleteProduct = new DOMComponent<HTMLTableElement>({
       tag: Tags.TableDataCell,
       classList: [BasketItemCssClasses.DeleteProduct],
@@ -128,53 +137,52 @@ export default class BasketItem extends DOMComponent<HTMLElement> {
     this.productId = product.product.id;
     this.cartParams = cartParameters;
 
-    this.addQuantityChangeHandlers();
+    this.addQuantityChangeHandlers(router);
 
     this.deleteProduct.addEventListener(Events.Click, async () => {
-      this.delete();
+      this.delete(router);
     });
   }
 
   public addInfoProduct(product: ProductProjection) {
-    const { images, prices } = product.masterVariant;
+    const { images } = product.masterVariant;
     const urlImage = images ? images[0].url : '';
     this.imgProductBasket.setAttribute('src', `${urlImage}`);
     this.imgProductBasket.setAttribute('alt', 'product');
-    const nameArr = product.name;
-    const name = Object.values(nameArr);
-    this.itemBasketName.addText(name[0]);
-    const discountNo = prices ? prices[0].discounted : '';
-    const priceValue = prices ? prices[0].value.centAmount : '';
-    if (discountNo === undefined) {
-      this.priceProduct.value = `$${+priceValue * 0.01}`;
-    } else {
-      const discountValue = discountNo ? discountNo.value.centAmount : '';
-      this.priceProduct.value = `$${Math.round(+discountValue * 0.01).toFixed(2)}`;
-    }
+
+    this.itemBasketName.addText(product.name['en-US']);
+
+    // const discountNo = prices ? prices[0].discounted : '';
+    // const priceValue = prices ? prices[0].value.centAmount : '';
+    // // if (discountNo) {
+    // //   const discountValue = discountNo ? discountNo.value.centAmount : '';
+    // //   this.priceProduct.textContent = `${(+discountValue * 0.01).toFixed(2)}$`;
+    // // } else {
+    // //   this.priceProduct.textContent = `${(+priceValue * 0.01).toFixed(2)}$`;
+    // // }
   }
 
-  public addQuantityChangeHandlers(): void {
+  public addQuantityChangeHandlers(router: AppRouter): void {
     this.plus.addEventListener(Events.Click, () => {
       const count = +this.sum.value;
       this.cartParams.productUpdater(this.productId, count + 1).then(() => {
-        this.sum.value = `${count + 1}`;
+        router.reload();
       });
     });
     this.minus.addEventListener(Events.Click, () => {
       const count = +this.sum.value;
       if (this.sum.value === '1') {
-        this.delete();
+        this.delete(router);
       } else {
         this.cartParams.productUpdater(this.productId, count - 1).then(() => {
-          this.sum.value = `${count - 1}`;
-          this.priceProduct.value = ``;
+          router.reload();
         });
       }
     });
   }
 
-  private async delete() {
+  private async delete(router: AppRouter) {
     await this.cartParams.productDeleter(this.productId);
-    this.remove();
+    router.reload();
   }
 }

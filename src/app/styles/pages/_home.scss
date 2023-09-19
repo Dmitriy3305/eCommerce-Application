@@ -22,10 +22,10 @@
   font-size: 4rem;
   color: $primary-light;
   text-shadow:
-    1px 0 1px #000,
-    0 1px 1px #000,
-    -1px 0 1px #000,
-    0 -1px 1px #000;
+    1px 0 1px $primary-dark,
+    0 1px 1px $primary-dark,
+    -1px 0 1px $primary-dark,
+    0 -1px 1px $primary-dark;
 }
 .btn__season {
   cursor: pointer;
@@ -53,9 +53,25 @@
   }
 }
 
+.season__promo {
+  font-weight: bold;
+  color: $primary-dark;
+  font-size: 2em;
+  text-align: center;
+
+  text-shadow:
+  1px 0 1px $primary-light,
+  0 1px 1px $primary-light,
+  -1px 0 1px $primary-light,
+  0 -1px 1px $primary-light;
+}
+
 @media (min-width: $tablet-width) and (max-width: $desktop-width) {
   .title__season {
     font-size: 3rem;
+  }
+  .season__promo {
+    font-size: 1.5rem;
   }
 }
 @media (max-width: $tablet-width) {
@@ -67,6 +83,9 @@
   }
   .title__season {
     font-size: 2rem;
+  }
+  .season__promo {
+    font-size: 1rem;
   }
 }
 

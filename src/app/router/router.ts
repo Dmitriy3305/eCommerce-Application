@@ -75,4 +75,8 @@ export default class AppRouter {
     }
     return parts.filter((link) => link);
   }
+
+  public reload(): void {
+    this.navigate(this.currentLink);
+  }
 }

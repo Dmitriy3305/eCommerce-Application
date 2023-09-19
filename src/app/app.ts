@@ -64,7 +64,7 @@ export default class App {
         this.view?.switchNavigationLinks();
         this.view?.showMessage('Successfully logged out');
 
-        if (this.router.currentLink === AppLink.Cart) this.router.navigate(AppLink.Cart);
+        if (this.router.currentLink === AppLink.Cart) this.router.reload();
       },
     };
   }
