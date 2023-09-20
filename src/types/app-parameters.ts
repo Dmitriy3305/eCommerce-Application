@@ -1,6 +1,6 @@
 import { ProductVariant } from '@commercetools/platform-sdk';
 import { FormSubmitCallback } from '../components/form/form-component';
-import { InputDataType } from './input-datas';
+import { InputDataType, InputValues } from './input-datas';
 import ValidationCallback from './validation-callback';
 import { CartProduct } from './cart-product';
 
@@ -18,6 +18,7 @@ export type FormParameters = {
   validationCallbacks: Map<InputDataType, ValidationCallback>;
   submitCallback: FormSubmitCallback;
   countries?: string[];
+  inputValues?: InputValues;
 };
 
 export type CartParameters = {
