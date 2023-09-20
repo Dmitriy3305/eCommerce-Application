@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Personal Info",
+    "inputs": [
+      {
+        "label": "First Name",
+        "dataType": "name"
+      },
+      {
+        "label": "Last Name",
+        "dataType": "name"
+      },
+      {
+        "label": "Birth Date",
+        "dataType": "birthDate"
+      },
+      {
+        "label": "Email",
+        "dataType": "email"
+      },
+      {
+        "label": "Password",
+        "dataType": "password"
+      }
+    ]
+  },
+  {
+    "title": "Shipping Address",
+    "inputs": [
+      {
+        "label": "Country",
+        "dataType": "country"
+      },
+      {
+        "label": "City",
+        "dataType": "city"
+      },
+      {
+        "label": "Street",
+        "dataType": "street"
+      },
+      {
+        "label": "Building",
+        "dataType": "apartment"
+      },
+      {
+        "label": "Apartment",
+        "dataType": "apartment"
+      },
+      {
+        "label": "Postal Code",
+        "dataType": "postalCode",
+        "resourceName": "country"
+      }
+    ]
+  }
+]

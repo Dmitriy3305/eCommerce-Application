@@ -1,0 +1,3 @@
+.main:has(.form) {
+  @include flex();
+}

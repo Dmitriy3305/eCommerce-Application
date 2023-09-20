@@ -1,0 +1,156 @@
+.form__title {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.form {
+  @include flex($direction: column, $gap: 1em);
+
+  &:not(:has(fieldset)) {
+    gap: 0;
+  }
+
+  a {
+    margin-top: 10px;
+    text-decoration: underline;
+  }
+}
+
+.form__title + a {
+  margin-top: 0;
+}
+
+.form__fieldset {
+  @include flex($direction: column, $justify-content: space-around);
+  width: max(60vw, 300px);
+  padding-bottom: 20px;
+}
+
+.fieldset__title {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.form__input-wrapper {
+  @include flex($direction: column);
+
+  &:has(input[type='checkbox']) {
+    @include flex($direction: row-reverse);
+    align-self: flex-start;
+    margin-left: 0.5em;
+
+    input {
+      margin-right: 0.5em;
+    }
+  }
+
+  &:has(.form__input[required]) {
+    position: relative;
+    .form__label {
+      padding-left: 1em;
+    }
+
+    .form__label::before {
+      content: '*';
+      position: relative;
+      top: 1.7em;
+      right: 0.5em;
+      color: $not-valid-color;
+    }
+
+    .form__input {
+      position: relative;
+      right: 0.5em;
+    }
+  }
+  &:not(:has(.form__input[required])) {
+    .form__buttons-wrapper {
+      margin-left: 0.5em;
+    }
+  }
+}
+
+.form__label {
+  @include flex($direction: column, $align-items: flex-start, $gap: 5px);
+}
+.form__buttons-wrapper {
+  width: 98%;
+  order: 2;
+  @include flex($direction: row, $align-items: flex-start, $gap: 5px, $justify-content: space-between);
+}
+
+.form__input {
+  @include input-style;
+
+  &_invalid {
+    border: 2px solid $not-valid-color;
+  }
+}
+
+.form__validation-message {
+  padding-top: 10px;
+  height: 20px;
+  font-family: $font-family;
+  color: $not-valid-color;
+  text-align: center;
+  font-size: 0.9em;
+}
+.form__edit-button,
+.form__save-button {
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+  background-color: transparent;
+}
+
+.form__edit-button {
+  background-image: url('../../assets/images/profile/edit_icon.ico');
+}
+
+.form__save-button {
+  background-image: url('../../assets/images/profile/save-icon.ico');
+}
+.form__edit-button:hover,
+.form__save-button:hover {
+  cursor: pointer;
+}
+.form__submit {
+  width: max(20vw, 100px);
+  height: 40px;
+
+  margin-top: 20px;
+
+  background-color: $primary-dark;
+  color: $primary-light;
+  border: 2px solid $secondary-grey;
+  border-radius: 20px;
+
+  transition:
+    border-color $hover-transition,
+    background-color $hover-transition;
+
+  cursor: pointer;
+
+  &:hover {
+    @include shadow();
+    border-color: $secondary-light;
+    background-color: $secondary-yellow;
+  }
+
+  &:disabled {
+    cursor: default;
+    @include shadow();
+
+    border-color: $secondary-light;
+    background-color: $secondary-grey;
+  }
+}
+
+select {
+  order: 1;
+}
+.profile {
+  translate: -40% 25%;
+}

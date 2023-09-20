@@ -1,0 +1,16 @@
+$padding: 40px;
+
+.main {
+  padding: calc($header-height + $padding) 0 $padding;
+  min-height: calc(100vh - $footer-height);
+  width: 100%;
+  margin: auto;
+
+  &:not(:has(*)) {
+    height: 100vh;
+  }
+}
+
+.main:has(.section__season) {
+  padding-top: $header-height;
+}

@@ -1,0 +1,39 @@
+.searchbar {
+  padding: 20px 0 40px;
+  @include flex();
+}
+
+$icon-width: 16px;
+$icon-offset: 25px;
+
+.searchbar__input {
+  height: 40px;
+  width: max(60%, 200px);
+
+  position: relative;
+  left: calc($icon-width / 2);
+
+  border: 2px solid $secondary-light;
+  border-radius: 10px;
+  outline: 2px solid $primary-dark;
+
+  padding: 0.5em;
+  padding-right: calc($icon-width + $icon-offset);
+}
+
+.searchbar__icon {
+  cursor: pointer;
+
+  position: relative;
+  right: $icon-offset;
+
+  width: $icon-width;
+
+  transition: scale $hover-transition;
+  &:hover {
+    scale: 1.1;
+  }
+  &:active {
+    scale: 0.9;
+  }
+}

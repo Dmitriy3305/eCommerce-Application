@@ -1,0 +1,20 @@
+.main:has(.catalog__products-wrapper) {
+  padding-bottom: 60px;
+}
+
+.catalog__products-wrapper {
+  @include flex($gap: 20px 30px);
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.catalog__no-results {
+  width: 250px;
+  height: 1.5em;
+
+  font-size: 1.5em;
+  text-align: center;
+  translate: 0 200%;
+
+  @include centered($width: 250px, $height: 1.5em);
+}

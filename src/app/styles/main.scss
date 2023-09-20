@@ -1,0 +1,40 @@
+@import 'abstracts/colors';
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+@import 'base/reset';
+@import 'base/typography';
+@import 'base/animations';
+
+@import 'components/link';
+@import 'components/categories-hover';
+@import 'components/navigation-burger-menu';
+@import 'components/slider-section';
+@import 'components/checkbox';
+@import 'components/password-input';
+@import 'components/form';
+@import 'components/toastify';
+@import 'components/product-card';
+@import 'components/add-to-cart-button';
+@import 'components/searchbar';
+@import 'components/products-filter';
+@import 'components/products-sort';
+@import 'components/info_product';
+@import 'components/modal-slider';
+@import 'components/slider-product-page';
+@import 'components/breadcrumb';
+
+@import 'swiper/swiper-bundle.css';
+
+@import 'layout/header';
+@import 'layout/main';
+@import 'layout/footer';
+
+@import 'pages/home';
+@import 'pages/not-found';
+@import 'pages/login-registration';
+@import 'pages/catalog';
+@import 'pages/basket';
+@import 'pages/about-us';
+
+@import 'vendors/normalize.css';
