@@ -3,13 +3,13 @@ import FormComponent from '../../components/form/form-component';
 import { AppInfo, AuthorizationParameters, FormParameters } from '../../types/app-parameters';
 import { Tags } from '../../types/dom-types/enums';
 import { FormFieldsetData } from '../../types/dom-types/types';
-import { InputData, InputDataType } from '../../types/input-datas';
+import { InputData, InputDataType, InputValues } from '../../types/input-datas';
 import { GrouppedCategories } from '../api/products';
 import AppRouter from '../router/router';
 import AppView from './view';
 
 export default abstract class FormView extends AppView {
-  protected form?: FormComponent;
+  protected form: FormComponent;
 
   protected abstract get formTitle(): string;
 
@@ -21,22 +21,22 @@ export default abstract class FormView extends AppView {
     formParams: FormParameters
   ) {
     super(router, appInfo, categories, authParams);
-    if (formParams.countries) this.form?.addOptions(InputDataType.Country, formParams.countries);
-    this.form?.addValidation(formParams.validationCallbacks);
-    this.form?.addSubmitCallback(formParams.submitCallback);
+    this.form = this.createForm(formParams.inputValues);
+    FormView.MAIN?.append(this.form);
+
+    if (formParams.countries) this.form.addOptions(InputDataType.Country, formParams.countries);
+    this.form.addValidation(formParams.validationCallbacks);
+    this.form.addSubmitCallback(formParams.submitCallback);
   }
 
   protected createMain(): DOMComponent<HTMLElement> {
-    const main = new DOMComponent<HTMLElement>({
+    return new DOMComponent<HTMLElement>({
       tag: Tags.Main,
     });
-    this.form = this.createForm();
-    main.append(this.form);
-    return main;
   }
 
-  protected createForm(): FormComponent {
-    const inputs = this.createInputs();
+  protected createForm(inputValues?: InputValues): FormComponent {
+    const inputs = this.createInputs(inputValues);
     const form = new FormComponent({
       inputs,
       title: this.formTitle,
@@ -45,5 +45,5 @@ export default abstract class FormView extends AppView {
     return form;
   }
 
-  abstract createInputs(): (InputData | FormFieldsetData)[];
+  abstract createInputs(inputValues?: InputValues): (InputData | FormFieldsetData)[];
 }

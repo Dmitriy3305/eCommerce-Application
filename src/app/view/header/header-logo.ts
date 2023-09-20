@@ -1,6 +1,6 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
 import { Tags } from '../../../types/dom-types/enums';
-import logo from '../../../assets/images/logo-color.svg';
+import logo from '../../../assets/images/header/logo-color.svg';
 import { AppLink } from '../../router/router-types';
 import AppRouter from '../../router/router';
 import RoutedLink from '../../../components/routed-link';

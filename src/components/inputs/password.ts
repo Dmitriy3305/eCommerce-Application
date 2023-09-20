@@ -1,8 +1,8 @@
 import { Events, InputTypes, InsertPositions, Tags } from '../../types/dom-types/enums';
 import DOMComponent, { ElementParameters } from '../base-component';
 import InputDomComponent from './input-component';
-import hidePasswordIcon from '../../assets/images/icon_hidePassword.svg';
-import showPasswordIcon from '../../assets/images/icon_showPassword.svg';
+import hidePasswordIcon from '../../assets/images/profile/icon_hidePassword.svg';
+import showPasswordIcon from '../../assets/images/profile/icon_showPassword.svg';
 
 enum PasswordCssClasses {
   VisibilityButton = 'password__toggle-visibility-button',

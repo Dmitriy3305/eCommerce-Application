@@ -16,7 +16,6 @@ export default class RegistrationView extends FormView {
 
   override createForm(): FormComponent {
     const form = super.createForm();
-    form.setAttribute('novalidate', '');
 
     const billingAddressTemplate = structuredClone(this.createInputs()[1]) as FormFieldsetData;
     billingAddressTemplate.title = 'Billing Address';

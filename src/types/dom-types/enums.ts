@@ -26,6 +26,13 @@ export enum Tags {
   Option = 'option',
   UnorderedList = 'ul',
   ListElement = 'li',
+  Table = 'table',
+  TableHead = 'thead',
+  TableRow = 'tr',
+  TableHeader = 'th',
+  TableBody = 'tbody',
+  TableDataCell = 'td',
+  Textarea = 'textarea',
 }
 
 export enum Events {
@@ -61,6 +68,7 @@ export enum InputTypes {
   Date = 'date',
   Select = 'select',
   Option = 'option',
+  Number = 'number',
 }
 
 export enum NodeTypes {

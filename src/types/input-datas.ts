@@ -12,6 +12,10 @@ export enum InputDataType {
   Toggle = 'toggle',
 }
 
+export type InputValues = {
+  [label: string]: string | undefined;
+};
+
 export type InputData = {
   label: string;
   dataType: InputDataType;

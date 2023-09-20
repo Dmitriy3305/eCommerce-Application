@@ -64,6 +64,10 @@ export default class DOMComponent<T extends HTMLElement> {
     return this.element.offsetWidth;
   }
 
+  public get pageX(): number {
+    return this.element.offsetLeft;
+  }
+
   public get pageY(): number {
     return this.element.offsetTop;
   }

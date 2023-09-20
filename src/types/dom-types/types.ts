@@ -10,3 +10,18 @@ export type FormFieldsetData = {
   inputs: InputData[];
   title?: string;
 };
+
+export type InfoCards = {
+  imgSrc: string;
+  name: string;
+  position: string;
+  aboutMe: string;
+  github: string;
+};
+
+export type AboutUsInfo = {
+  name: string;
+  role: string;
+  aboutMe: string;
+  github: string;
+};

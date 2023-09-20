@@ -15,10 +15,14 @@
 @import 'components/form';
 @import 'components/toastify';
 @import 'components/product-card';
+@import 'components/add-to-cart-button';
 @import 'components/searchbar';
+@import 'components/products-filter';
+@import 'components/products-sort';
 @import 'components/info_product';
 @import 'components/modal-slider';
 @import 'components/slider-product-page';
+@import 'components/breadcrumb';
 
 @import 'swiper/swiper-bundle.css';
 
@@ -30,5 +34,7 @@
 @import 'pages/not-found';
 @import 'pages/login-registration';
 @import 'pages/catalog';
+@import 'pages/basket';
+@import 'pages/about-us';
 
 @import 'vendors/normalize.css';

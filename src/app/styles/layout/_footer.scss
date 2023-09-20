@@ -6,6 +6,10 @@
 
   color: $primary-light;
   background-color: $primary-dark;
+
+  @media (max-width: $mobile-width) {
+    height: 250px;
+  }
 }
 
 .footer__shop-info-links {

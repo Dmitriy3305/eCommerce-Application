@@ -56,6 +56,10 @@
     font-size: 1em;
     text-align: left;
   }
+
+  .dropdown-menu__expand-wrapper {
+    overflow-y: auto;
+  }
 }
 
 .mobile-menu__logo {

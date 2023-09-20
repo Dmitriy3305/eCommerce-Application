@@ -3,7 +3,9 @@ import DOMComponent, { ElementParameters } from '../../components/base-component
 import RoutedLink from '../../components/routed-link';
 import AppRouter from '../router/router';
 import { Tags } from '../../types/dom-types/enums';
-import getLinkIcon from '../../utils/get-link-icon';
+import { CartParameters } from '../../types/app-parameters';
+import { CartProduct } from '../../types/cart-product';
+import AddToCartButton from './add-to-cart-btn';
 
 enum ProductCardCssClasses {
   Link = 'product-card',
@@ -16,6 +18,7 @@ enum ProductCardCssClasses {
   Price = 'product-card__price',
   Discount = 'product-card__discount',
   AddToCart = 'product-card__add-to-cart',
+  CartRegulation = 'product-card__cart-regulation',
 }
 
 export default class ProductCard extends RoutedLink {
@@ -53,15 +56,9 @@ export default class ProductCard extends RoutedLink {
     classList: [ProductCardCssClasses.Price],
   };
 
-  private static DISCROUNT_PARAMETERS: ElementParameters = {
+  private static DISCOUNT_PARAMETERS: ElementParameters = {
     tag: Tags.Span,
     classList: [ProductCardCssClasses.Discount],
-  };
-
-  private static CARD_BUTTON_PARAMETERS: ElementParameters = {
-    tag: Tags.Button,
-    classList: [ProductCardCssClasses.AddToCart],
-    textContent: 'Add to cart',
   };
 
   private imageWrapper: DOMComponent<HTMLDivElement>;
@@ -78,9 +75,11 @@ export default class ProductCard extends RoutedLink {
 
   private discount?: DOMComponent<HTMLSpanElement>;
 
-  private addToCartButton?: DOMComponent<HTMLButtonElement>;
+  private addToCartButton?: AddToCartButton;
 
-  public constructor(router: AppRouter, product: ProductProjection, withAdditionals = false) {
+  public constructor(router: AppRouter, productData: ProductProjection | CartProduct, cartParameters?: CartParameters) {
+    const isCartProduct = Object.prototype.hasOwnProperty.call(productData, 'quantity');
+    const product = isCartProduct ? (productData as CartProduct).product : (productData as ProductProjection);
     super(ProductCard.CARD_PARAMETERS, router.buildProductUrl(product), router);
 
     this.imageWrapper = new DOMComponent<HTMLDivElement>(ProductCard.IMAGE_WRAPPER_PARAMS);
@@ -100,42 +99,52 @@ export default class ProductCard extends RoutedLink {
     });
     this.append(this.name);
 
-    if (withAdditionals) {
-      this.addClass(ProductCardCssClasses.CardFull);
+    if (cartParameters) this.addAdditionals(productData, isCartProduct, cartParameters);
+  }
 
-      const description = product.description
-        ? `${product.description['en-US'].substring(0, ProductCard.DESCRIPTION_CHARS_LIMTIT).replace('&#x27;', "'")}...`
-        : '';
+  private addAdditionals(
+    productData: ProductProjection | CartProduct,
+    isCartProduct: boolean,
+    cartParameters: CartParameters
+  ) {
+    this.addClass(ProductCardCssClasses.CardFull);
 
-      this.description = new DOMComponent<HTMLSpanElement>({
-        ...ProductCard.DESCRIPTION_PARAMETERS,
-        textContent: description,
+    const product = isCartProduct ? (productData as CartProduct).product : (productData as ProductProjection);
+
+    const variant = product.masterVariant;
+
+    const description = product.description
+      ? `${product.description['en-US'].substring(0, ProductCard.DESCRIPTION_CHARS_LIMTIT).replace('&#x27;', "'")}...`
+      : '';
+
+    this.description = new DOMComponent<HTMLSpanElement>({
+      ...ProductCard.DESCRIPTION_PARAMETERS,
+      textContent: description,
+    });
+    this.append(this.description);
+
+    const price = variant.prices ? variant.prices[0] : null;
+
+    if (price) {
+      this.price = new DOMComponent({
+        ...ProductCard.PRICE_PARAMETERS,
+        textContent: `${price.value.centAmount / 100}$`,
       });
-      this.append(this.description);
-
-      const price = variant.prices ? variant.prices[0] : null;
-
-      if (price) {
-        this.price = new DOMComponent({
-          ...ProductCard.PRICE_PARAMETERS,
-          textContent: `${price.value.centAmount / 100}$`,
-        });
-        this.append(this.price);
-      }
-
-      if (price && price.discounted && this.price) {
-        this.priceWrapper = new DOMComponent(ProductCard.PRICE_WRAPPER_PARAMS);
-        this.discount = new DOMComponent({
-          ...ProductCard.DISCROUNT_PARAMETERS,
-          textContent: `${price.discounted.value.centAmount / 100}$`,
-        });
-        this.append(this.priceWrapper);
-        this.priceWrapper.append(this.price, this.discount);
-      }
-
-      this.addToCartButton = new DOMComponent<HTMLButtonElement>(ProductCard.CARD_BUTTON_PARAMETERS);
-      this.addToCartButton.append(getLinkIcon('Catalog'));
-      this.append(this.addToCartButton);
+      this.append(this.price);
     }
+
+    if (price && price.discounted && this.price) {
+      this.priceWrapper = new DOMComponent(ProductCard.PRICE_WRAPPER_PARAMS);
+      this.discount = new DOMComponent({
+        ...ProductCard.DISCOUNT_PARAMETERS,
+        textContent: `${price.discounted.value.centAmount / 100}$`,
+      });
+      this.append(this.priceWrapper);
+      this.priceWrapper.append(this.price, this.discount);
+    }
+
+    this.addToCartButton = new AddToCartButton(productData, cartParameters);
+    this.append(this.addToCartButton);
+    this.addToCartButton.checkCartPresence();
   }
 }

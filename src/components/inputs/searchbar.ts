@@ -47,4 +47,16 @@ export default class SearchBar extends DOMComponent<HTMLElement> {
   public get value(): string {
     return this.searchInput.value;
   }
+
+  override get pageX(): number {
+    return this.searchInput.pageX;
+  }
+
+  override get pageY(): number {
+    return this.searchInput.pageY;
+  }
+
+  override get width(): number {
+    return this.searchInput.width;
+  }
 }
