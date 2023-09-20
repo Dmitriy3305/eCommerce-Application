@@ -1,7 +1,10 @@
-import { Product } from '@commercetools/platform-sdk';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import DOMComponent from '../../../components/base-component';
 import Slider from './slider-product';
 import { Tags } from '../../../types/dom-types/enums';
+import { CartParameters } from '../../../types/app-parameters';
+import AddToCartButton from '../add-to-cart-btn';
+import { CartProduct } from '../../../types/cart-product';
 
 enum InfoCssClasses {
   InfoProduct = 'info__product',
@@ -35,10 +38,10 @@ class InfoProduct extends Slider {
 
   private containerAttributes: DOMComponent<HTMLElement>;
 
-  private btnAddCart: DOMComponent<HTMLButtonElement>;
+  private btnAddCart: AddToCartButton;
 
-  public constructor(product: Product) {
-    super(product);
+  public constructor(productData: ProductProjection | CartProduct, cartParameters: CartParameters) {
+    super(productData);
     const infoProduct = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [InfoCssClasses.InfoProduct],
@@ -81,11 +84,7 @@ class InfoProduct extends Slider {
       classList: [InfoCssClasses.ContainerForAttributes],
       textContent: 'product attributes',
     });
-    this.btnAddCart = new DOMComponent<HTMLButtonElement>({
-      tag: Tags.Button,
-      classList: [InfoCssClasses.BtnAddCart],
-      textContent: 'add to cart',
-    });
+    this.btnAddCart = new AddToCartButton(productData, cartParameters);
     this.descriptionProduct = new DOMComponent<HTMLDivElement>({
       tag: Tags.Div,
       classList: [InfoCssClasses.DescriptionProduct],
@@ -95,16 +94,18 @@ class InfoProduct extends Slider {
     this.containerOldPrice.append(this.priceProduct, this.discountValue);
     infoProduct.append(mainInfoProduct, this.descriptionProduct);
     mainInfoProduct.append(this.nameProduct, priceContainer, attribute, this.containerAttributes, this.btnAddCart);
+    this.btnAddCart.checkCartPresence();
     attribute.append(this.containerAttributes);
+
+    const isCartProduct = Object.prototype.hasOwnProperty.call(productData, 'quantity');
+    const product = isCartProduct ? (productData as CartProduct).product : (productData as ProductProjection);
     this.addInfoProduct(product);
-    // this.addInBasket(product);
   }
 
-  public addInfoProduct(product: Product): void {
-    const dataProduct = product.masterData.current;
-    const name = Object.values(dataProduct.name);
-    this.nameProduct.addText(`${name[0]}`);
-    const { prices } = dataProduct.masterVariant;
+  public addInfoProduct(product: ProductProjection): void {
+    const { name } = product;
+    this.nameProduct.addText(`${name['en-US']}`);
+    const { prices } = product.masterVariant;
     const discountNo = prices ? prices[0].discounted : '';
     const priseValue = prices ? prices[0].value.centAmount : '';
     if (discountNo === undefined) {
@@ -121,7 +122,7 @@ class InfoProduct extends Slider {
       this.discountValue.addText(`- ${100 - (+discountValue * 100) / +priseValue}%`);
     }
 
-    const desc = dataProduct.description;
+    const desc = product.description;
     let descProduct;
     if (desc === undefined) {
       descProduct = '';
@@ -131,7 +132,7 @@ class InfoProduct extends Slider {
     const descriptionMod = `${descProduct[0]}`.replaceAll(`&#x27;`, `'`);
     this.descriptionProduct.addText(descriptionMod);
 
-    const attributes = dataProduct?.masterVariant?.attributes;
+    const { attributes } = product.masterVariant;
     if (attributes) {
       for (let i = 0; i < attributes.length; i += 1) {
         const attribute = new DOMComponent<HTMLLIElement>({
@@ -149,14 +150,6 @@ class InfoProduct extends Slider {
       }
     }
   }
-  // public addInBasket(product: Product){
-  // this.btnAddCart.addEventListener(Events.Click, () => {
-  // const addBasket = new Basketful(product);
-  // addBasket.addingNewProduct(product);
-  // console.log(product);
-  // console.log(`add basket`);
-  // })
-  // }
 }
 
 export default InfoProduct;

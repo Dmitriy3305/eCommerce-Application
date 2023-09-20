@@ -75,13 +75,8 @@ $border-radius: 30px;
   color: $not-valid-color;
 }
 
-.product-card__add-to-cart {
+.product-card .add-to-cart-button,
+.product-card .add-to-cart-button__quantity-regulation {
   width: 100%;
   height: 10%;
-
-  @include button($bg-color: $primary-dark, $font-color: $primary-light);
-
-  i {
-    margin-left: 1em;
-  }
 }

@@ -1,5 +1,5 @@
 import DOMComponent, { ElementParameters } from '../../../components/base-component';
-import { AppInfo, AuthorizationParameters } from '../../../types/app-parameters';
+import { AppInfo, AuthorizationParameters, CartParameters } from '../../../types/app-parameters';
 import { GrouppedCategories } from '../../api/products';
 import AppRouter from '../../router/router';
 import { Tags } from '../../../types/dom-types/enums';
@@ -24,6 +24,8 @@ export default class CatalogView extends BreadcrumbedView {
 
   private productLoader: ProductLoader;
 
+  private cartParameters: CartParameters;
+
   private productsWrapper?: DOMComponent<HTMLElement>;
 
   private searchbar?: SearchBar;
@@ -39,10 +41,13 @@ export default class CatalogView extends BreadcrumbedView {
     appInfo: AppInfo,
     categories: GrouppedCategories,
     authParams: AuthorizationParameters,
-    loader: ProductLoader
+    loader: ProductLoader,
+    cartParameters: CartParameters
   ) {
     super(router, appInfo, categories, authParams);
     this.productLoader = loader;
+    this.cartParameters = cartParameters;
+
     this.addProducts(false);
 
     this.noResultsLabel = new DOMComponent<HTMLSpanElement>({
@@ -114,7 +119,9 @@ export default class CatalogView extends BreadcrumbedView {
     if (withClear) this.productsWrapper?.clear();
     if (products.length) {
       this.noResultsLabel.remove();
-      this.productsWrapper?.append(...products.map((product) => new ProductCard(this.router, product, true)));
+      this.productsWrapper?.append(
+        ...products.map((product) => new ProductCard(this.router, product, this.cartParameters))
+      );
     } else if (withClear) {
       this.productsWrapper?.append(this.noResultsLabel);
     }

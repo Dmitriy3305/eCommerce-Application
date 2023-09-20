@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { BaseAddress, CustomerDraft, ProductProjection } from '@commercetools/platform-sdk';
 import ProductsRepository, { GrouppedCategories } from '../api/products';
 import { InputDataType } from '../../types/input-datas';
@@ -16,6 +17,12 @@ import createFromFieldset from '../../utils/create-client';
 import getCountryCode from '../../utils/country-code';
 import UserRepository from '../api/user';
 import { ProductFilterQueries, ProductLoader } from '../../types/product-loads';
+import CartManager from '../api/cart';
+import { CartParameters } from '../../types/app-parameters';
+import convertProjectionToCartProduct from '../../utils/product-projection-to-cart-product';
+import { CartProduct } from '../../types/cart-product';
+import AppRouter from '../router/router';
+import { AppLink } from '../router/router-types';
 
 export default class AppController {
   private products: ProductsRepository;
@@ -23,6 +30,8 @@ export default class AppController {
   private authManager: UserRepository;
 
   private projectSettings: ProjectSettingsRepository;
+
+  private cartManager?: CartManager;
 
   public constructor() {
     this.products = new ProductsRepository();
@@ -32,15 +41,17 @@ export default class AppController {
 
   public authorizeSavedUser(): void {
     this.authManager.checkToken();
+    this.cartManager = new CartManager(this.authManager);
   }
 
   public get isAuthorized(): boolean {
-    return this.authManager.user !== null;
+    return this.authManager.userExists;
   }
 
   public async authorize(loginFormData: (InputSubmitData | FieldsetSubmitData)[]) {
     const [email, password] = (loginFormData as InputSubmitData[]).map((data) => data.value);
     await this.authManager.authorize(email, password);
+    this.cartManager?.bindAnonymousCartToUser();
   }
 
   public async register(registerFormData: (InputSubmitData | FieldsetSubmitData)[]) {
@@ -77,6 +88,7 @@ export default class AppController {
       Object.defineProperty(customer, 'defaultBillingAddress', { value: 0 });
     }
     await this.authManager.register(customer);
+    await this.cartManager?.bindAnonymousCartToUser();
   }
 
   public async loadCategories(): Promise<GrouppedCategories> {
@@ -88,20 +100,33 @@ export default class AppController {
     return this.projectSettings.getCountries();
   }
 
-  public loadProduct(key: string) {
-    return this.products.getProductByKey(key);
+  public async loadProduct(key: string) {
+    const product = await this.products.getProductProjectionByKey(key);
+    const cartItems = await this.cartItems;
+    try {
+      return convertProjectionToCartProduct(cartItems, product);
+    } catch {
+      return product;
+    }
   }
 
-  public getProductsLoader(urlQueries?: URLSearchParams): ProductLoader {
+  public async getProductsLoader(urlQueries?: URLSearchParams): Promise<ProductLoader> {
     let page = 1;
+    const cart = await this.cartManager?.cart;
     return {
       load: async (filterQueries?) => {
         const queries: ProductFilterQueries = filterQueries || {};
         queries.category = urlQueries?.get('category') || undefined;
 
-        let products: ProductProjection[] = [];
+        let products: (ProductProjection | CartProduct)[] = [];
         try {
-          products = await this.products.filterProducts(page, queries);
+          products = (await this.products.filterProducts(page, queries)).map((product) => {
+            try {
+              return convertProjectionToCartProduct(cart?.lineItems || [], product);
+            } catch {
+              return product;
+            }
+          });
         } catch {
           products = await this.products.filterProducts(page);
         } finally {
@@ -123,6 +148,36 @@ export default class AppController {
     this.authManager.logout();
   }
 
+  public getCartParameters(router: AppRouter): CartParameters {
+    if (!this.cartManager) throw Error();
+    return {
+      productAdder: (variant) => this.cartManager!.addProduct(variant),
+      productDeleter: (id) => this.cartManager!.removeProduct(id),
+      productUpdater: (id, quantity) => this.cartManager!.changeProductQuantity(id, quantity),
+      productsGetter: async () => {
+        const cartItems = (await this.cartManager!.cart).lineItems;
+        const products = await Promise.all(
+          cartItems.map((item) => this.products.getProductProjectionById(item.productId))
+        );
+        return products.map((product) => convertProjectionToCartProduct(cartItems, product));
+      },
+      cartClearer: async () => {
+        await this.cartManager!.clearCart();
+        if (router.currentLink === AppLink.Cart) router.navigate(router.currentLink);
+      },
+      totalPriceGetter: async () => {
+        const cart = await this.cartManager!.cart;
+        return cart.totalPrice.centAmount / 100;
+      },
+      discountApplyer: (promocode: string) => this.cartManager!.applyDiscount(promocode),
+      includeChecker: (id: string) => this.cartManager!.checkPresence(id),
+    };
+  }
+
+  public get cartItems() {
+    return this.cartManager?.cart.then((cart) => cart.lineItems) || [];
+  }
+
   public getValidationCallbacks(): Map<InputDataType, ValidationCallback> {
     const callbacks = new Map();
     Object.values(InputDataType).forEach((value) => {
@@ -136,6 +191,7 @@ export default class AppController {
       let validator: Validator;
 
       switch (type) {
+        case InputDataType.Country:
         case InputDataType.Street:
         case InputDataType.Apartment:
           validator = new NonSpecialCharactersValidator();
@@ -155,7 +211,6 @@ export default class AppController {
           break;
         case InputDataType.City:
         case InputDataType.Name:
-        case InputDataType.Country:
         default:
           validator = new OnlyLettersValidator();
           break;

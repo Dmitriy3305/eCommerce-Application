@@ -1,4 +1,5 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
+import { CartProduct } from './cart-product';
 
 export type ProductFilterQueries = Partial<{
   category: string;
@@ -10,6 +11,6 @@ export type ProductFilterQueries = Partial<{
 }>;
 
 export type ProductLoader = {
-  load: (filterQueries?: ProductFilterQueries) => Promise<ProductProjection[]>;
+  load: (filterQueries?: ProductFilterQueries) => Promise<(ProductProjection | CartProduct)[]>;
   resetOffset: () => void;
 };

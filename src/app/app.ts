@@ -14,6 +14,7 @@ import RegistrationView from './view/registration/registration-view';
 import BasketView from './view/basket/basket-view';
 import ProductView from './view/product-page/product-view';
 import AboutUsView from './view/about_as/about_us-view';
+import BasketEmpty from './view/basket/basket-empty';
 
 export type AppConfig = {
   appName: string;
@@ -62,6 +63,8 @@ export default class App {
         this.controller.logout();
         this.view?.switchNavigationLinks();
         this.view?.showMessage('Successfully logged out');
+
+        if (this.router.currentLink === AppLink.Cart) this.router.reload();
       },
     };
   }
@@ -145,15 +148,22 @@ export default class App {
               this.appInfo,
               categories,
               this.authorizationParameters,
-              this.controller.getProductsLoader(queries)
+              await this.controller.getProductsLoader(queries),
+              this.controller.getCartParameters(this.router)
             );
           } else {
             const productKey = resources[0].replaceAll('-', ' ');
             this.controller
               .loadProduct(productKey)
               .then((product) => {
-                this.view = new ProductView(this.router, this.appInfo, categories, this.authorizationParameters);
-                (this.view as ProductView).product = product;
+                this.view = new ProductView(
+                  this.router,
+                  this.appInfo,
+                  categories,
+                  this.authorizationParameters,
+                  this.controller.getCartParameters(this.router),
+                  product
+                );
               })
               .catch(() => {
                 this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
@@ -177,10 +187,19 @@ export default class App {
         case AppLink.AboutUs:
           this.view = new AboutUsView(this.router, this.appInfo, categories, this.authorizationParameters);
           break;
-        case AppLink.Cart:
-          // this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters);
-          this.view = new BasketView(this.router, this.appInfo, categories, this.authorizationParameters);
+        case AppLink.Cart: {
+          const cartItems = await this.controller.cartItems;
+          this.view = cartItems.length
+            ? new BasketView(
+                this.router,
+                this.appInfo,
+                categories,
+                this.authorizationParameters,
+                this.controller.getCartParameters(this.router)
+              )
+            : (this.view = new BasketEmpty(this.router, this.appInfo, categories, this.authorizationParameters));
           break;
+        }
         default:
           this.view = new NotFoundView(this.router, this.appInfo, categories, this.authorizationParameters);
       }

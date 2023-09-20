@@ -17,12 +17,14 @@ export default class UserRepository extends Repository {
     }
   }
 
+  public get userExists(): boolean {
+    return this.token !== null;
+  }
+
   public get user(): Promise<Customer> | null {
-    if (this.token) {
-      const request = this.apiRoot.customers().withPasswordToken({ passwordToken: this.token.value }).get().execute();
-      return request.then((response) => response.body);
-    }
-    return null;
+    if (!this.token) return null;
+    const request = this.apiRoot.customers().withPasswordToken({ passwordToken: this.token.value }).get().execute();
+    return request.then((response) => response.body);
   }
 
   public async register(user: CustomerDraft) {
